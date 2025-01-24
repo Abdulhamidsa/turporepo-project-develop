@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base Colors - Light Mode */
+    --background: #f0f4f8; /* Soft light blue background */
+    --foreground: #2c3e50; /* Deep blue for sharp contrast */
+    --card: #ffffff; /* Pure white cards */
+    --card-foreground: #2c3e50; /* Match foreground */
+    --popover: #ffffff; /* Matches card */
+    --popover-foreground: #2c3e50;
+    --primary: #6a1b9a; /* Rich purple for an elegant accent */
+    --primary-foreground: #ffffff; /* White text on primary */
+    --secondary: #8e24aa; /* Lighter purple for secondary highlights */
+    --secondary-foreground: #ffffff;
+    --muted: #dfe6e9; /* Light gray for muted elements */
+    --muted-foreground: #636e72; /* Medium gray for muted text */
+    --accent: #6a1b9a; /* Matches primary */
+    --accent-foreground: #ffffff;
+    --destructive: #e74c3c; /* Red for destructive actions */
+    --destructive-foreground: #ffffff;
+    --border: #b2bec3; /* Subtle gray for borders */
+    --input: #b2bec3; /* Match borders */
+    --ring: #6a1b9a; /* Matches accent for focus outlines */
+    --radius: 0.4rem; /* Slightly rounded corners */
+  }
+
+  .dark {
+    /* Base Colors - Dark Mode */
+    --background: #1c2833; /* Darker background for better contrast */
+    --foreground: #ecf0f1; /* Soft white text */
+    --card: #2c3e50; /* Deep blue for cards */
+    --card-foreground: #ecf0f1;
+    --popover: #2c3e50;
+    --popover-foreground: #ecf0f1;
+    --primary: #6a1b9a; /* Rich purple for an elegant accent */
+    --primary-foreground: #ffffff; /* White text on primary */
+    --secondary: #8e24aa; /* Lighter purple for secondary elements */
+    --secondary-foreground: #ecf0f1;
+    --muted: #34495e; /* Dark gray for muted elements */
+    --muted-foreground: #95a5a6; /* Softer muted text */
+    --accent: #6a1b9a; /* Matches primary */
+    --accent-foreground: #ffffff;
+    --destructive: #e74c3c; /* Red for destructive actions */
+    --destructive-foreground: #ffffff;
+    --border: #566573; /* Dark gray for borders */
+    --input: #566573; /* Match borders */
+    --ring: #6a1b9a; /* Matches accent for focus outlines */
+    --radius: 0.4rem;
+  }
+
+  /* Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 10px;
+    border: 3px solid var(--muted);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--secondary);
+  }
+
+  /* Hover Effects */
+  .hover\:text-primary:hover {
+    color: var(--primary);
+  }
+
+  .hover\:text-secondary:hover {
+    color: var(--secondary);
+  }
+
+  .hover\:text-accent:hover {
+    color: var(--accent);
+  }
+
+  .hover\:text-destructive:hover {
+    color: var(--destructive);
+  }
+
+  /* Highlighted Text */
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .dark ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+@layer base {
+  /* Apply base styles */
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

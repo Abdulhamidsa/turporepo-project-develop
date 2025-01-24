@@ -1,0 +1,39 @@
+{
+  "name": "next-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@repo/api": "workspace:*",
+    "@repo/data": "workspace:*",
+    "@repo/hooks": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@repo/zod": "workspace:*",
+    "clsx": "^2.1.1",
+    "lodash.debounce": "^4.0.8",
+    "lucide-react": "catalog:react18",
+    "next": "catalog:next15",
+    "next-themes": "^0.4.4",
+    "react": "catalog:react18",
+    "react-dom": "catalog:react18",
+    "tailwind-merge": "^2.5.5"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript": "workspace:*",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/node": "catalog:node-types",
+    "@types/react": "catalog:react18",
+    "@types/react-dom": "catalog:react18",
+    "eslint": "catalog:eslint",
+    "postcss": "catalog:tailwindcss",
+    "tailwindcss": "catalog:tailwindcss",
+    "typescript": "catalog:typescript"
+  }
+}

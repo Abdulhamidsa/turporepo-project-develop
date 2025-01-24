@@ -1,0 +1,80 @@
+{
+  "name": "@repo/ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./globals.css": {
+      "default": "./src/globals.css"
+    },
+    "./postcss.config": {
+      "default": "./postcss.config.mjs"
+    },
+    "./tailwind.config": {
+      "default": "./tailwind.config.ts"
+    },
+    "./components/*": {
+      "import": "./src/components/*.tsx",
+      "types": "./src/components/*.d.tsx"
+    },
+    "./lib/*": {
+      "import": "./src/lib/*",
+      "types": "./src/lib/*.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "clean": "rimraf dist",
+    "prebuild": "pnpm clean"
+  },
+  "dependencies": {
+    "@lexical/react": "^0.22.0",
+    "@radix-ui/react-alert-dialog": "^1.1.2",
+    "@radix-ui/react-avatar": "^1.1.2",
+    "@radix-ui/react-dialog": "^1.1.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.4",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-popover": "^1.1.4",
+    "@radix-ui/react-progress": "^1.1.0",
+    "@radix-ui/react-scroll-area": "^1.2.2",
+    "@radix-ui/react-select": "^2.1.2",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.2",
+    "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-toast": "^1.2.2",
+    "@radix-ui/react-tooltip": "^1.1.6",
+    "@repo/hooks": "workspace:*",
+    "add": "^2.0.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "dialog": "^0.3.1",
+    "framer-motion": "^11.15.0",
+    "lexical": "^0.22.0",
+    "lucide-react": "^0.468.0",
+    "modal": "^1.2.0",
+    "react-day-picker": "8.10.1",
+    "react-hot-toast": "^2.4.1",
+    "shadcn": "^2.1.7",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7",
+    "toast": "^0.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:node-types",
+    "@types/react": "catalog:react18",
+    "autoprefixer": "catalog:tailwindcss",
+    "postcss": "catalog:tailwindcss",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "catalog:tailwindcss",
+    "typescript": "catalog:typescript"
+  }
+}

@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base Colors - Light Mode */
+    --background: #f0f0f0; /* Light gray background */
+    --foreground: #1a1a1a; /* Dark gray for sharp contrast */
+    --card: #ffffff; /* Pure white cards */
+    --card-foreground: #1a1a1a; /* Match foreground */
+    --popover: #ffffff; /* Matches card */
+    --popover-foreground: #1a1a1a;
+    --primary: #d32f2f; /* Windows 11 red tone */
+    --primary-foreground: #ffffff; /* White text on primary */
+    --secondary: #ff6659; /* Lighter red for secondary highlights */
+    --secondary-foreground: #1a1a1a;
+    --muted: #e0e0e0; /* Light gray for muted elements */
+    --muted-foreground: #6b7280; /* Medium gray for muted text */
+    --accent: #d32f2f; /* Matches primary */
+    --accent-foreground: #ffffff;
+    --destructive: #b71c1c; /* Darker red for destructive actions */
+    --destructive-foreground: #ffffff;
+    --border: #d1d5db; /* Subtle gray for borders */
+    --input: #d1d5db; /* Match borders */
+    --ring: #d32f2f; /* Matches accent for focus outlines */
+    --radius: 0.4rem; /* Slightly rounded corners */
+  }
+
+  .dark {
+    /* Base Colors - Dark Mode */
+    --background: #121212; /* Darker background for better contrast */
+    --foreground: #e0e0e0; /* Soft white text */
+    --card: #1e1e1e; /* Dark gray for cards */
+    --card-foreground: #e0e0e0;
+    --popover: #1e1e1e;
+    --popover-foreground: #e0e0e0;
+    --primary: #d32f2f; /* Windows 11 red tone */
+    --primary-foreground: #ffffff; /* White text on primary */
+    --secondary: #ff6659; /* Lighter red for secondary elements */
+    --secondary-foreground: #e0e0e0;
+    --muted: #2d2d2d; /* Dark gray for muted elements */
+    --muted-foreground: #cacacb; /* Softer muted text */
+    --accent: #d32f2f; /* Matches primary */
+    --accent-foreground: #ffffff;
+    --destructive: #b71c1c; /* Darker red for destructive actions */
+    --destructive-foreground: #ffffff;
+    --border: #3f3f3f; /* Dark gray for borders */
+    --input: #3f3f3f; /* Match borders */
+    --ring: #d32f2f; /* Matches accent for focus outlines */
+    --radius: 0.4rem;
+  }
+
+  /* Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 8px; /* Thinner scrollbar */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--muted); /* Subtle gray background */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #a0a0a0; /* Neutral gray for thumb */
+    border-radius: 10px;
+    border: 2px solid var(--muted); /* Match track background */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #888888; /* Slightly darker gray on hover */
+  }
+
+  /* Hover Effects */
+  .hover\:text-primary:hover {
+    color: var(--primary);
+  }
+
+  .hover\:text-secondary:hover {
+    color: var(--secondary);
+  }
+
+  .hover\:text-accent:hover {
+    color: var(--accent);
+  }
+
+  .hover\:text-destructive:hover {
+    color: var(--destructive);
+  }
+
+  /* Highlighted Text */
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .dark ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+@layer base {
+  /* Apply base styles */
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

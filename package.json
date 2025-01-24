@@ -1,0 +1,29 @@
+{
+  "name": "turporepo-project",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "pnpm clean && turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "turbo run clean"
+  },
+  "dependencies": {
+    "rimraf": "^6.0.1",
+    "zod": "catalog:zod"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript": "workspace:*",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "turbo": "^2.3.3",
+    "typescript": "catalog:typescript"
+  },
+  "packageManager": "pnpm@9.12.0"
+}
