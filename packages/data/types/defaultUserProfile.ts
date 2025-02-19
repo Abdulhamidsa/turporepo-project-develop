@@ -1,15 +1,15 @@
 // defaultUserProfile.ts
+import { UserProfile } from '../../zod/validation/user';
 
-import { UserProfile } from "../../zod/validation/user";
 // defaultUserProfile.ts
 export const defaultUserProfile: UserProfile = {
-  bio: "",
-  username: "",
+  bio: '',
+  username: '',
   completedProfile: false,
   age: null,
-  countryOrigin: "",
-  profession: "",
-  friendlyId: "",
-  profilePicture: "",
-  coverImage: "",
+  countryOrigin: '',
+  profession: '',
+  friendlyId: '',
+  profilePicture: '',
+  coverImage: '',
 };

@@ -1,6 +1,11 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import NavigationItem from "./NavigationItem";
+import React, { useState } from 'react';
+
+import { AlertCircle } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+
+import IncompleteProfileDialog from '../features/user/components/IncompleteProfileDialog';
+import { useUserProfile } from '../features/user/hooks/use.user.profile';
+import NavigationItem from './NavigationItem';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -16,25 +21,70 @@ export interface NavigationItemProps {
   action?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, navigationItems, sidebarOnlyItems, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  navigationItems,
+  sidebarOnlyItems,
+  onClose,
+}) => {
   const location = useLocation();
+  const { userProfile } = useUserProfile();
+
+  const [modalContent, setModalContent] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => {
+    const missingFields: string[] = [];
+    if (!userProfile.username) missingFields.push('Username');
+    if (!userProfile.profession) missingFields.push('Profession');
+    if (!userProfile.countryOrigin) missingFields.push('Country');
+    if (!userProfile.age) missingFields.push('Age');
+    if (!userProfile.bio) missingFields.push('Bio');
+    if (!userProfile.profilePicture) missingFields.push('Profile Picture');
+    setModalContent(missingFields);
+    setShowModal(true);
+  };
 
   const renderNavItem = (item: NavigationItemProps, showText = true) => {
     const isActive = item.link ? location.pathname === item.link : false;
 
-    return <NavigationItem key={item.name} item={item} isActive={isActive} showText={showText} onClick={onClose} />;
+    return (
+      <div key={item.name} className="relative flex items-center">
+        <NavigationItem item={item} isActive={isActive} showText={showText} onClick={onClose} />
+        {item.name === 'My Portfolio' && !userProfile.completedProfile && (
+          <AlertCircle
+            className="ml-2 h-5 w-5 cursor-pointer text-red-500"
+            onClick={handleOpenModal}
+          />
+        )}
+      </div>
+    );
   };
 
   return (
-    <aside className={`fixed h-dvh top-0 left-0 z-50 bg-card border-r border-border transition-transform duration-300 ${isOpen ? "translate-x-0 w-64" : "-translate-x-full"}`}>
-      <div className="flex flex-col h-full">
+    <aside
+      className={`bg-card border-border fixed left-0 top-0 z-50 h-dvh border-r transition-transform duration-300 ${isOpen ? 'w-64 translate-x-0' : '-translate-x-full'}`}
+    >
+      <IncompleteProfileDialog
+        showModal={showModal}
+        setShowModal={setShowModal}
+        modalContent={modalContent}
+      />
+      <div className="flex h-full flex-col">
         {/* Navigation Items */}
-        <div className={`flex-1 overflow-y-auto transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-          <nav className="px-4 mt-4 space-y-2">{navigationItems.map((item) => renderNavItem(item))}</nav>
+        <div
+          className={`flex-1 overflow-y-auto transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        >
+          <nav className="mt-4 space-y-2 px-4">
+            {navigationItems.map((item) => renderNavItem(item))}
+          </nav>
         </div>
-
         {/* Sidebar Only Items */}
-        <div className={`space-y-2 px-4 mb-4 transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>{sidebarOnlyItems.map((item) => renderNavItem(item))}</div>
+        <div
+          className={`mb-4 space-y-2 px-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        >
+          {sidebarOnlyItems.map((item) => renderNavItem(item))}
+        </div>
       </div>
     </aside>
   );

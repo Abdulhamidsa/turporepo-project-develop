@@ -1,83 +1,117 @@
-import "server-only";
-import { getEndpoints } from "@repo/api/endpoints";
-import { UserProfile } from "@repo/zod/validation/user";
+import { getEndpoints } from '@repo/api/endpoints';
+import { UserProfile } from '@repo/zod/validation/user';
+import 'server-only';
+
 const ENDPOINTS = getEndpoints(process.env.NEXT_PUBLIC_BASE_URL as string);
+class AppError extends Error {
+  status: number;
+  details?: unknown;
 
-export async function getProjects(page = 1, limit = 12, search = "") {
+  constructor(message: string, status: number, details?: unknown) {
+    super(message);
+    this.name = 'AppError';
+    this.status = status;
+    this.details = details;
+  }
+}
+
+async function handleApiRequest(url: string, options?: RequestInit) {
   try {
-    // ✅ Add search to the API request
-    const res = await fetch(`${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`, { next: { revalidate: 3600 }, cache: "no-store" });
+    const res = await fetch(url, options);
 
-    if (!res.ok) throw new Error("Failed to fetch projects");
+    if (!res.ok) {
+      const errorBody = await res.json().catch(() => null);
+      throw new AppError('API request failed', res.status, errorBody || res.statusText);
+    }
 
-    const response = await res.json();
+    return await res.json();
+  } catch (error) {
+    if (error instanceof AppError) {
+      console.error(`Error ${error.status}: ${error.message}`, error.details);
+    } else {
+      console.error('Unexpected error:', error);
+    }
+    throw error;
+  }
+}
+
+export async function getProjects(page = 1, limit = 12, search = '') {
+  try {
+    const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
+    const response = await handleApiRequest(url, { next: { revalidate: 3600 }, cache: 'no-store' });
     const projects = response.data.projects || [];
     const totalPages = Math.ceil(response.data.pagination.total / limit);
-
     return { projects, totalPages };
   } catch (error) {
-    console.error("Error fetching projects:", error);
+    console.error('Error fetching projects:', error);
     return { projects: [], totalPages: 1 };
   }
 }
-export async function getUsers(page = 1, limit = 12, search = "") {
+
+export async function getUsers(page = 1, limit = 12, search = '') {
   try {
-    const res = await fetch(`${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`);
-
-    if (!res.ok) throw new Error("Failed to fetch users");
-
-    const json = await res.json();
-
-    // Filter users where completedProfile is true
-    const filteredUsers = (json.data?.users || []).filter((user: UserProfile) => user.completedProfile);
-
-    return {
-      users: filteredUsers,
-      total: filteredUsers.length, // Return the count of filtered users
-    };
+    const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
+    const response = await handleApiRequest(url);
+    const filteredUsers = (response.data?.users || []).filter(
+      (user: UserProfile) => user.completedProfile,
+    );
+    return { users: filteredUsers, total: filteredUsers.length };
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching users:', error);
     return { users: [], total: 0 };
   }
 }
 
 export async function getUserProfile(friendlyId: string) {
   try {
-    const res = await fetch(`${ENDPOINTS.users.fetchUserPublicProfile(friendlyId).replace(":friendlyId", friendlyId)}`);
-
-    if (!res.ok) throw new Error("Failed to fetch user profile");
-
-    const response = await res.json();
+    const url = ENDPOINTS.users
+      .fetchUserPublicProfile(friendlyId)
+      .replace(':friendlyId', friendlyId);
+    const response = await handleApiRequest(url);
     return response.data;
   } catch (error) {
-    console.error("Error fetching user profile:", error);
+    console.error('Error fetching user profile:', error);
     return null;
   }
 }
 
-// Fetch a single project by ID
-// export async function getProject(id: string) {
-//   const res = await fetch(`${BASE_URL}/projects/${id}`, {
-//     next: { revalidate: 3600 }, // Revalidate every hour
-//   });
-//   if (!res.ok) throw new Error("Failed to fetch project");
-//   return res.json();
-// }
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  media: string[];
+}
 
-// Fetch featured users with a limit on the number of users
-// export async function getFeaturedUsers(limit = 3) {
-//   const res = await fetch(`${BASE_URL}/users/featured?limit=${limit}`, {
-//     next: { revalidate: 3600 }, // Revalidate every hour
-//   });
-//   if (!res.ok) throw new Error("Failed to fetch featured users");
-//   return res.json();
-// }
+interface User {
+  friendlyId: string;
+  username: string;
+  profilePicture: string;
+}
 
-// Fetch featured projects with a limit on the number of projects
-// export async function getFeaturedProjects(limit = 3) {
-//   const res = await fetch(`${BASE_URL}/projects/featured?limit=${limit}`, {
-//     next: { revalidate: 3600 }, // Revalidate every hour
-//   });
-//   if (!res.ok) throw new Error("Failed to fetch featured projects");
-//   return res.json();
-// }
+interface GetUserProjectResponse {
+  success: boolean;
+  data: {
+    projects: Project[];
+    user: User;
+  };
+}
+
+export async function getUserProject(friendlyId: string): Promise<GetUserProjectResponse | null> {
+  try {
+    const url = ENDPOINTS.projects.fetchByFriendlyId(friendlyId);
+    const response: GetUserProjectResponse = await handleApiRequest(url, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.success) {
+      throw new AppError('Failed to fetch project', 500);
+    }
+
+    console.log('response', response);
+    return response;
+  } catch (error) {
+    console.error('Error fetching project:', error);
+    return null;
+  }
+}

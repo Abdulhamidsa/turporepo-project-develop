@@ -1,8 +1,11 @@
-import useSWR from "swr";
-import React from "react";
-import { request } from "../api/request";
-import { AuthContext } from "../src/features/user/hooks/use.auth";
-import { getEndpoints } from "@repo/api/endpoints";
+import React from 'react';
+
+import { getEndpoints } from '@repo/api/endpoints';
+import useSWR from 'swr';
+
+import { request } from '../api/request';
+import { AuthContext } from '../src/features/user/hooks/use.auth';
+
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 type User = {
   friendlyId: string;
@@ -20,12 +23,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   } = useSWR<User | null>(
     ENDPOINTS.auth.loggedUser,
     async (url) => {
-      const user = await request<User>("GET", url);
+      const user = await request<User>('GET', url);
       return user;
     },
     {
       revalidateOnFocus: true,
-    }
+    },
   );
   const isAuthenticated = Boolean(userData && !error);
 
@@ -35,9 +38,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await request("POST", ENDPOINTS.auth.signout);
+      await request('POST', ENDPOINTS.auth.signout);
     } catch (err) {
-      console.error("signOut error:", err);
+      console.error('signOut error:', err);
     }
     mutate(null, false);
   };

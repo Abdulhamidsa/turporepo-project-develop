@@ -1,17 +1,24 @@
-import { useState } from "react";
-import { Button } from "@repo/ui/components/ui/button";
-import { Textarea } from "@repo/ui/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@repo/ui/components/ui/dialog";
-import { Send } from "lucide-react";
+import { useState } from 'react';
+
+import { Button } from '@repo/ui/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@repo/ui/components/ui/dialog';
+import { Textarea } from '@repo/ui/components/ui/textarea';
+import { Send } from 'lucide-react';
 
 export default function StatusUpdate() {
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handlePost = () => {
     if (status.trim()) {
       alert(`Posting status: ${status}`);
-      setStatus(""); // Reset input
+      setStatus(''); // Reset input
       setIsDialogOpen(false); // Close modal
     }
   };
@@ -19,13 +26,22 @@ export default function StatusUpdate() {
   return (
     <div>
       {/* Full Status Update UI for Larger Screens */}
-      <div className="hidden md:block bg-card p-4 rounded-lg shadow mb-6 space-y-4">
+      <div className="bg-card mb-6 hidden space-y-4 rounded-lg p-4 shadow md:block">
         {/* Textarea */}
-        <Textarea value={status} onChange={(e) => setStatus(e.target.value)} placeholder="What's on your mind?" className="w-full border border-border focus:ring-primary focus:outline-none rounded-md px-3 py-2 text-sm" />
+        <Textarea
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          placeholder="What's on your mind?"
+          className="border-border focus:ring-primary w-full rounded-md border px-3 py-2 text-sm focus:outline-none"
+        />
 
         {/* Post Button */}
         <div className="flex justify-end">
-          <Button onClick={handlePost} variant="ghost" className="px-2 py-1 text-primary hover:bg-muted rounded-md">
+          <Button
+            onClick={handlePost}
+            variant="ghost"
+            className="text-primary hover:bg-muted rounded-md px-2 py-1"
+          >
             <Send className="h-5 w-5" />
           </Button>
         </div>
@@ -39,10 +55,18 @@ export default function StatusUpdate() {
           </DialogHeader>
           <div className="space-y-4">
             {/* Textarea */}
-            <Textarea value={status} onChange={(e) => setStatus(e.target.value)} placeholder="What's on your mind?" className="w-full border border-border focus:ring-primary focus:outline-none rounded-md px-3 py-2 text-sm" />
+            <Textarea
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              placeholder="What's on your mind?"
+              className="border-border focus:ring-primary w-full rounded-md border px-3 py-2 text-sm focus:outline-none"
+            />
           </div>
           <DialogFooter>
-            <Button onClick={handlePost} className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+            <Button
+              onClick={handlePost}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm"
+            >
               Post
             </Button>
           </DialogFooter>

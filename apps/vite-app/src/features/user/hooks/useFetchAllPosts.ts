@@ -1,9 +1,12 @@
-import { useState } from "react";
-import useSWRInfinite from "swr/infinite";
-import { swrFetcher } from "../../../../api/swrFetcher";
-import { PostType } from "@repo/zod/validation/post";
-import { request } from "../../../../api/request";
-import { getEndpoints } from "@repo/api/endpoints";
+import { useState } from 'react';
+
+import { getEndpoints } from '@repo/api/endpoints';
+import { PostType } from '@repo/zod/validation/post';
+import useSWRInfinite from 'swr/infinite';
+
+import { request } from '../../../../api/request';
+import { swrFetcher } from '../../../../api/swrFetcher';
+
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 export const useFetchPosts = () => {
   const [limit] = useState(5);
@@ -16,7 +19,7 @@ export const useFetchPosts = () => {
     (url) => swrFetcher(url),
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 
   // Ensure posts are appended rather than sorted and re-ordered
@@ -37,23 +40,25 @@ export const useFetchPosts = () => {
                     ? {
                         ...post,
                         likedByUser: !post.likedByUser,
-                        likesCount: post.likedByUser ? (post.likesCount ?? 0) - 1 : (post.likesCount ?? 0) + 1,
+                        likesCount: post.likedByUser
+                          ? (post.likesCount ?? 0) - 1
+                          : (post.likesCount ?? 0) + 1,
                       }
-                    : post
+                    : post,
                 ),
               }))
             : currentData,
-        false
+        false,
       );
 
       // Make the API request to toggle like
-      await request("POST", ENDPOINTS.posts.like, {
+      await request('POST', ENDPOINTS.posts.like, {
         postId,
       });
 
       mutate();
     } catch (error) {
-      console.error("Error toggling like:", error);
+      console.error('Error toggling like:', error);
     }
   };
 

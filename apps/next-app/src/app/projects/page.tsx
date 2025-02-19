@@ -1,18 +1,23 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/ui/avatar";
-import { Badge } from "@repo/ui/components/ui/badge";
-import { Button } from "@repo/ui/components/ui/button";
-import { SearchForm } from "../../components/search-form";
-import { fetchProjectWithUserType } from "@repo/zod/validation/project";
-import { getProjects } from "../../lib/api";
+import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
+import { Badge } from '@repo/ui/components/ui/badge';
+import { Button } from '@repo/ui/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/ui/card';
+import { fetchProjectWithUserType } from '@repo/zod/validation/project';
+import Image from 'next/image';
+import Link from 'next/link';
 
-export const dynamic = "force-dynamic";
+import { SearchForm } from '../../components/search-form';
+import { getProjects } from '../../lib/api';
 
-export default async function ProjectsPage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
-  const page = parseInt((searchParams.page as string) || "1", 10);
-  const search = (searchParams.search as string) || "";
+export const dynamic = 'force-dynamic';
+
+export default async function ProjectsPage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+  const page = parseInt((searchParams.page as string) || '1', 10);
+  const search = (searchParams.search as string) || '';
 
   // ✅ Pass search term to getProjects
   const { projects, totalPages } = await getProjects(page, 12, search);
@@ -23,31 +28,44 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Rec
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">All Projects</h1>
+      <h1 className="mb-8 text-3xl font-bold">All Projects</h1>
 
       {/* ✅ Updated SearchForm for Live Search */}
-      <SearchForm initialSearch={search} searchType={"projects"} />
+      <SearchForm initialSearch={search} searchType={'projects'} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.length > 0 ? (
           projects.map((project: fetchProjectWithUserType) => (
             <Card key={project.id} className="overflow-hidden">
-              <Image src={project.thumbnail} alt={project.title} width={400} height={300} className="w-full h-48 object-cover" />
+              <Image
+                src={project.thumbnail}
+                alt={project.title}
+                width={400}
+                height={300}
+                className="h-48 w-full object-cover"
+              />
               <CardHeader className="p-4">
                 <CardTitle className="text-lg">{project.title}</CardTitle>
               </CardHeader>
               <CardContent className="p-4">
-                <div className="flex items-center space-x-2 mb-2">
+                <div className="mb-2 flex items-center space-x-2">
                   {project.user && (
                     <Avatar className="h-6 w-6">
-                      <AvatarImage src={project.user.profilePicture || ""} alt={project.user.username} />
-                      <AvatarFallback>{project.user.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+                      <AvatarImage
+                        src={project.user.profilePicture || ''}
+                        alt={project.user.username}
+                      />
+                      <AvatarFallback>
+                        {project.user.username.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                   )}
                   {project.user && <span className="text-sm">{project.user.username}</span>}
                 </div>
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">
+                  {project.description}
+                </p>
+                <div className="mb-4 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <Badge key={tag.id} variant="secondary">
                       {tag.name}
@@ -63,12 +81,12 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Rec
             </Card>
           ))
         ) : (
-          <p className="text-center text-muted-foreground">No projects found.</p>
+          <p className="text-muted-foreground text-center">No projects found.</p>
         )}
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-8 space-x-2">
+      <div className="mt-8 flex justify-center space-x-2">
         {page > 1 && (
           <Link href={`/projects?page=${page - 1}&search=${search}`}>
             <Button>Previous</Button>
@@ -81,7 +99,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Rec
         )}
       </div>
 
-      <p className="text-center mt-4">
+      <p className="mt-4 text-center">
         Page {page} of {totalPages}
       </p>
     </div>

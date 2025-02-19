@@ -1,24 +1,20 @@
-import { useState } from "react";
-import CustomModal from "@repo/ui/components/CustomModal";
-import ProjectPreview from "./ProjectPreview";
-import ProjectForm from "./ProjectForm";
-import { AddProjectInput } from "@repo/zod/validation";
-import { AddProjectModalProps } from "@repo/data/types/types";
-import { useCreateProject } from "../../../hooks/useCreateProject";
+import { useState } from 'react';
+
+import { AddProjectModalProps } from '@repo/data/types/types';
+import CustomModal from '@repo/ui/components/CustomModal';
+import { AddProjectInput } from '@repo/zod/validation';
+
+import { useCreateProject } from '../../../hooks/useCreateProject';
+import ProjectForm from './ProjectForm';
+import ProjectPreview from './ProjectPreview';
 
 const initialProject: AddProjectInput = {
-  title: "",
-  description: "",
-  url: "",
+  title: '',
+  description: '',
+  url: '',
   media: [],
-  thumbnail: "",
+  thumbnail: '',
   tags: [],
-  user: {
-    friendlyId: "",
-    username: "",
-    profilePicture: "",
-    profession: "",
-  },
 };
 
 export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProps) {
@@ -36,13 +32,12 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
       setPendingThumbnail(null);
       setPendingMedia([]);
       setErrors({
-        title: "",
-        description: "",
-        url: "",
-        thumbnail: "",
-        tags: "",
-        media: "",
-        user: "",
+        title: '',
+        description: '',
+        url: '',
+        thumbnail: '',
+        tags: '',
+        media: '',
       });
 
       onClose();
@@ -51,14 +46,14 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
 
   return (
     <CustomModal size="3xl" isOpen={isOpen} onClose={onClose}>
-      <div className="grid md:grid-cols-2 gap-4 h-auto md:h-[500px]">
+      <div className="grid h-auto gap-4 md:h-[500px] md:grid-cols-2">
         {/* Project Preview - Always visible */}
         <div className="hidden md:block">
           <ProjectPreview project={project} pendingThumbnail={pendingThumbnail} />
         </div>
 
         {/* Project Form */}
-        <div className="p-4 max-h-[450px] overflow-y-auto">
+        <div className="max-h-[450px] overflow-y-auto p-4">
           <ProjectForm
             project={project}
             setProject={setProject}

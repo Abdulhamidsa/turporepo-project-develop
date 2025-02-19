@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export function useProjectState(userProfile: { username: string; profilePicture: string }) {
   const [project, setProject] = useState({
-    title: "",
-    description: "",
-    url: "",
+    title: '',
+    description: '',
+    url: '',
     media: [] as string[],
     thumbnail: null as string | null,
     tags: [] as string[],
     user: {
-      name: userProfile.username || "Unknown User",
-      avatar: userProfile.profilePicture || "/placeholder.png",
+      name: userProfile.username || 'Unknown User',
+      avatar: userProfile.profilePicture || '/placeholder.png',
     },
   });
 
@@ -57,9 +57,9 @@ export function useProjectState(userProfile: { username: string; profilePicture:
     updateThumbnail,
     reset: () =>
       setProject({
-        title: "",
-        description: "",
-        url: "",
+        title: '',
+        description: '',
+        url: '',
         media: [],
         thumbnail: null,
         tags: [],

@@ -1,9 +1,11 @@
-import React, { useRef, useEffect } from "react";
-import { useFetchPosts } from "../../user/hooks/useFetchAllPosts";
-import { PostFeed } from "./PostFeed";
+import React, { useEffect, useRef } from 'react';
+
+import { useFetchPosts } from '../../user/hooks/useFetchAllPosts';
+import { PostFeed } from './PostFeed';
 
 const PostList: React.FC = () => {
   const { posts, isLoading, error, loadMore, isReachingEnd, isValidating } = useFetchPosts();
+
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -15,7 +17,7 @@ const PostList: React.FC = () => {
           loadMore();
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     if (currentLoader) {
@@ -46,7 +48,7 @@ const PostList: React.FC = () => {
             _id: post._id,
             content: post.content,
             image: post.image ?? null,
-            createdAt: post.createdAt ?? "",
+            createdAt: post.createdAt ?? '',
             likedByUser: post.likedByUser ?? false,
             likesCount: post.likesCount ?? 0,
             comments: post.comments ?? [],
@@ -54,15 +56,15 @@ const PostList: React.FC = () => {
           user={{
             _id: post.userId._id,
             username: post.userId.username,
-            profession: post.userId.profession ?? "",
+            profession: post.userId.profession ?? '',
             friendlyId: post.userId.friendlyId,
-            profilePicture: post.userId.profilePicture ?? "",
+            profilePicture: post.userId.profilePicture ?? '',
           }}
         />
       ))}
       {!isReachingEnd && (
-        <div ref={loaderRef} className="text-center py-4">
-          {isValidating ? "Loading more..." : ""}
+        <div ref={loaderRef} className="py-4 text-center">
+          {isValidating ? 'Loading more...' : ''}
         </div>
       )}
     </div>

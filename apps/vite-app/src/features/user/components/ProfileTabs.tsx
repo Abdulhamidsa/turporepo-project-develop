@@ -1,0 +1,101 @@
+// ProfileTabs.tsx
+import { useEffect, useRef, useState } from 'react';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
+import { FetchedProjectType } from '@repo/zod/validation';
+import { Plus } from 'lucide-react';
+    
+import UserPosts from '../../post/components/UserPosts';
+import ProjectCard from '../../projects/components/ProjectCard';
+import ProjectModal from '../../projects/components/ProjectModal';
+import AddProjectModal from '../../projects/components/addProjectModal';
+
+interface ProfileTabsProps {
+  userProfile: any; // Replace with your actual type if you have one
+  projects: any[]; // Replace with the proper type for projects
+}
+
+const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
+  const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
+  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
+  const tabsContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (tabsContentRef.current) {
+      const tabContents = tabsContentRef.current.querySelectorAll("[role='tabpanel']");
+      let maxHeight = 0;
+      tabContents.forEach((tabContent) => {
+        maxHeight = Math.max(maxHeight, tabContent.scrollHeight);
+      });
+      tabsContentRef.current.style.minHeight = `${maxHeight}px`;
+    }
+  }, [projects, userProfile]);
+
+  return (
+    <>
+      <div ref={tabsContentRef}>
+        <Tabs defaultValue="posts" className="mt-8">
+          <TabsList className="bg-muted border-border grid w-full grid-cols-2 overflow-hidden rounded-lg border">
+            <TabsTrigger value="posts">Posts</TabsTrigger>
+            <TabsTrigger value="projects">Projects</TabsTrigger>
+          </TabsList>
+          <TabsContent value="posts" className="mt-6">
+            <UserPosts friendlyId={userProfile.friendlyId ?? ''} />
+          </TabsContent>
+          <TabsContent value="projects" className="mt-6">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <div
+                className="bg-card hover:bg-primary-foreground group relative flex h-full w-full items-center justify-center rounded-lg border p-4 transition duration-300 ease-in-out hover:cursor-pointer"
+                onClick={() => setIsProjectDialogOpen(true)}
+              >
+                <Plus className="text-primary-foreground h-52 w-12 opacity-100 transition-all duration-300 ease-in-out group-hover:opacity-0" />
+                <span className="text-card absolute text-lg font-semibold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+                  Add Project
+                </span>
+              </div>
+
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={{
+                    id: project.id,
+                    title: project.title,
+                    description: project.description,
+                    url: project.url ?? '',
+                    thumbnail: project.thumbnail,
+                    tags: project.tags,
+                    media: project.media,
+                    createdAt: project.createdAt,
+                    updatedAt: project.updatedAt,
+                  }}
+                  onClick={() => setSelectedProject(project)}
+                  friendlyId={userProfile.friendlyId ?? ''}
+                />
+              ))}
+            </div>
+            {projects.length === 0 && (
+              <p className="text-muted-foreground col-span-full p-4 text-center">
+                No projects available.
+              </p>
+            )}
+          </TabsContent>
+          {selectedProject && (
+            <ProjectModal
+              project={selectedProject}
+              user={{
+                friendlyId: userProfile.friendlyId ?? '',
+                username: userProfile.username ?? '',
+                profilePicture: userProfile.profilePicture ?? '',
+              }}
+              isOpen={!!selectedProject}
+              onClose={() => setSelectedProject(null)}
+            />
+          )}
+        </Tabs>
+      </div>
+      <AddProjectModal isOpen={isProjectDialogOpen} onClose={() => setIsProjectDialogOpen(false)} />
+    </>
+  );
+};
+
+export default ProfileTabs;

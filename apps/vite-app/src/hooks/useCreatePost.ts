@@ -1,7 +1,9 @@
-import useSWRMutation from "swr/mutation";
-import { z } from "zod";
-import { request } from "../../api/request";
-import { getEndpoints } from "@repo/api/endpoints";
+import { getEndpoints } from '@repo/api/endpoints';
+import useSWRMutation from 'swr/mutation';
+import { z } from 'zod';
+
+import { request } from '../../api/request';
+
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 
 export const PostSchema = z.object({
@@ -14,14 +16,17 @@ type PostPayload = { content: string; image?: string };
 
 export const usePostSubmit = () => {
   const mutationFetcher = async (url: string, { arg }: { arg: PostPayload }) => {
-    const response = await request<PostData>("POST", url, arg);
+    const response = await request<PostData>('POST', url, arg);
     if (!response) {
-      throw new Error("Failed to create post");
+      throw new Error('Failed to create post');
     }
     return response;
   };
 
-  const { trigger, isMutating, error } = useSWRMutation<PostData, Error, string, PostPayload>(ENDPOINTS.posts.post, mutationFetcher);
+  const { trigger, isMutating, error } = useSWRMutation<PostData, Error, string, PostPayload>(
+    ENDPOINTS.posts.post,
+    mutationFetcher,
+  );
 
   return { trigger, isMutating, error };
 };

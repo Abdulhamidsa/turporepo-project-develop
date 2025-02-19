@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface OverlayProps {
   isOpen: boolean;
@@ -8,7 +8,7 @@ interface OverlayProps {
 const Overlay: React.FC<OverlayProps> = ({ isOpen, closeSidebar }) => {
   if (!isOpen) return null;
 
-  return <div onClick={closeSidebar} className="absolute inset-0 bg-black/50 z-20 md:hidden"></div>;
+  return <div onClick={closeSidebar} className="absolute inset-0 z-20 bg-black/50 md:hidden"></div>;
 };
 
 export default Overlay;

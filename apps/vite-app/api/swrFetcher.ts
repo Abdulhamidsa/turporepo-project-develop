@@ -1,11 +1,16 @@
-import { ZodSchema, z } from "zod";
-import { request } from "./request";
-import { getErrorMessage } from "../utils/getErrorMessage";
+import { ZodSchema, z } from 'zod';
 
-export async function swrFetcher<T>(url: string, schema?: ZodSchema<T>, defaultValue?: T): Promise<T> {
+import { getErrorMessage } from '../utils/getErrorMessage';
+import { request } from './request';
+
+export async function swrFetcher<T>(
+  url: string,
+  schema?: ZodSchema<T>,
+  defaultValue?: T,
+): Promise<T> {
   try {
-    const response = await request<unknown>("GET", url);
-    console.log("Received data:", response); // Debugging API response
+    const response = await request<unknown>('GET', url);
+    console.log('Received data:', response); // Debugging API response
 
     // Automatically wrap the schema in z.array if the response is an array
     let validatedSchema = schema;
@@ -16,7 +21,7 @@ export async function swrFetcher<T>(url: string, schema?: ZodSchema<T>, defaultV
     if (validatedSchema) {
       const parsed = validatedSchema.safeParse(response);
       if (!parsed.success) {
-        console.error("Validation Error:", parsed.error);
+        console.error('Validation Error:', parsed.error);
         return defaultValue as T;
       }
       return parsed.data;
@@ -24,7 +29,7 @@ export async function swrFetcher<T>(url: string, schema?: ZodSchema<T>, defaultV
 
     return response as T;
   } catch (error) {
-    console.error("SWR Fetch Error:", getErrorMessage(error));
+    console.error('SWR Fetch Error:', getErrorMessage(error));
     return defaultValue as T;
   }
 }

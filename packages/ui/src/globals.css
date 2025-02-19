@@ -100,11 +100,24 @@
 }
 
 @layer base {
-  /* Apply base styles */
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+@layer utilities {
+  @keyframes scrollLeftToRight {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scrollLeftToRight 45s linear infinite;
   }
 }

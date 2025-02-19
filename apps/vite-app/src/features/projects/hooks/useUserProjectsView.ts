@@ -1,7 +1,8 @@
-import { getEndpoints } from "@repo/api/endpoints";
-import useSWR from "swr";
-import { swrFetcher } from "../../../../api/swrFetcher";
-import { FetchedProjectType } from "@repo/zod/validation";
+import { getEndpoints } from '@repo/api/endpoints';
+import { FetchedProjectType } from '@repo/zod/validation';
+import useSWR from 'swr';
+
+import { swrFetcher } from '../../../../api/swrFetcher';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 type UserProjectsResponse = {
@@ -13,7 +14,10 @@ type UserProjectsResponse = {
   projects: FetchedProjectType[];
 };
 export const useUserProjectsView = (friendlyId: string) => {
-  const { data, error, isLoading, mutate } = useSWR<UserProjectsResponse>(friendlyId ? ENDPOINTS.projects.fetchByFriendlyId(friendlyId) : null, swrFetcher);
+  const { data, error, isLoading, mutate } = useSWR<UserProjectsResponse>(
+    friendlyId ? ENDPOINTS.projects.fetchByFriendlyId(friendlyId) : null,
+    swrFetcher,
+  );
   return {
     user: data?.user || null,
     projects: data?.projects || [],

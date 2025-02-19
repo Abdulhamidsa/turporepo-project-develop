@@ -1,10 +1,13 @@
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
-import { request } from "../../../../api/request";
-import { createContext, useContext } from "react";
-import { updateCredentialsSchema } from "@repo/zod/validation/auth";
-import { getErrorMessage } from "../../../../utils/getErrorMessage";
-import { getEndpoints } from "@repo/api/endpoints";
+import { createContext, useContext } from 'react';
+
+import { getEndpoints } from '@repo/api/endpoints';
+import { updateCredentialsSchema } from '@repo/zod/validation/auth';
+import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
+
+import { request } from '../../../../api/request';
+import { getErrorMessage } from '../../../../utils/getErrorMessage';
+
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 
 type SignupResponse = {
@@ -36,18 +39,23 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
 
 export const useSignup = () => {
   const mutationFetcher = async (url: string, { arg }: { arg: SignupPayload }) => {
-    const response = await request<SignupResponse>("POST", url, arg);
+    const response = await request<SignupResponse>('POST', url, arg);
     return response;
   };
 
-  const { trigger, isMutating, error } = useSWRMutation<SignupResponse, Error, string, SignupPayload>(ENDPOINTS.auth.signup, mutationFetcher);
+  const { trigger, isMutating, error } = useSWRMutation<
+    SignupResponse,
+    Error,
+    string,
+    SignupPayload
+  >(ENDPOINTS.auth.signup, mutationFetcher);
 
   return {
     signup: trigger,
@@ -76,7 +84,7 @@ export const useSignin = () => {
   const { signIn } = useAuth();
 
   const mutationFetcher = async (url: string, { arg }: { arg: SigninPayload }) => {
-    const response = await request<SigninResponse>("POST", url, arg);
+    const response = await request<SigninResponse>('POST', url, arg);
     return response;
   };
 
@@ -112,10 +120,13 @@ export type CredentialsType = {
 
 // Hook to fetch credentials
 export const useFetchCredentials = () => {
-  const { data, error, mutate } = useSWR<CredentialsType | null>(ENDPOINTS.auth.credentials, async (url: string) => {
-    const response = await request<CredentialsType>("GET", url);
-    return response;
-  });
+  const { data, error, mutate } = useSWR<CredentialsType | null>(
+    ENDPOINTS.auth.credentials,
+    async (url: string) => {
+      const response = await request<CredentialsType>('GET', url);
+      return response;
+    },
+  );
 
   return {
     credentials: data || null,
@@ -135,10 +146,13 @@ export const useUpdateCredentials = () => {
   const mutationFetcher = async (url: string, { arg }: { arg: UpdateCredentialsPayload }) => {
     // Validate the payload before sending it to the API
     const validatedPayload = updateCredentialsSchema.parse(arg);
-    const response = await request("PUT", url, validatedPayload);
+    const response = await request('PUT', url, validatedPayload);
     return response;
   };
-  const { trigger, isMutating, error } = useSWRMutation(ENDPOINTS.auth.credentials, mutationFetcher);
+  const { trigger, isMutating, error } = useSWRMutation(
+    ENDPOINTS.auth.credentials,
+    mutationFetcher,
+  );
   return {
     updateCredentials: trigger,
     isSubmitting: isMutating,

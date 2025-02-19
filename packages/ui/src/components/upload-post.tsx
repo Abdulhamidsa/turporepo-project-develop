@@ -1,11 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader } from "@repo/ui/components/ui/card";
-import { Button } from "@repo/ui/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/ui/avatar";
-import { ImagePlus, X } from "lucide-react";
-import { RichTextEditor } from "./rich-text-editor";
+import { useState } from 'react';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
+import { Button } from '@repo/ui/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '@repo/ui/components/ui/card';
+import { ImagePlus, X } from 'lucide-react';
+
+import { RichTextEditor } from './rich-text-editor';
 
 interface UploadPostProps {
   onClose: () => void;
@@ -13,7 +15,7 @@ interface UploadPostProps {
 }
 
 export function UploadPost({ onClose, onSubmit }: UploadPostProps) {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -35,25 +37,34 @@ export function UploadPost({ onClose, onSubmit }: UploadPostProps) {
   };
 
   return (
-    <Card className="w-full max-w-xl mx-auto bg-white dark:bg-gray-800">
-      <CardHeader className="flex justify-between items-center p-4">
+    <Card className="mx-auto w-full max-w-xl bg-white dark:bg-gray-800">
+      <CardHeader className="flex items-center justify-between p-4">
         <h3 className="text-lg font-semibold">Create Post</h3>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
       </CardHeader>
       <CardContent className="p-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <Avatar className="w-8 h-8">
+        <div className="mb-4 flex items-center space-x-2">
+          <Avatar className="h-8 w-8">
             <AvatarImage src="/placeholder-avatar.jpg" alt="Your Name" />
             <AvatarFallback>YN</AvatarFallback>
           </Avatar>
-          <span className="font-semibold text-sm">Your Name</span>
+          <span className="text-sm font-semibold">Your Name</span>
         </div>
         <RichTextEditor onChange={(editorState) => setContent(editorState)} />
         <div className="relative mt-4">
-          <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" id="image-upload" />
-          <label htmlFor="image-upload" className="flex items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:border-gray-400 transition-colors duration-300">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+            id="image-upload"
+          />
+          <label
+            htmlFor="image-upload"
+            className="flex h-24 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 transition-colors duration-300 hover:border-gray-400"
+          >
             {imagePreview ? (
               <img src={imagePreview} alt="Preview" className="rounded-md" />
             ) : (

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -6,25 +6,27 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   withCredentials: true, // to include cookies with requests
 });
 
-const IGNORED_ENDPOINTS = ["/logged-user"];
+const IGNORED_ENDPOINTS = ['/logged-user'];
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      const isIgnoredEndpoint = IGNORED_ENDPOINTS.some((endpoint) => error.config?.url?.includes(endpoint));
+      const isIgnoredEndpoint = IGNORED_ENDPOINTS.some((endpoint) =>
+        error.config?.url?.includes(endpoint),
+      );
       if (!isIgnoredEndpoint) {
-        console.warn("Unauthorized: Redirecting to authentication.");
-        window.location.href = "/auth";
+        console.warn('Unauthorized: Redirecting to authentication.');
+        window.location.href = '/auth';
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

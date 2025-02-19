@@ -1,7 +1,9 @@
-import { useState } from "react";
-import useSWRInfinite from "swr/infinite";
-import { swrFetcher } from "../../../../api/swrFetcher";
-import { getEndpoints } from "@repo/api/endpoints";
+import { useState } from 'react';
+
+import { getEndpoints } from '@repo/api/endpoints';
+import useSWRInfinite from 'swr/infinite';
+
+import { swrFetcher } from '../../../../api/swrFetcher';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 
@@ -13,7 +15,12 @@ export type ProjectType = {
   thumbnail?: string;
   media: { url: string }[];
   tags: { id: string; name: string }[];
-  user: { username: string; profilePicture?: string | null; profession: string; friendlyId: string | null };
+  user: {
+    username: string;
+    profilePicture?: string | null;
+    profession: string;
+    friendlyId: string | null;
+  };
   createdAt: string;
   updatedAt?: string;
   likedByUser: boolean;
@@ -29,10 +36,14 @@ export const useProjects = (initialLimit = 5) => {
       page: number;
       total: number;
     };
-  }>((pageIndex) => `${ENDPOINTS.projects.fetchAll}?limit=${limit}&page=${pageIndex + 1}`, swrFetcher, {
-    revalidateOnFocus: false, // Prevents refetching on window focus
-    persistSize: true, // Keeps track of previously loaded pages
-  });
+  }>(
+    (pageIndex) => `${ENDPOINTS.projects.fetchAll}?limit=${limit}&page=${pageIndex + 1}`,
+    swrFetcher,
+    {
+      revalidateOnFocus: false, // Prevents refetching on window focus
+      persistSize: true, // Keeps track of previously loaded pages
+    },
+  );
 
   // Ensure projects are loaded in the correct order
   const projects = data ? data.flatMap((page) => page.projects) : [];
@@ -58,19 +69,21 @@ export const useProjects = (initialLimit = 5) => {
                     ? {
                         ...project,
                         likedByUser: !project.likedByUser,
-                        likesCount: project.likedByUser ? project.likesCount - 1 : project.likesCount + 1,
+                        likesCount: project.likedByUser
+                          ? project.likesCount - 1
+                          : project.likesCount + 1,
                       }
-                    : project
+                    : project,
                 ),
               }))
             : currentData,
-        false // Prevent auto revalidation
+        false, // Prevent auto revalidation
       );
 
       // Revalidate data after successful API call
       mutate();
     } catch (error) {
-      console.error("Error toggling like:", error);
+      console.error('Error toggling like:', error);
     }
   };
 

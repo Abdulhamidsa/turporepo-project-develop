@@ -1,25 +1,30 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import { Popover, PopoverContent, PopoverTrigger } from "@repo/ui/components/ui/popover";
-import { Button } from "@repo/ui/components/ui/button";
-import { MoreVertical } from "lucide-react";
-import { NavigationItemProps } from "./Sidebar";
-import NavigationItem from "./NavigationItem";
+import React from 'react';
+
+import { Button } from '@repo/ui/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui/components/ui/popover';
+import { MoreVertical } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+
+import NavigationItem from './NavigationItem';
+import { NavigationItemProps } from './Sidebar';
 
 interface BottomNavigationProps {
   navigationItems: NavigationItemProps[];
   sidebarOnlyItems: NavigationItemProps[];
 }
 
-const BottomNavigation: React.FC<BottomNavigationProps> = ({ navigationItems, sidebarOnlyItems }) => {
+const BottomNavigation: React.FC<BottomNavigationProps> = ({
+  navigationItems,
+  sidebarOnlyItems,
+}) => {
   const location = useLocation();
 
   // Check if an item is active
   const isActive = (link?: string) => location.pathname === link;
 
   return (
-    <nav className="fixed bottom-0 w-full bg-card border-t border-border flex justify-between items-center md:hidden">
-      <div className="flex justify-center gap-10 flex-grow">
+    <nav className="bg-card border-border fixed bottom-0 flex w-full items-center justify-between border-t md:hidden">
+      <div className="flex flex-grow justify-center gap-10">
         {navigationItems.map((item) => (
           <NavigationItem
             key={item.name}
@@ -35,7 +40,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ navigationItems, si
             <MoreVertical className="h-6 w-6" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-2 bg-card border border-border rounded-lg shadow-md">
+        <PopoverContent className="bg-card border-border w-48 rounded-lg border p-2 shadow-md">
           {sidebarOnlyItems.map((item) => (
             <NavigationItem
               key={item.name}

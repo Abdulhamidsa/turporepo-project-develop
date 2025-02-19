@@ -1,5 +1,6 @@
-import axios from "axios";
-import { AppError } from "../api/errors";
+import axios from 'axios';
+
+import { AppError } from '../api/errors';
 
 export const getErrorMessage = (error: unknown): string => {
   // If it’s one of our custom AppErrors:
@@ -14,7 +15,7 @@ export const getErrorMessage = (error: unknown): string => {
     if (backendMessage) {
       return `[${status}] ${backendMessage}`;
     }
-    return `HTTP Error: ${status || "Unknown status"}`;
+    return `HTTP Error: ${status || 'Unknown status'}`;
   }
 
   // If it’s a normal JavaScript error (TypeError, ReferenceError, etc.):
@@ -23,5 +24,5 @@ export const getErrorMessage = (error: unknown): string => {
   }
 
   // Fallback if we have no clue what it is:
-  return "An unknown error occurred.";
+  return 'An unknown error occurred.';
 };

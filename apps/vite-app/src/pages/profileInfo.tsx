@@ -1,28 +1,35 @@
-import { useState } from "react";
-import { Button } from "@repo/ui/components/ui/button";
-import { Input } from "@repo/ui/components/ui/input";
-import { Textarea } from "@repo/ui/components/ui/textarea";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@repo/ui/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/components/ui/select";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@repo/ui/components/ui/card";
-import { Pen, Check, Loader } from "lucide-react";
+import { useState } from 'react';
 
-import { useUserProfile } from "../features/user/hooks/use.user.profile";
-import { Countries } from "@repo/data/constants/countries";
-import { Professions } from "@repo/data/constants/professions";
-import AgePicker from "../components/AgePicker";
-import { EditableProfileType, ProfileType } from "@repo/data/types/user";
-import { defaultUserProfile } from "@repo/zod/validation/user";
-import { showToast } from "@repo/ui/components/ui/toaster";
-import CredentialsPage from "../features/user/components/CredentialsPage";
-import { useUpdateUserProfile } from "../features/user/hooks/useUpdateUserProfile";
-import { getErrorMessage } from "../../utils/getErrorMessage";
+import { Countries } from '@repo/data/constants/countries';
+import { Professions } from '@repo/data/constants/professions';
+import { EditableProfileType, ProfileType } from '@repo/data/types/user';
+import { Button } from '@repo/ui/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@repo/ui/components/ui/card';
+import { Input } from '@repo/ui/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@repo/ui/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
+import { Textarea } from '@repo/ui/components/ui/textarea';
+import { showToast } from '@repo/ui/components/ui/toaster';
+import { defaultUserProfile } from '@repo/zod/validation/user';
+import { Check, Loader, Pen } from 'lucide-react';
+
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import AgePicker from '../components/AgePicker';
+import CredentialsPage from '../features/user/components/CredentialsPage';
+import { useUserProfile } from '../features/user/hooks/use.user.profile';
+import { useUpdateUserProfile } from '../features/user/hooks/useUpdateUserProfile';
 
 export default function ProfileInfo() {
   const { userProfile, mutate } = useUserProfile();
   const { updateProfile } = useUpdateUserProfile();
 
-  const [activeTab, setActiveTab] = useState("personalInfo");
+  const [activeTab, setActiveTab] = useState('personalInfo');
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editableProfile, setEditableProfile] = useState<Partial<ProfileType>>({});
   const [isDirty, setIsDirty] = useState(false);
@@ -58,7 +65,13 @@ export default function ProfileInfo() {
     setIsSaving(true);
     try {
       // Only send fields that changed
-      const modifiedFields: EditableProfileType = Object.fromEntries(Object.entries(editableProfile).filter(([key, val]) => val !== (userProfile as Partial<ProfileType>)[key as keyof ProfileType] && val !== undefined)) as EditableProfileType;
+      const modifiedFields: EditableProfileType = Object.fromEntries(
+        Object.entries(editableProfile).filter(
+          ([key, val]) =>
+            val !== (userProfile as Partial<ProfileType>)[key as keyof ProfileType] &&
+            val !== undefined,
+        ),
+      ) as EditableProfileType;
 
       if (Object.keys(modifiedFields).length > 0) {
         const updatedProfile: ProfileType = {
@@ -70,15 +83,15 @@ export default function ProfileInfo() {
         await updateProfile(updatedProfile);
         // Revalidate SWR data
         await mutate();
-        showToast("Profile updated successfully!");
+        showToast('Profile updated successfully!');
         setIsDirty(false);
       } else {
-        showToast("No changes to save.");
+        showToast('No changes to save.');
       }
     } catch (err) {
       const errorMessage = getErrorMessage(err);
-      console.error("Error updating profile:", errorMessage);
-      showToast(`Failed to save changes: ${errorMessage}`, "error");
+      console.error('Error updating profile:', errorMessage);
+      showToast(`Failed to save changes: ${errorMessage}`, 'error');
     } finally {
       setIsSaving(false);
       setEditingField(null);
@@ -87,7 +100,7 @@ export default function ProfileInfo() {
 
   // Stop editing on Enter press (optional)
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       setEditingField(null);
     }
   };
@@ -96,17 +109,28 @@ export default function ProfileInfo() {
     <div className="container mx-auto p-2 sm:p-4 md:p-6">
       {/* Banner if profile is incomplete */}
 
-      <Card className="w-full max-w-4xl mx-auto bg-card text-card-foreground">
+      <Card className="bg-card text-card-foreground mx-auto w-full max-w-4xl">
         <CardHeader>
-          <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold">Edit Profile</CardTitle>
+          <CardTitle className="text-lg font-bold sm:text-xl md:text-2xl">Edit Profile</CardTitle>
         </CardHeader>
 
-        <Tabs defaultValue="personalInfo" value={activeTab} onValueChange={setActiveTab} className="mt-2 sm:mt-4">
-          <TabsList className="flex justify-start pl-2 sm:pl-4 md:pl-6 pb-1 sm:pb-2 space-x-2 sm:space-x-4 bg-transparent">
-            <TabsTrigger value="personalInfo" className={`sm:px-4 py-1 sm:py-2 whitespace-nowrap ${activeTab === "personalInfo" ? "border-b-2 border-primary bg-transparent" : "bg-transparent"}`}>
+        <Tabs
+          defaultValue="personalInfo"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="mt-2 sm:mt-4"
+        >
+          <TabsList className="flex justify-start space-x-2 bg-transparent pb-1 pl-2 sm:space-x-4 sm:pb-2 sm:pl-4 md:pl-6">
+            <TabsTrigger
+              value="personalInfo"
+              className={`whitespace-nowrap py-1 sm:px-4 sm:py-2 ${activeTab === 'personalInfo' ? 'border-primary border-b-2 bg-transparent' : 'bg-transparent'}`}
+            >
               Personal Info
             </TabsTrigger>
-            <TabsTrigger value="credentials" className={`px-2 sm:px-4 py-1 sm:py-2 whitespace-nowrap ${activeTab === "credentials" ? "border-b-2 border-primary bg-transparent" : "bg-transparent"}`}>
+            <TabsTrigger
+              value="credentials"
+              className={`whitespace-nowrap px-2 py-1 sm:px-4 sm:py-2 ${activeTab === 'credentials' ? 'border-primary border-b-2 bg-transparent' : 'bg-transparent'}`}
+            >
               Credentials
             </TabsTrigger>
           </TabsList>
@@ -116,57 +140,107 @@ export default function ProfileInfo() {
             <CardContent>
               <div className="space-y-4 sm:space-y-6">
                 {Object.entries(profileData).map(([key, value]) => {
-                  if (["profilePicture", "coverImage", "createdAt", "completedProfile", "email", "password", "friendlyId"].includes(key)) {
+                  if (
+                    [
+                      'profilePicture',
+                      'coverImage',
+                      'createdAt',
+                      'completedProfile',
+                      'email',
+                      'password',
+                      'friendlyId',
+                    ].includes(key)
+                  ) {
                     return null; // Skip these fields
                   }
 
                   return (
-                    <div key={key} className="relative flex flex-col bg-muted text-muted-foreground rounded-lg p-3 sm:p-4">
+                    <div
+                      key={key}
+                      className="bg-muted text-muted-foreground relative flex flex-col rounded-lg p-3 sm:p-4"
+                    >
                       <div className="w-full">
-                        <label className="block text-sm font-medium text-muted-foreground mb-1">{key === "age" ? "Age" : key.charAt(0).toUpperCase() + key.slice(1)}</label>
+                        <label className="text-muted-foreground mb-1 block text-sm font-medium">
+                          {key === 'age' ? 'Age' : key.charAt(0).toUpperCase() + key.slice(1)}
+                        </label>
 
                         {editingField === key ? (
                           // If editing, show input/textarea/select
-                          key === "bio" ? (
-                            <Textarea value={(value as string) || ""} onChange={(e) => handleChange(key as keyof ProfileType, e.target.value)} onKeyDown={handleKeyDown} className="mt-1 w-full bg-card text-card-foreground border border-border rounded-lg text-sm p-2 sm:p-3" />
-                          ) : key === "countryOrigin" || key === "profession" ? (
-                            <Select onValueChange={(val) => handleChange(key as keyof ProfileType, val)} value={(value as string) || ""}>
-                              <SelectTrigger className="w-full bg-card text-card-foreground text-sm p-2 sm:p-3">
-                                <SelectValue>{key === "countryOrigin" ? Countries.find((c) => c.value === value)?.label || "Select" : Professions.find((p) => p.value === value)?.label || "Select"}</SelectValue>
+                          key === 'bio' ? (
+                            <Textarea
+                              value={(value as string) || ''}
+                              onChange={(e) =>
+                                handleChange(key as keyof ProfileType, e.target.value)
+                              }
+                              onKeyDown={handleKeyDown}
+                              className="bg-card text-card-foreground border-border mt-1 w-full rounded-lg border p-2 text-sm sm:p-3"
+                            />
+                          ) : key === 'countryOrigin' || key === 'profession' ? (
+                            <Select
+                              onValueChange={(val) => handleChange(key as keyof ProfileType, val)}
+                              value={(value as string) || ''}
+                            >
+                              <SelectTrigger className="bg-card text-card-foreground w-full p-2 text-sm sm:p-3">
+                                <SelectValue>
+                                  {key === 'countryOrigin'
+                                    ? Countries.find((c) => c.value === value)?.label || 'Select'
+                                    : Professions.find((p) => p.value === value)?.label || 'Select'}
+                                </SelectValue>
                               </SelectTrigger>
 
-                              <SelectContent className="bg-card text-card-foreground max-h-60 overflow-y-auto z-50">
-                                {(key === "countryOrigin" ? Countries : Professions).map((item) => (
-                                  <SelectItem key={item.value} value={item.value} className="cursor-pointer hover:bg-muted hover:text-primary rounded px-2 py-1 pr-10">
+                              <SelectContent className="bg-card text-card-foreground z-50 max-h-60 overflow-y-auto">
+                                {(key === 'countryOrigin' ? Countries : Professions).map((item) => (
+                                  <SelectItem
+                                    key={item.value}
+                                    value={item.value}
+                                    className="hover:bg-muted hover:text-primary cursor-pointer rounded px-2 py-1 pr-10"
+                                  >
                                     {item.label}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
-                          ) : key === "age" ? (
-                            <AgePicker value={(value as number) || null} onChange={(age) => handleChange(key as keyof ProfileType, age)} />
+                          ) : key === 'age' ? (
+                            <AgePicker
+                              value={(value as number) || null}
+                              onChange={(age) => handleChange(key as keyof ProfileType, age)}
+                            />
                           ) : (
                             <Input
-                              value={(value as string | number) || ""}
-                              onChange={(e) => handleChange(key as keyof ProfileType, e.target.value)}
+                              value={(value as string | number) || ''}
+                              onChange={(e) =>
+                                handleChange(key as keyof ProfileType, e.target.value)
+                              }
                               onKeyDown={handleKeyDown}
-                              className="mt-1 w-full bg-card text-card-foreground border border-border rounded-lg text-sm p-2 sm:p-3"
+                              className="bg-card text-card-foreground border-border mt-1 w-full rounded-lg border p-2 text-sm sm:p-3"
                             />
                           )
                         ) : (
                           // If not editing, show plain text
-                          <p className="mt-1 text-sm">{key === "age" && value === 0 ? "" : value}</p>
+                          <p className="mt-1 text-sm">
+                            {key === 'age' && value === 0 ? '' : value}
+                          </p>
                         )}
                       </div>
 
                       {editingField !== key && (
-                        <Button variant="ghost" size="icon" onClick={() => handleEdit(key as keyof ProfileType)} className="absolute top-1 right-1 text-muted-foreground hover:text-foreground flex items-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(key as keyof ProfileType)}
+                          className="text-muted-foreground hover:text-foreground absolute right-1 top-1 flex items-center"
+                        >
                           <Pen className="h-3 w-3" />
                         </Button>
                       )}
 
                       {editingField === key && (
-                        <Button variant="ghost" size="icon" onClick={() => setEditingField(null)} className="absolute top-1 right-1 text-primary hover:text-primary-foreground flex items-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setEditingField(null)}
+                          className="text-primary hover:text-primary-foreground absolute right-1 top-1 flex items-center"
+                        >
                           <Check className="h-4 w-4" />
                         </Button>
                       )}
@@ -177,8 +251,12 @@ export default function ProfileInfo() {
             </CardContent>
             {isDirty && (
               <CardFooter className="mt-4">
-                <Button onClick={handleSave} className="bg-primary hover:bg-accent text-primary-foreground" disabled={isSaving}>
-                  {isSaving ? <Loader className="animate-spin h-5 w-5" /> : "Save Changes"}
+                <Button
+                  onClick={handleSave}
+                  className="bg-primary hover:bg-accent text-primary-foreground"
+                  disabled={isSaving}
+                >
+                  {isSaving ? <Loader className="h-5 w-5 animate-spin" /> : 'Save Changes'}
                 </Button>
               </CardFooter>
             )}

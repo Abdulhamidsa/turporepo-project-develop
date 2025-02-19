@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const fetchProjectWithUser = z.object({
   id: z.string(),
@@ -11,11 +11,11 @@ export const fetchProjectWithUser = z.object({
   user: z
     .object({
       username: z.string(),
-      profilePicture: z.string().nullable(), // Optional field
+      profilePicture: z.string().nullable(),
     })
     .nullable(),
-  createdAt: z.date(), // Accept Date objects
-  updatedAt: z.date(), // Accept Date objects
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export type fetchProjectWithUserType = z.infer<typeof fetchProjectWithUser>;

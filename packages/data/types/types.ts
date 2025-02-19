@@ -1,7 +1,7 @@
 export type ProjectType = {
   createdAt: string;
   updatedAt: string;
-  url?: string;
+  url?: string | undefined;
   id: string;
   media: {
     url: string;
@@ -20,6 +20,17 @@ export type MediaType = {
   _id: string;
 };
 
+export interface UserProfile {
+  bio?: string | null | undefined;
+  username?: string | null | undefined;
+  age?: number | null | undefined;
+  countryOrigin?: string | null | undefined;
+  profession?: string | null | undefined;
+  friendlyId?: string | undefined;
+  profilePicture?: string | null | undefined;
+  coverImage?: string | null | undefined;
+  completedProfile?: boolean | undefined;
+}
 export type AllProjectType = {
   _id: string;
   userId: string;
@@ -165,6 +176,7 @@ export type CommentType = {
     username: string;
     profilePicture: string | null;
     friendlyId: string;
+    profession: string | null;
   };
   text: string;
   createdAt?: string;
@@ -181,3 +193,21 @@ export interface PostType {
   comments: CommentType[];
   userId: UserType;
 }
+
+//
+export type AIChatProps = {
+  chatOpen: boolean;
+  chatStep: 'list-projects' | 'select-project' | 'choose-action' | 'finished';
+  chatMessages: { role: 'user' | 'ai'; text: string }[];
+  improvements?: { title: string; description: string }[];
+  monetization?: { title: string; description: string }[];
+  similarProjects?: { title: string; description: string }[];
+  audienceAnalysis?: { title: string; description: string }[];
+  loading: boolean;
+  projects: { title: string }[];
+  startChat: () => void;
+  selectProject: (project: string) => void;
+  sendMessage: (message: string) => void;
+  setChatOpen: (open: boolean) => void;
+  goBack: () => void;
+};

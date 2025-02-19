@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { Button } from "@repo/ui/components/ui/button";
+import { Button } from '@repo/ui/components/ui/button';
+import Link from 'next/link';
 
 export function Nav() {
   return (
-    <nav className="bg-background border-b sticky top-0 z-10">
+    <nav className="bg-background sticky top-0 z-10 border-b">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-16 items-center justify-between">
           <Link href="/" className="text-xl font-bold">
             <span className="text-primary">Portfolio</span>Showcase
           </Link>

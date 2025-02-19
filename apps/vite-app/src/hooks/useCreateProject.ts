@@ -1,13 +1,15 @@
-import { useState } from "react";
-import { addProjectSchema, AddProjectInput } from "@repo/zod/validation";
-import { request } from "../../api/request";
-import { getEndpoints } from "@repo/api/endpoints";
-import { showToast } from "@repo/ui/components/ui/toaster";
-import { ZodError } from "zod";
-import { useProjects } from "../features/projects/hooks/useProjects";
-import { useUserProjects } from "../features/user/hooks/useUserProjects";
-import { uploadToCloudinary } from "../../utils/CloudinaryConfige";
-import { getErrorMessage } from "../../utils/getErrorMessage";
+import { useState } from 'react';
+
+import { getEndpoints } from '@repo/api/endpoints';
+import { showToast } from '@repo/ui/components/ui/toaster';
+import { AddProjectInput, addProjectSchema } from '@repo/zod/validation';
+import { ZodError } from 'zod';
+
+import { request } from '../../api/request';
+import { uploadToCloudinary } from '../../utils/CloudinaryConfige';
+import { getErrorMessage } from '../../utils/getErrorMessage';
+import { useProjects } from '../features/projects/hooks/useProjects';
+import { useUserProjects } from '../features/user/hooks/useUserProjects';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 
@@ -17,18 +19,29 @@ export const useCreateProject = () => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<keyof AddProjectInput, string>>({
-    title: "",
-    description: "",
-    url: "",
-    thumbnail: "",
-    tags: "",
-    media: "",
+    title: '',
+    description: '',
+    url: '',
+    thumbnail: '',
+    tags: '',
+    media: '',
   });
 
-  const createProject = async (project: AddProjectInput, pendingThumbnail: File | null, pendingMedia: File[]): Promise<boolean> => {
+  const createProject = async (
+    project: AddProjectInput,
+    pendingThumbnail: File | null,
+    pendingMedia: File[],
+  ): Promise<boolean> => {
     if (loading) return false;
     setLoading(true);
-    setErrors({ title: "", description: "", url: "", thumbnail: "", tags: "", media: "" });
+    setErrors({
+      title: '',
+      description: '',
+      url: '',
+      thumbnail: '',
+      tags: '',
+      media: '',
+    });
 
     try {
       let thumbnailUrl = project.thumbnail;
@@ -53,9 +66,9 @@ export const useCreateProject = () => {
       const validatedProject = addProjectSchema.parse(finalProject);
 
       // Send request to backend
-      await request<AddProjectInput>("POST", ENDPOINTS.projects.create, validatedProject);
+      await request<AddProjectInput>('POST', ENDPOINTS.projects.create, validatedProject);
 
-      showToast("Project uploaded successfully!", "success");
+      showToast('Project uploaded successfully!', 'success');
       await refetchAllProjects();
       mutateProjects();
 
@@ -63,12 +76,12 @@ export const useCreateProject = () => {
     } catch (error) {
       if (error instanceof ZodError) {
         const fieldErrors: Record<keyof AddProjectInput, string> = {
-          title: "",
-          description: "",
-          url: "",
-          thumbnail: "",
-          tags: "",
-          media: "",
+          title: '',
+          description: '',
+          url: '',
+          thumbnail: '',
+          tags: '',
+          media: '',
         };
 
         error.errors.forEach((err) => {
@@ -77,9 +90,9 @@ export const useCreateProject = () => {
         });
 
         setErrors(fieldErrors);
-        showToast("Please fill all required fields correctly.", "error");
+        showToast('Please fill all required fields correctly.', 'error');
       } else {
-        showToast(getErrorMessage(error), "error");
+        showToast(getErrorMessage(error), 'error');
       }
 
       return false;

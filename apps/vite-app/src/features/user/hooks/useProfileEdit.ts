@@ -1,11 +1,13 @@
 // src/hooks/useProfileEdit.ts
+import { useState } from 'react';
 
-import { useState } from "react";
-import useSWR from "swr";
-import { request } from "../../../../api/request";
-import { swrFetcher } from "../../../../api/swrFetcher";
-import { getErrorMessage } from "../../../../utils/getErrorMessage";
-import { getEndpoints } from "@repo/api/endpoints";
+import { getEndpoints } from '@repo/api/endpoints';
+import useSWR from 'swr';
+
+import { request } from '../../../../api/request';
+import { swrFetcher } from '../../../../api/swrFetcher';
+import { getErrorMessage } from '../../../../utils/getErrorMessage';
+
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 // Define the UserProfile type based on your schema
 type UserProfile = {
@@ -32,16 +34,16 @@ export function useProfileEdit(friendlyId: string) {
     (url) => swrFetcher(url), // Use swrFetcher for data fetching
     {
       fallbackData: {
-        username: "",
+        username: '',
         age: 0,
-        bio: "",
-        friendlyId: "",
-        profilePicture: "",
-        coverImage: "",
-        country: "",
-        profession: "",
+        bio: '',
+        friendlyId: '',
+        profilePicture: '',
+        coverImage: '',
+        country: '',
+        profession: '',
       },
-    }
+    },
   );
 
   const [isSaving, setIsSaving] = useState(false);
@@ -56,12 +58,12 @@ export function useProfileEdit(friendlyId: string) {
     setSaveError(null);
     try {
       // Make PUT request to save profile
-      await request<UserProfile>("PUT", `${ENDPOINTS.profile.update}/${friendlyId}`, profileData);
+      await request<UserProfile>('PUT', `${ENDPOINTS.profile.update}/${friendlyId}`, profileData);
       await mutate(); // Revalidate the SWR cache
     } catch (err) {
       const errorMessage = getErrorMessage(err);
       setSaveError(errorMessage);
-      console.error("Error saving profile:", err);
+      console.error('Error saving profile:', err);
       throw err; // Optionally rethrow if you want to handle it further up
     } finally {
       setIsSaving(false);

@@ -1,5 +1,6 @@
-import React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from 'react';
+
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SidebarToggleProps {
   isOpen: boolean;
@@ -8,7 +9,10 @@ interface SidebarToggleProps {
 
 const SidebarToggle: React.FC<SidebarToggleProps> = ({ isOpen, toggleSidebar }) => {
   return (
-    <button onClick={toggleSidebar} className={`fixed bottom-4 ${isOpen ? "left-64" : "left-4"} bg-primary text-primary-foreground p-2 rounded-full shadow-lg z-50 transition-all duration-300 md:block hidden`}>
+    <button
+      onClick={toggleSidebar}
+      className={`fixed bottom-4 ${isOpen ? 'left-64' : 'left-4'} bg-primary text-primary-foreground z-50 hidden rounded-full p-2 shadow-lg transition-all duration-300 md:block`}
+    >
       {isOpen ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
     </button>
   );

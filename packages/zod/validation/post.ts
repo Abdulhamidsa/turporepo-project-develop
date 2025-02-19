@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // User schema for userId references
 export const userSchema = z.object({
@@ -6,6 +6,7 @@ export const userSchema = z.object({
   username: z.string(),
   profilePicture: z.string().nullable(),
   friendlyId: z.string(),
+  profession: z.string().nullable(),
 });
 
 // Comment schema
@@ -14,7 +15,7 @@ export const commentSchema = z.object({
   _id: z.string(), // Comment ID (required now, as backend always provides it)
   postId: z.string(), // Added postId to match backend
   userId: userSchema, // Reference to `userSchema`
-  text: z.string().min(1, "Comment text cannot be empty"), // Ensure text is required
+  text: z.string().min(1, 'Comment text cannot be empty'), // Ensure text is required
   createdAt: z.string().optional(), // Optional timestamp for when comment was created
   updatedAt: z.string().optional(), // Optional timestamp for updates
 });
@@ -23,11 +24,11 @@ export const commentSchema = z.object({
 
 export const postSchema = z.object({
   _id: z.string(), // Post ID
-  content: z.string().optional().default(""), // Optional content
+  content: z.string().optional().default(''), // Optional content
   image: z
-    .union([z.string().url(), z.literal(""), z.null()])
+    .union([z.string().url(), z.literal(''), z.null()])
     .optional()
-    .default(""), // Handle empty and null images
+    .default(''), // Handle empty and null images
   createdAt: z.string().optional(), // Optional creation timestamp
   updatedAt: z.string().optional(), // Optional updated timestamp
   likedByUser: z.boolean().optional().default(false), // Optional boolean
@@ -62,8 +63,8 @@ export const frontendCommentSchema = z.object({
 
 // Schema for adding a comment
 export const frontendAddCommentSchema = z.object({
-  postId: z.string().min(1, "Post ID is required"),
-  text: z.string().min(1, "Comment text cannot be empty"),
+  postId: z.string().min(1, 'Post ID is required'),
+  text: z.string().min(1, 'Comment text cannot be empty'),
 });
 
 // Types inferred from schemas
@@ -73,7 +74,7 @@ export type AddCommentInput = z.infer<typeof frontendAddCommentSchema>;
 export const UserPostSchema = z.object({
   _id: z.string(),
   content: z.string().nullable(),
-  image: z.union([z.string().url(), z.null()]).optional().default(""),
+  image: z.union([z.string().url(), z.null()]).optional().default(''),
   createdAt: z.string(),
   updatedAt: z.string(),
   userId: z.object({
@@ -93,7 +94,7 @@ export const UserPostSchema = z.object({
         }),
         text: z.string(),
         createdAt: z.string().optional(),
-      })
+      }),
     )
     .optional()
     .default([]),

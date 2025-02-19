@@ -1,4 +1,10 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@repo/ui/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@repo/ui/components/ui/select';
 
 interface AgePickerProps {
   value: number | null;
@@ -13,11 +19,15 @@ export default function AgePicker({ value, onChange }: AgePickerProps) {
   return (
     <Select onValueChange={(val) => onChange(parseInt(val, 10))}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder={value ? value.toString() : "Select Age"} />
+        <SelectValue placeholder={value ? value.toString() : 'Select Age'} />
       </SelectTrigger>
-      <SelectContent className="bg-card text-card-foreground max-h-60 overflow-y-auto z-50">
+      <SelectContent className="bg-card text-card-foreground z-50 max-h-60 overflow-y-auto">
         {ageOptions.map((age) => (
-          <SelectItem key={age} value={age.toString()} className="cursor-pointer hover:bg-muted hover:text-primary rounded px-2 py-1">
+          <SelectItem
+            key={age}
+            value={age.toString()}
+            className="hover:bg-muted hover:text-primary cursor-pointer rounded px-2 py-1"
+          >
             {age}
           </SelectItem>
         ))}

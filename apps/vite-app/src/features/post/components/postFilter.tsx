@@ -1,21 +1,22 @@
-import { Input } from "@repo/ui/components/ui/input";
-import { Select, SelectItem } from "@repo/ui/components/ui/select";
-import { Button } from "@repo/ui/components/ui/button";
-import { useState } from "react";
+import { useState } from 'react';
+
+import { Button } from '@repo/ui/components/ui/button';
+import { Input } from '@repo/ui/components/ui/input';
+import { Select, SelectItem } from '@repo/ui/components/ui/select';
 
 const professionOptions = [
-  { value: "all", label: "All Professions" },
-  { value: "Software Engineer", label: "Software Engineer" },
-  { value: "UI/UX Designer", label: "UI/UX Designer" },
-  { value: "Web Developer", label: "Web Developer" },
-  { value: "Product Designer", label: "Product Designer" },
-  { value: "DevOps Engineer", label: "DevOps Engineer" },
+  { value: 'all', label: 'All Professions' },
+  { value: 'Software Engineer', label: 'Software Engineer' },
+  { value: 'UI/UX Designer', label: 'UI/UX Designer' },
+  { value: 'Web Developer', label: 'Web Developer' },
+  { value: 'Product Designer', label: 'Product Designer' },
+  { value: 'DevOps Engineer', label: 'DevOps Engineer' },
 ];
 
 const sortOptions = [
-  { value: "all", label: "All" },
-  { value: "mostLiked", label: "Most Liked" },
-  { value: "newest", label: "Newest" },
+  { value: 'all', label: 'All' },
+  { value: 'mostLiked', label: 'Most Liked' },
+  { value: 'newest', label: 'Newest' },
 ];
 
 type FilterProps = {
@@ -23,19 +24,24 @@ type FilterProps = {
 };
 
 export const PostFilter = ({ onFilterChange }: FilterProps) => {
-  const [search, setSearch] = useState("");
-  const [profession, setProfession] = useState("all");
-  const [sortBy, setSortBy] = useState("all");
+  const [search, setSearch] = useState('');
+  const [profession, setProfession] = useState('all');
+  const [sortBy, setSortBy] = useState('all');
 
   const applyFilters = () => {
     onFilterChange({ search, profession, sortBy });
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center gap-4 bg-card p-4 rounded-lg shadow-md mb-6">
-      <Input placeholder="Search posts..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full md:w-1/3" />
+    <div className="bg-card mb-6 flex flex-col items-center gap-4 rounded-lg p-4 shadow-md md:flex-row">
+      <Input
+        placeholder="Search posts..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full md:w-1/3"
+      />
 
-      <Select value={profession} onValueChange={setProfession} className="w-full md:w-1/3">
+      <Select value={profession} onValueChange={setProfession}>
         {professionOptions.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}
@@ -43,7 +49,7 @@ export const PostFilter = ({ onFilterChange }: FilterProps) => {
         ))}
       </Select>
 
-      <Select value={sortBy} onValueChange={setSortBy} className="w-full md:w-1/3">
+      <Select value={sortBy} onValueChange={setSortBy}>
         {sortOptions.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}

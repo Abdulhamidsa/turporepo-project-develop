@@ -4,7 +4,8 @@ export const getEndpoints = (baseUrl: string) => ({
     like: `${baseUrl}/post/like`,
     addComment: `${baseUrl}/post/comment`,
     post: `${baseUrl}/post`,
-    deleteComment: (postId: string, commentId: string) => `${baseUrl}/post/comment/${postId}/${commentId}`,
+    deleteComment: (postId: string, commentId: string) =>
+      `${baseUrl}/post/comment/${postId}/${commentId}`,
     fetchUserPosts: (friendlyId: string) => `/user/${friendlyId}/posts`,
     deletePost: (postId: string) => `${baseUrl}/post/${postId}`,
   },
@@ -19,11 +20,12 @@ export const getEndpoints = (baseUrl: string) => ({
     update: `${baseUrl}/profile`,
   },
   projects: {
-    fetchByFriendlyId: (friendlyId: string) => `${baseUrl}/projects/user/${friendlyId}`, // Added endpoint
+    fetchByFriendlyId: (friendlyId: string) => `${baseUrl}/projects/user/${friendlyId}`,
     fetchUserProjects: `${baseUrl}/projects/user`,
     delete: `${baseUrl}/project`,
     create: `${baseUrl}/project`,
     fetchAll: `${baseUrl}/projects`,
+    projectAi: `${baseUrl}/ai/generate`,
   },
   auth: {
     signin: `${baseUrl}/auth/signin`,

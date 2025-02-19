@@ -11,7 +11,8 @@
     "build": "pnpm clean && turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "check-format": "prettier --check ."
   },
   "dependencies": {
     "rimraf": "^6.0.1",
@@ -20,8 +21,10 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript": "workspace:*",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "turbo": "^2.3.3",
     "typescript": "catalog:typescript"
   },

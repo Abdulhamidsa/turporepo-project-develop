@@ -1,7 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@repo/ui/components/ui/button";
-import { NavigationItemProps } from "./Sidebar";
+import React from 'react';
+
+import { Button } from '@repo/ui/components/ui/button';
+import { Link } from 'react-router-dom';
+
+import { NavigationItemProps } from './Sidebar';
 
 interface NavigationItemComponentProps {
   item: NavigationItemProps;
@@ -10,9 +12,17 @@ interface NavigationItemComponentProps {
   onClick?: () => void;
 }
 
-const NavigationItem: React.FC<NavigationItemComponentProps> = ({ item, isActive, showText, onClick }) => {
-  const baseClasses = "flex items-center px-5 py-3 text-sm font-medium rounded-lg transition-colors";
-  const activeClasses = isActive ? " text-accent bg-muted/50" : "text-muted-foreground hover:bg-muted/50";
+const NavigationItem: React.FC<NavigationItemComponentProps> = ({
+  item,
+  isActive,
+  showText,
+  onClick,
+}) => {
+  const baseClasses =
+    'flex items-center px-5 py-3 text-sm font-medium rounded-lg transition-colors';
+  const activeClasses = isActive
+    ? ' text-accent bg-muted/50'
+    : 'text-muted-foreground hover:bg-muted/50';
 
   const handleClick = () => {
     if (item.action) {
@@ -26,8 +36,8 @@ const NavigationItem: React.FC<NavigationItemComponentProps> = ({ item, isActive
   if (item.link) {
     return (
       <Link to={item.link} className={`${baseClasses} ${activeClasses}`} onClick={handleClick}>
-        <item.icon className={`h-7 w-7 ${isActive ? "text-accent" : "text-muted-foreground"}`} />
-        {showText && <span className="ml-4 text-primary-foreground ">{item.name}</span>}
+        <item.icon className={`h-7 w-7 ${isActive ? 'text-accent' : 'text-muted-foreground'}`} />
+        {showText && <span className="text-primary-foreground ml-4">{item.name}</span>}
       </Link>
     );
   }

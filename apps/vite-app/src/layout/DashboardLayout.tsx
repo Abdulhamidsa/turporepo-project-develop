@@ -1,34 +1,38 @@
-import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
-import SidebarToggle from "../components/SidebarToggle";
-import Overlay from "../components/OverlayComponent";
-import BottomNavigation from "../components/BottomNavigation";
-import { Briefcase, Home, Settings, User } from "lucide-react";
-import { useUserProfile } from "../features/user/hooks/use.user.profile";
-import { routesConfig } from "../../routes/routesConfig";
-import { NavbarApp } from "./NavbarApp";
+import React, { useEffect, useState } from 'react';
+
+import { Briefcase, Home, Settings, User } from 'lucide-react';
+import { Outlet } from 'react-router-dom';
+
+import { routesConfig } from '../../routes/routesConfig';
+import BottomNavigation from '../components/BottomNavigation';
+import Overlay from '../components/OverlayComponent';
+import Sidebar from '../components/Sidebar';
+import SidebarToggle from '../components/SidebarToggle';
+import { useUserProfile } from '../features/user/hooks/use.user.profile';
+import { NavbarApp } from './NavbarApp';
 
 const DashboardLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { userProfile } = useUserProfile();
 
   const navigationItems = [
-    { name: "Home", icon: Home, link: routesConfig.home },
+    { name: 'Home', icon: Home, link: routesConfig.home },
     {
-      name: "My Portfolio",
+      name: 'My Portfolio',
       icon: Briefcase,
-      link: userProfile?.username ? routesConfig.userPortfolio(userProfile.username) : routesConfig.home,
+      link: userProfile?.username
+        ? routesConfig.userPortfolio(userProfile.username)
+        : routesConfig.home,
     },
     {
-      name: "Profile",
+      name: 'Profile',
       icon: User,
       link: routesConfig.profile,
       attention: userProfile && !userProfile.completedProfile, // Check if profile needs attention
     },
   ];
 
-  const sidebarOnlyItems = [{ name: "Settings", icon: Settings, link: routesConfig.settings }];
+  const sidebarOnlyItems = [{ name: 'Settings', icon: Settings, link: routesConfig.settings }];
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,8 +41,8 @@ const DashboardLayout: React.FC = () => {
       }
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const toggleSidebar = () => {
@@ -46,12 +50,17 @@ const DashboardLayout: React.FC = () => {
   };
 
   return (
-    <div className="relative h-screen bg-background text-foreground overflow-y-scroll">
+    <div className="bg-background text-foreground relative h-screen overflow-y-scroll">
       <NavbarApp />
       <SidebarToggle isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={isSidebarOpen} navigationItems={navigationItems} sidebarOnlyItems={sidebarOnlyItems} onClose={toggleSidebar} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        navigationItems={navigationItems}
+        sidebarOnlyItems={sidebarOnlyItems}
+        onClose={toggleSidebar}
+      />
       <Overlay isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
-      <main className="flex-1 max-w-screen-lg m-auto p-4 md:p-8 overflow-auto">
+      <main className="m-auto max-w-screen-lg flex-1 overflow-auto p-4 md:p-8">
         <Outlet />
       </main>
       <footer className="mb-16">

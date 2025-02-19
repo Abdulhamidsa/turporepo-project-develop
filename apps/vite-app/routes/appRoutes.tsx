@@ -1,14 +1,15 @@
-import { RouteObject } from "react-router-dom";
-import ProfilePage from "../src/pages/[username]/manage";
-import ProfileView from "../src/pages/[username]/view";
-import ProfileInfo from "../src/pages/profileInfo";
-import DashboardLayout from "../src/layout/DashboardLayout";
-import Settings from "../src/pages/settings";
-import { ProtectedRoute } from "./protectedRoutes";
-import NotFound from "@repo/ui/components/NotFound";
-import { AuthOrRedirect } from "../utils/AuthRedirect";
-import Feed from "../src/pages/feed";
-import { routesConfig } from "./routesConfig";
+import NotFound from '@repo/ui/components/NotFound';
+import { RouteObject } from 'react-router-dom';
+
+import DashboardLayout from '../src/layout/DashboardLayout';
+import ProfilePage from '../src/pages/[username]/manage';
+import ProfileView from '../src/pages/[username]/view';
+import Feed from '../src/pages/feed';
+import ProfileInfo from '../src/pages/profileInfo';
+import Settings from '../src/pages/settings';
+import { AuthOrRedirect } from '../utils/AuthRedirect';
+import { ProtectedRoute } from './protectedRoutes';
+import { routesConfig } from './routesConfig';
 
 export const appRoutes: RouteObject[] = [
   {
@@ -31,11 +32,11 @@ export const appRoutes: RouteObject[] = [
         element: <Feed />,
       },
       {
-        path: routesConfig.userPortfolio(":friendlyId"),
+        path: routesConfig.userPortfolio(':friendlyId'),
         element: <ProfilePage />,
       },
       {
-        path: routesConfig.userPortfolioView(":friendlyId"),
+        path: routesConfig.userPortfolioView(':friendlyId'),
         element: <ProfileView />,
       },
       {
@@ -49,7 +50,7 @@ export const appRoutes: RouteObject[] = [
     ],
   },
   {
-    path: "*", // Catch-all 404 for unknown routes
+    path: '*', // Catch-all 404 for unknown routes
     element: <NotFound />,
   },
 ];

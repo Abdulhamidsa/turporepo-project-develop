@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 
 const Loading: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
+    <div className="bg-background text-foreground flex min-h-screen items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         {/* Spinner */}
-        <div className="relative w-16 h-16 animate-spin">
+        <div className="relative h-16 w-16 animate-spin">
           <div
-            className="absolute inset-0 w-full h-full rounded-full border-[3px] border-t-primary border-r-secondary border-b-accent border-l-muted"
+            className="border-t-primary border-r-secondary border-b-accent border-l-muted absolute inset-0 h-full w-full rounded-full border-[3px]"
             style={{
-              borderRadius: "var(--radius)",
+              borderRadius: 'var(--radius)',
             }}
           ></div>
         </div>

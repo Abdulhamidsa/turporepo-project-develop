@@ -1,5 +1,4 @@
 // import imageCompression from "browser-image-compression";
-
 // /**
 //  * Compress an image using browser-image-compression.
 //  *
@@ -14,7 +13,6 @@
 //   };
 //   return await imageCompression(file, options);
 // };
-
 // /**
 //  * Upload images to Cloudinary.
 //  *
@@ -28,25 +26,20 @@
 //       const formData = new FormData();
 //       formData.append("file", compressedFile);
 //       formData.append("upload_preset", "portfoliohub");
-
 //       const response = await fetch("https://api.cloudinary.com/v1_1/dtaceicn1/image/upload", {
 //         method: "POST",
 //         body: formData,
 //       });
-
 //       if (!response.ok) {
 //         throw new Error("File upload failed");
 //       }
-
 //       const data = await response.json();
 //       return data.secure_url;
 //     })
 //   );
 // };
-
 // imageUtils.ts
-
-import imageCompression from "browser-image-compression";
+import imageCompression from 'browser-image-compression';
 
 /**
  * Compress an image using browser-image-compression.
@@ -79,22 +72,22 @@ export const uploadToCloudinary = async (files: File[]): Promise<string[]> => {
       const compressedFile = await compressImage(file);
 
       const formData = new FormData();
-      formData.append("file", compressedFile);
-      formData.append("upload_preset", "portfoliohub");
+      formData.append('file', compressedFile);
+      formData.append('upload_preset', 'portfoliohub');
       // ^ Make sure you have this preset configured in your Cloudinary dashboard
 
       // Potentially wrap in try/catch for more granular error handling
-      const response = await fetch("https://api.cloudinary.com/v1_1/dtaceicn1/image/upload", {
-        method: "POST",
+      const response = await fetch('https://api.cloudinary.com/v1_1/dtaceicn1/image/upload', {
+        method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error("File upload failed");
+        throw new Error('File upload failed');
       }
 
       const data = await response.json();
       return data.secure_url;
-    })
+    }),
   );
 };
