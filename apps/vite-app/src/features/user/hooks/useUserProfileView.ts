@@ -14,9 +14,6 @@ export const useUserProfileView = () => {
   const { data, error, isLoading, mutate } = useSWR(
     friendlyId ? ENDPOINTS.users.fetchUserPublicProfile(friendlyId) : null,
     (endpoint) => swrFetcher(endpoint, userProfileSchema, defaultUserProfile),
-    {
-      revalidateOnFocus: true, // Avoid re-fetching on focus
-    },
   );
 
   return {

@@ -5,11 +5,7 @@ import { uploadToCloudinary } from '../../utils/CloudinaryConfige';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export function useImageUpload() {
-  const {
-    data: uploadState,
-    isLoading,
-    isValidating,
-  } = useSWR('uploadState', null, { revalidateOnFocus: false });
+  const { data: uploadState, isLoading, isValidating } = useSWR('uploadState', null);
 
   const uploadImages = async (files: File[]) => {
     try {

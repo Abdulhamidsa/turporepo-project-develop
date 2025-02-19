@@ -17,9 +17,6 @@ export const useFetchPosts = () => {
   }>(
     (pageIndex) => `${ENDPOINTS.posts.fetch}?limit=${limit}&page=${pageIndex + 1}`,
     (url) => swrFetcher(url),
-    {
-      revalidateOnFocus: false,
-    },
   );
 
   // Ensure posts are appended rather than sorted and re-ordered

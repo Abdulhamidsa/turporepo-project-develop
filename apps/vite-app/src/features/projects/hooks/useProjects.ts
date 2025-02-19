@@ -40,8 +40,7 @@ export const useProjects = (initialLimit = 5) => {
     (pageIndex) => `${ENDPOINTS.projects.fetchAll}?limit=${limit}&page=${pageIndex + 1}`,
     swrFetcher,
     {
-      revalidateOnFocus: false, // Prevents refetching on window focus
-      persistSize: true, // Keeps track of previously loaded pages
+      persistSize: true,
     },
   );
 
