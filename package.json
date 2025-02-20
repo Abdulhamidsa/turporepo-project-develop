@@ -21,11 +21,11 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript": "workspace:*",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "turbo": "^2.3.3",
+    "turbo": "^2.4.2",
     "typescript": "catalog:typescript"
   },
   "packageManager": "pnpm@9.12.0"
