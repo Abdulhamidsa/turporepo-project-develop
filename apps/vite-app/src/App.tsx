@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useRoutes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -13,7 +12,7 @@ function App() {
     <SWRConfig
       value={{
         fetcher: swrFetcher,
-        revalidateOnFocus: false, // Stops refetching when switching tabs (MONEY SAVER 💰)
+        revalidateOnFocus: true, // Stops refetching when switching tabs (MONEY SAVER 💰)
         revalidateOnReconnect: false, // Stops refetching when internet reconnects
         refreshInterval: 0, // No auto-refreshing (manual fetch only)
         dedupingInterval: 60000, // Cache data for 1 min (adjust if needed)
