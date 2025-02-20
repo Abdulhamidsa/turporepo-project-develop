@@ -39,25 +39,9 @@ async function handleApiRequest(url: string, options?: RequestInit) {
 /**
  * OLD FUNCTION (WITH SEARCH) - COMMENTED OUT
  */
-// export async function getProjects(page = 1, limit = 12, search = '') {
-//   try {
-//     const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
-//     const response = await handleApiRequest(url, { next: { revalidate: 3600 }, cache: 'no-store' });
-//     const projects = response.data.projects || [];
-//     const totalPages = Math.ceil(response.data.pagination.total / limit);
-//     return { projects, totalPages };
-//   } catch (error) {
-//     console.error('Error fetching projects:', error);
-//     return { projects: [], totalPages: 1 };
-//   }
-// }
-
-/**
- * NEW FUNCTION (WITHOUT SEARCH)
- */
-export async function getProjects(page = 1, limit = 12) {
+export async function getProjects(page = 1, limit = 12, search = '') {
   try {
-    const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}`;
+    const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
     const response = await handleApiRequest(url, { next: { revalidate: 3600 }, cache: 'no-store' });
     const projects = response.data.projects || [];
     const totalPages = Math.ceil(response.data.pagination.total / limit);
@@ -69,28 +53,27 @@ export async function getProjects(page = 1, limit = 12) {
 }
 
 /**
- * OLD FUNCTION (WITH SEARCH) - COMMENTED OUT
+ * NEW FUNCTION (WITHOUT SEARCH)
  */
-// export async function getUsers(page = 1, limit = 12, search = '') {
+// export async function getProjects(page = 1, limit = 12) {
 //   try {
-//     const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
-//     const response = await handleApiRequest(url);
-//     const filteredUsers = (response.data?.users || []).filter(
-//       (user: UserProfile) => user.completedProfile,
-//     );
-//     return { users: filteredUsers, total: filteredUsers.length };
+//     const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}`;
+//     const response = await handleApiRequest(url, { next: { revalidate: 3600 }, cache: 'no-store' });
+//     const projects = response.data.projects || [];
+//     const totalPages = Math.ceil(response.data.pagination.total / limit);
+//     return { projects, totalPages };
 //   } catch (error) {
-//     console.error('Error fetching users:', error);
-//     return { users: [], total: 0 };
+//     console.error('Error fetching projects:', error);
+//     return { projects: [], totalPages: 1 };
 //   }
 // }
 
 /**
- * NEW FUNCTION (WITHOUT SEARCH)
+ * OLD FUNCTION (WITH SEARCH) - COMMENTED OUT
  */
-export async function getUsers(page = 1, limit = 12) {
+export async function getUsers(page = 1, limit = 12, search = '') {
   try {
-    const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}`;
+    const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
     const response = await handleApiRequest(url);
     const filteredUsers = (response.data?.users || []).filter(
       (user: UserProfile) => user.completedProfile,
@@ -101,6 +84,23 @@ export async function getUsers(page = 1, limit = 12) {
     return { users: [], total: 0 };
   }
 }
+
+/**
+ * NEW FUNCTION (WITHOUT SEARCH)
+ */
+// export async function getUsers(page = 1, limit = 12) {
+//   try {
+//     const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}`;
+//     const response = await handleApiRequest(url);
+//     const filteredUsers = (response.data?.users || []).filter(
+//       (user: UserProfile) => user.completedProfile,
+//     );
+//     return { users: filteredUsers, total: filteredUsers.length };
+//   } catch (error) {
+//     console.error('Error fetching users:', error);
+//     return { users: [], total: 0 };
+//   }
+// }
 
 export async function getUserProfile(friendlyId: string) {
   try {

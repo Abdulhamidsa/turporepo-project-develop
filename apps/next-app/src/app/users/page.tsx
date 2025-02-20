@@ -1,17 +1,29 @@
 /* eslint-disable import/order */
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
+import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { getUsers } from '../../lib/api';
 import type { User } from '../../types';
 
 export const dynamic = 'force-dynamic';
 
-export default async function UsersPage() {
-  // ✅ Get users WITHOUT any search parameters
-  const { users } = await getUsers(1, 20);
-  // const totalPages = Math.ceil(total / 20);
+export default async function UsersPage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+  const resolvedSearchParams = await searchParams;
+
+  const page = Number.parseInt((resolvedSearchParams?.page as string) || '1', 10);
+  if (!searchParams?.page) {
+    redirect(`/users?page=1`);
+  }
+  const { users, total } = await getUsers(page, 20);
+  const totalPages = Math.ceil(total / 20);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="mb-8 text-center text-3xl font-bold">Discover Professionals</h1>
@@ -44,7 +56,7 @@ export default async function UsersPage() {
         ))}
       </div>
       <div className="mt-12 flex justify-center space-x-4">
-        {/* {page > 1 && (
+        {page > 1 && (
           <Link href={`/users?page=${page - 1}`}>
             <Button variant="outline">Previous</Button>
           </Link>
@@ -53,9 +65,11 @@ export default async function UsersPage() {
           <Link href={`/users?page=${page + 1}`}>
             <Button variant="outline">Next</Button>
           </Link>
-        )} */}
+        )}
       </div>
-      <p className="text-muted-foreground mt-4 text-center">{/* Page {page} of {totalPages} */}</p>
+      <p className="text-muted-foreground mt-4 text-center">
+        Page {page} of {totalPages}
+      </p>
     </div>
   );
 }
