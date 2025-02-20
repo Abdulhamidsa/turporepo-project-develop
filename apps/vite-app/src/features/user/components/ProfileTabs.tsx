@@ -1,18 +1,19 @@
-// ProfileTabs.tsx
 import { useEffect, useRef, useState } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
 import { FetchedProjectType } from '@repo/zod/validation';
+import { UserProfile } from '@repo/zod/validation/user';
 import { Plus } from 'lucide-react';
-    
+
 import UserPosts from '../../post/components/UserPosts';
 import ProjectCard from '../../projects/components/ProjectCard';
 import ProjectModal from '../../projects/components/ProjectModal';
 import AddProjectModal from '../../projects/components/addProjectModal';
 
 interface ProfileTabsProps {
-  userProfile: any; // Replace with your actual type if you have one
-  projects: any[]; // Replace with the proper type for projects
+  userProfile: UserProfile;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  projects: any[];
 }
 
 const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
@@ -36,11 +37,23 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
       <div ref={tabsContentRef}>
         <Tabs defaultValue="posts" className="mt-8">
           <TabsList className="bg-muted border-border grid w-full grid-cols-2 overflow-hidden rounded-lg border">
-            <TabsTrigger value="posts">Posts</TabsTrigger>
-            <TabsTrigger value="projects">Projects</TabsTrigger>
+            <TabsTrigger
+              value="posts"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-red-500"
+            >
+              Posts
+            </TabsTrigger>
+            <TabsTrigger
+              value="projects"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-red-500"
+            >
+              Projects
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="posts" className="mt-6">
-            <UserPosts friendlyId={userProfile.friendlyId ?? ''} />
+            <div className="">
+              <UserPosts friendlyId={userProfile.friendlyId ?? ''} />
+            </div>
           </TabsContent>
           <TabsContent value="projects" className="mt-6">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -58,15 +71,8 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
                 <ProjectCard
                   key={project.id}
                   project={{
-                    id: project.id,
-                    title: project.title,
-                    description: project.description,
+                    ...project,
                     url: project.url ?? '',
-                    thumbnail: project.thumbnail,
-                    tags: project.tags,
-                    media: project.media,
-                    createdAt: project.createdAt,
-                    updatedAt: project.updatedAt,
                   }}
                   onClick={() => setSelectedProject(project)}
                   friendlyId={userProfile.friendlyId ?? ''}

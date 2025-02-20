@@ -1,49 +1,15 @@
+import { UserProfile } from '@repo/data/types/types';
 import { motion } from 'framer-motion';
-import {
-  AlertCircle,
-  Briefcase,
-  CakeIcon,
-  CheckCircle,
-  LucideHome,
-  TriangleAlert,
-} from 'lucide-react';
+import { Briefcase, CakeIcon, LucideHome } from 'lucide-react';
 
 import { getCountryFlagIcon } from '../../../../utils/generateCountryFlag';
 import ProfilePictureEdit from './ProfilePicture';
 
 interface ProfileDetailsProps {
-  userProfile: any; // Replace 'any' with a proper user profile type if available.
-  onIncompleteProfileClick: () => void;
+  userProfile: UserProfile;
 }
 
-const getProfileStatus = (userProfile: any) => {
-  const missingFields = [
-    !userProfile.username,
-    !userProfile.profession,
-    !userProfile.countryOrigin,
-    !userProfile.age,
-    !userProfile.bio,
-    !userProfile.profilePicture,
-  ].filter(Boolean).length;
-
-  if (missingFields === 0) {
-    return { status: 'Active', color: 'text-green-500', icon: <CheckCircle className="h-8 w-8" /> };
-  }
-
-  if (missingFields <= 2) {
-    return {
-      status: 'Inactive',
-      color: 'text-yellow-500',
-      icon: <TriangleAlert className="h-8 w-8" />,
-    };
-  }
-
-  return { status: 'Incomplete', color: 'text-red-500', icon: <AlertCircle className="h-8 w-8" /> };
-};
-
-const ProfileDetails = ({ userProfile, onIncompleteProfileClick }: ProfileDetailsProps) => {
-  const { status, color, icon } = getProfileStatus(userProfile);
-
+const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -59,13 +25,6 @@ const ProfileDetails = ({ userProfile, onIncompleteProfileClick }: ProfileDetail
 
         {/* Main Content */}
         <div className="flex-1 text-center sm:text-left">
-          <div className="absolute right-6 top-4 flex items-center space-x-2">
-            <span className={`${color} font-bold`}>{status}</span>
-            <div className={`${color} cursor-pointer`} onClick={onIncompleteProfileClick}>
-              {icon}
-            </div>
-          </div>
-
           <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{userProfile.username}</h1>
           <p className="text-muted-foreground text-lg sm:text-xl">@{userProfile.friendlyId}</p>
 

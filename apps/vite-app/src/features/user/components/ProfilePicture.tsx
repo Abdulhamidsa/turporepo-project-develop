@@ -80,10 +80,10 @@ export default function ProfilePictureEdit({ label, field }: ProfilePictureEditP
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
-            className="bg-primary text-primary-foreground hover:bg-primary-hover absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full shadow-lg"
+            className="bg-primary text-primary-foreground hover:bg-primary-hover absolute bottom-0 right-0 mb-2 mr-2 flex h-10 w-10 items-center justify-center rounded-full shadow-lg md:h-12 md:w-12"
             disabled={isUploading}
           >
-            <Camera className="h-6 w-6" />
+            <Camera className="h-5 w-5 md:h-6 md:w-6" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-card text-card-foreground w-36 rounded-lg shadow-lg">
