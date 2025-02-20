@@ -27,7 +27,7 @@ const isProfileComplete = (userProfile: UserProfile) => {
 };
 
 export function NavbarApp() {
-  const { signOut } = useAuth();
+  const { signOut, loggedUser } = useAuth();
   const navigate = useNavigate();
   const { userProfile } = useUserProfile();
 
@@ -93,13 +93,13 @@ export function NavbarApp() {
                 className="hover:bg-muted border-border flex h-12 w-12 items-center space-x-2 rounded-full border p-2 transition focus-visible:ring"
               >
                 <Avatar>
-                  {userProfile.profilePicture ? (
+                  {loggedUser && loggedUser.profilePicture ? (
                     <AvatarImage
-                      src={userProfile.profilePicture}
-                      alt={userProfile.username || 'User avatar'}
+                      src={loggedUser.profilePicture}
+                      alt={loggedUser.username || 'User avatar'}
                     />
                   ) : (
-                    <AvatarFallback>{userProfile.username?.charAt(0) || 'U'}</AvatarFallback>
+                    <AvatarFallback>{loggedUser?.username?.charAt(0) || 'U'}</AvatarFallback>
                   )}
                 </Avatar>
               </Button>
