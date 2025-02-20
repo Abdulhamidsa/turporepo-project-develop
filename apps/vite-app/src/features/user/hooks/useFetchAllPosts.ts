@@ -8,25 +8,30 @@ import { request } from '../../../../api/request';
 import { swrFetcher } from '../../../../api/swrFetcher';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
-export const useFetchPosts = () => {
+export const useFetchPosts = (userId?: string) => {
   const [limit] = useState(5);
   const { data, error, size, setSize, mutate, isValidating } = useSWRInfinite<{
     posts: PostType[];
     totalPages: number;
     currentPage: number;
   }>(
-    (pageIndex) => `${ENDPOINTS.posts.fetch}?limit=${limit}&page=${pageIndex + 1}`,
+    (pageIndex) => {
+      if (!userId) return null; // Prevent fetching if no user
+      return `${ENDPOINTS.posts.fetch}?limit=${limit}&page=${pageIndex + 1}`;
+    },
     (url) => swrFetcher(url),
+    {
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
+    },
   );
 
-  // Ensure posts are appended rather than sorted and re-ordered
   const posts = data ? data.reduce((acc, page) => [...acc, ...page.posts], [] as PostType[]) : [];
 
   const totalPages = data?.[0]?.totalPages ?? 0;
 
   const toggleLike = async (postId: string) => {
     try {
-      // Optimistic update
       mutate(
         (currentData) =>
           currentData
@@ -45,17 +50,16 @@ export const useFetchPosts = () => {
                 ),
               }))
             : currentData,
-        false,
+        false, // Optimistic update, don't re-fetch yet
       );
 
-      // Make the API request to toggle like
-      await request('POST', ENDPOINTS.posts.like, {
-        postId,
-      });
+      await request('POST', ENDPOINTS.posts.like, { postId });
 
-      mutate();
+      // 🚀 Revalidate to fetch fresh data
+      mutate(undefined, { revalidate: true });
     } catch (error) {
       console.error('Error toggling like:', error);
+      mutate(); // Rollback in case of failure
     }
   };
 

@@ -1,10 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 
+import { useAuth } from '../../user/hooks/use.auth';
 import { useFetchPosts } from '../../user/hooks/useFetchAllPosts';
 import { PostFeed } from './PostFeed';
 
 const PostList: React.FC = () => {
-  const { posts, isLoading, error, loadMore, isReachingEnd, isValidating } = useFetchPosts();
+  const { loggedUser } = useAuth();
+  const friendlyId = loggedUser?.friendlyId;
+  const { posts, isLoading, error, loadMore, isReachingEnd, isValidating } =
+    useFetchPosts(friendlyId);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
