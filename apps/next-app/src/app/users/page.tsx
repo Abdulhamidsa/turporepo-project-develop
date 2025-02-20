@@ -15,7 +15,7 @@ export default async function UsersPage({
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const resolvedSearchParams = await searchParams;
+  const resolvedSearchParams = searchParams;
 
   const page = Number.parseInt((resolvedSearchParams?.page as string) || '1', 10);
   if (!searchParams?.page) {
