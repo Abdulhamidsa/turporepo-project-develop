@@ -42,7 +42,7 @@ async function handleApiRequest(url: string, options?: RequestInit) {
 export async function getProjects(page = 1, limit = 12, search = '') {
   try {
     const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
-    const response = await handleApiRequest(url, { next: { revalidate: 3600 }, cache: 'no-store' });
+    const response = await handleApiRequest(url, { next: { revalidate: 300 }, cache: 'no-store' });
     const projects = response.data.projects || [];
     const totalPages = Math.ceil(response.data.pagination.total / limit);
     return { projects, totalPages };
@@ -141,7 +141,7 @@ export async function getUserProject(friendlyId: string): Promise<GetUserProject
   try {
     const url = ENDPOINTS.projects.fetchByFriendlyId(friendlyId);
     const response: GetUserProjectResponse = await handleApiRequest(url, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     });
 
     if (!response.success) {
