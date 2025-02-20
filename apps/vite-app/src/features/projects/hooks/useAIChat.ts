@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+import { getEndpoints } from '@repo/api/endpoints';
 
 export type ChatStep = 'list-projects' | 'select-project' | 'choose-action' | 'finished';
 
@@ -6,7 +8,7 @@ export type ChatMessage = {
   role: 'user' | 'ai';
   text: string;
 };
-
+const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 export type ResultItem = { title: string; description: string };
 
 export type ActionOption =
@@ -116,11 +118,8 @@ export const useAIChat = () => {
     if (isRefresh && lastAction) {
       payload.lastMode = lastAction;
     }
-
-    console.log('🚀 Sending request payload:', payload); // Debugging log
-
     try {
-      const response = await fetch('http://localhost:4000/api/ai/generate', {
+      const response = await fetch(ENDPOINTS.projects.projectAi, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -128,8 +127,6 @@ export const useAIChat = () => {
       });
 
       const resData: ApiResponse = await response.json();
-      console.log('📌 AI Response:', resData);
-
       if (resData.success) {
         setChatStep(resData.step);
         const aiResponseText =
@@ -139,7 +136,7 @@ export const useAIChat = () => {
             : `No new results for **${selectedProject}**.`);
 
         setChatMessages((prev) => [...prev, { role: 'ai', text: aiResponseText }]);
-        setData(resData.data || []); // Update with fresh results
+        setData(resData.data || []);
       } else {
         setChatMessages((prev) => [
           ...prev,
@@ -161,9 +158,9 @@ export const useAIChat = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('📌 Updated Data:', data);
-  }, [data]);
+  //   useEffect(() => {
+  //     console.log('📌 Updated Data:', data);
+  //   }, [data]);
 
   return {
     chatOpen,

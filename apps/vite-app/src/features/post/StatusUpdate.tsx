@@ -17,9 +17,8 @@ export default function StatusUpdate() {
 
   const handlePost = () => {
     if (status.trim()) {
-      alert(`Posting status: ${status}`);
-      setStatus(''); // Reset input
-      setIsDialogOpen(false); // Close modal
+      setStatus('');
+      setIsDialogOpen(false);
     }
   };
 
