@@ -5,9 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avat
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { timeAgo } from '@repo/utils/timeCalculation';
 import { UserPostType } from '@repo/zod/validation/post';
-import { Loader, Trash2 } from 'lucide-react';
+import { Loader, Plus, Trash2 } from 'lucide-react';
 
 import { useDeletePost } from '../../../hooks/useDeletePost';
+import { PostForm } from '../../user/components/PostForm';
 import { useAuth } from '../../user/hooks/use.auth';
 import { useUserPosts } from '../../user/hooks/useFetchUserPosts';
 
@@ -45,73 +46,87 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
     }
     setIsDeleting(false);
   };
+  const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
 
   return (
-    <div className="container mx-auto grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 lg:grid-cols-3">
-      {posts.length > 0 ? (
-        posts.map((post) => (
-          <Card
-            key={post._id}
-            className="bg-card text-card-foreground group relative cursor-pointer overflow-hidden"
-            onClick={() =>
-              openPostModal({
-                ...post,
-                content: post.content ?? 'No Content',
-                image: post.image ?? '',
-                likes: post.likes ?? [],
-                comments:
-                  post.comments?.map((comment) => ({
-                    ...comment,
-                    _id: comment._id ?? 'unknown',
-                  })) ?? [],
-              })
-            }
+    <>
+      {/* Grid container to match the projects layout */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {loggedUser?.friendlyId === friendlyId && (
+          <div
+            className="bg-card hover:bg-primary-foreground group relative flex h-full w-full items-center justify-center rounded-lg border p-4 transition duration-300 ease-in-out hover:cursor-pointer"
+            onClick={() => setIsPostDialogOpen(true)}
           >
-            <CardContent className="relative p-0">
-              {post.image && (
-                <div className="relative">
-                  <img
-                    src={post.image}
-                    alt="Post"
-                    className="h-[200px] w-full rounded-t-lg object-cover transition-all duration-300 group-hover:opacity-80"
-                  />
+            <Plus className="text-primary-foreground h-52 w-12 opacity-100 transition-all duration-300 ease-in-out group-hover:opacity-0" />
+            <span className="text-card absolute text-lg font-semibold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+              Add Post
+            </span>
+          </div>
+        )}
+
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <Card
+              key={post._id}
+              className="bg-card text-card-foreground group relative w-full cursor-pointer overflow-hidden"
+              onClick={() =>
+                openPostModal({
+                  ...post,
+                  content: post.content ?? 'No Content',
+                  image: post.image ?? '',
+                  likes: post.likes ?? [],
+                  comments:
+                    post.comments?.map((comment) => ({
+                      ...comment,
+                      _id: comment._id ?? 'unknown',
+                    })) ?? [],
+                })
+              }
+            >
+              <CardContent className="relative p-0">
+                {post.image ? (
+                  <img src={post.image} alt="Post" className="h-64 w-full object-cover" />
+                ) : (
+                  <div className="text-card bg-card flex h-64 w-full items-center justify-center"></div>
+                )}
+                <div className="absolute inset-0 bg-black bg-opacity-0 transition-all duration-300 ease-in-out group-hover:bg-opacity-40"></div>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                  <h3 className="mb-2 text-xl font-bold">{post.content || 'No Content'}</h3>
+                  <p className="text-muted-foreground mb-4 text-sm">
+                    Likes: {post.likes?.length || 0} | Comments: {post.comments?.length || 0}
+                  </p>
                 </div>
-              )}
-
-              {loggedUser?.username === post.userId.username && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteModal({
-                      ...post,
-                      image: post.image ?? null,
-                      comments: post.comments ?? [],
-                      likes: post.likes ?? [],
-                    });
-                  }}
-                  className="absolute right-3 top-3 rounded-full bg-red-600 p-2 text-white opacity-0 transition-all duration-300 hover:bg-red-700 group-hover:opacity-100"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
-              )}
-
-              <div className="p-4">
-                <h3 className="truncate text-lg font-bold">{post.content || 'No Content'}</h3>
-                <p className="text-sm text-gray-500">Likes: {post.likes?.length || 0}</p>
-                <p className="text-sm text-gray-500">Comments: {post.comments?.length || 0}</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))
-      ) : (
-        <p className="text-muted-foreground col-span-full text-center">No posts available.</p>
-      )}
-
+                {loggedUser?.username === post.userId.username && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteModal({
+                        ...post,
+                        image: post.image ?? null,
+                        comments: post.comments ?? [],
+                        likes: post.likes ?? [],
+                      });
+                    }}
+                    className="absolute right-3 top-3 rounded-full bg-red-600 p-2 text-white opacity-0 transition-all duration-300 group-hover:opacity-100"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                )}
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <p className="text-muted-foreground col-span-full text-center">No posts available.</p>
+        )}
+      </div>
+      <CustomModal isOpen={isPostDialogOpen} onClose={() => setIsPostDialogOpen(false)} size="lg">
+        <PostForm onClose={() => setIsPostDialogOpen(false)} />
+      </CustomModal>
+      {/* Post Modal */}
       <CustomModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} size="lg">
         {selectedPost && (
           <div className="max-h-[80vh] overflow-y-auto">
             <h2 className="mb-4 text-xl font-bold">{selectedPost.content || 'No Content'}</h2>
-
             {selectedPost.image && (
               <div className="relative flex justify-center">
                 <img
@@ -121,10 +136,7 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
                 />
               </div>
             )}
-
             <p className="text-sm text-gray-500">Likes: {selectedPost.likes?.length || 0}</p>
-
-            {/* Comments Section */}
             <h3 className="mb-2 mt-4 text-lg font-bold">Comments</h3>
             <div className="max-h-[300px] overflow-y-auto">
               {selectedPost.comments.length > 0 ? (
@@ -162,6 +174,7 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
         )}
       </CustomModal>
 
+      {/* Delete Modal */}
       <CustomModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} size="sm">
         <div className="text-center">
           <h2 className="mb-4 text-lg font-bold">Are you sure you want to delete this post?</h2>
@@ -182,7 +195,7 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
           </div>
         </div>
       </CustomModal>
-    </div>
+    </>
   );
 };
 
