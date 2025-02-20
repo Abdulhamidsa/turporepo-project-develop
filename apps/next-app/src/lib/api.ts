@@ -1,5 +1,4 @@
 import { getEndpoints } from '@repo/api/endpoints';
-import { UserProfile } from '@repo/zod/validation/user';
 import 'server-only';
 
 const ENDPOINTS = getEndpoints(process.env.NEXT_PUBLIC_BASE_URL as string);
@@ -90,15 +89,18 @@ export async function getProjects(page = 1, limit = 12) {
  */
 export async function getUsers(page = 1, limit = 12) {
   try {
-    const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}`;
-    const response = await handleApiRequest(url);
-    const filteredUsers = (response.data?.users || []).filter(
-      (user: UserProfile) => user.completedProfile,
-    );
-    return { users: filteredUsers, total: filteredUsers.length };
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/users?page=${page}&limit=${limit}`;
+    console.log('Fetching users from:', url); // 🔥 Debug Log
+    const response = await fetch(url, { cache: 'no-store' });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch users: ${response.status} ${response.statusText}`);
+    }
+
+    return await response.json();
   } catch (error) {
     console.error('Error fetching users:', error);
-    return { users: [], total: 0 };
+    return { users: [] };
   }
 }
 
