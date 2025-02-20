@@ -27,7 +27,7 @@ export const useFetchPosts = () => {
 
   const toggleLike = async (postId: string) => {
     try {
-      // Optimistic update: update the like state locally
+      // Optimistic UI update: update the like state locally
       mutate(
         (currentData) =>
           currentData
@@ -46,16 +46,18 @@ export const useFetchPosts = () => {
                 ),
               }))
             : currentData,
-        false,
+        false, // Don't re-fetch yet
       );
 
       // API call to toggle like
       await request('POST', ENDPOINTS.posts.like, { postId });
 
-      // Revalidate the data after the request
-      mutate();
+      // 🚀 Force refetching the post list
+      mutate(undefined, { revalidate: true });
     } catch (error) {
       console.error('Error toggling like:', error);
+
+      mutate();
     }
   };
 

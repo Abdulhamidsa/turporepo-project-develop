@@ -12,8 +12,10 @@ function App() {
     <SWRConfig
       value={{
         fetcher: swrFetcher,
-        revalidateOnFocus: true, // Stops refetching when switching tabs
-        revalidateOnMount: true, // Refetches data on mount
+        revalidateOnFocus: true,
+        revalidateOnReconnect: true,
+        revalidateOnMount: true,
+        dedupingInterval: 0,
       }}
     >
       <AuthProvider>{routing}</AuthProvider>
