@@ -118,12 +118,12 @@ export default function ProfileInfo() {
           defaultValue="personalInfo"
           value={activeTab}
           onValueChange={setActiveTab}
-          className="mt-2 sm:mt-4"
+          className="mt-2 sm:mt-10"
         >
-          <TabsList className="flex justify-start space-x-2 bg-transparent pb-1 pl-2 sm:space-x-4 sm:pb-2 sm:pl-4 md:pl-6">
+          <TabsList className="flex justify-start space-x-2 bg-transparent pl-2 sm:space-x-4 sm:pb-10 sm:pl-4 md:pl-6">
             <TabsTrigger
               value="personalInfo"
-              className={`whitespace-nowrap py-1 sm:px-4 sm:py-2 ${activeTab === 'personalInfo' ? 'border-primary border-b-2 bg-transparent' : 'bg-transparent'}`}
+              className={`whitespace-nowrap py-1 sm:px-4 sm:py-2 ${activeTab === 'personalInfo' ? 'border-primary border-b-2' : 'bg-transparent'}`}
             >
               Personal Info
             </TabsTrigger>
