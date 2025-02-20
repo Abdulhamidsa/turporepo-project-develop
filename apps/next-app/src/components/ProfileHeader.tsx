@@ -69,7 +69,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
             transition={{ delay: 0.5 }}
             className="text-muted-foreground mt-2 italic"
           >
-            "{userProfile.bio}"
+            &quot;{userProfile.bio}&quot;
           </motion.p>
           <motion.div
             initial={{ opacity: 0 }}

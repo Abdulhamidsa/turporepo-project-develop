@@ -3,6 +3,7 @@ import { UserProfile } from '@repo/zod/validation/user';
 import 'server-only';
 
 const ENDPOINTS = getEndpoints(process.env.NEXT_PUBLIC_BASE_URL as string);
+
 class AppError extends Error {
   status: number;
   details?: unknown;
@@ -35,9 +36,28 @@ async function handleApiRequest(url: string, options?: RequestInit) {
   }
 }
 
-export async function getProjects(page = 1, limit = 12, search = '') {
+/**
+ * OLD FUNCTION (WITH SEARCH) - COMMENTED OUT
+ */
+// export async function getProjects(page = 1, limit = 12, search = '') {
+//   try {
+//     const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
+//     const response = await handleApiRequest(url, { next: { revalidate: 3600 }, cache: 'no-store' });
+//     const projects = response.data.projects || [];
+//     const totalPages = Math.ceil(response.data.pagination.total / limit);
+//     return { projects, totalPages };
+//   } catch (error) {
+//     console.error('Error fetching projects:', error);
+//     return { projects: [], totalPages: 1 };
+//   }
+// }
+
+/**
+ * NEW FUNCTION (WITHOUT SEARCH)
+ */
+export async function getProjects(page = 1, limit = 12) {
   try {
-    const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
+    const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}`;
     const response = await handleApiRequest(url, { next: { revalidate: 3600 }, cache: 'no-store' });
     const projects = response.data.projects || [];
     const totalPages = Math.ceil(response.data.pagination.total / limit);
@@ -48,9 +68,29 @@ export async function getProjects(page = 1, limit = 12, search = '') {
   }
 }
 
-export async function getUsers(page = 1, limit = 12, search = '') {
+/**
+ * OLD FUNCTION (WITH SEARCH) - COMMENTED OUT
+ */
+// export async function getUsers(page = 1, limit = 12, search = '') {
+//   try {
+//     const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
+//     const response = await handleApiRequest(url);
+//     const filteredUsers = (response.data?.users || []).filter(
+//       (user: UserProfile) => user.completedProfile,
+//     );
+//     return { users: filteredUsers, total: filteredUsers.length };
+//   } catch (error) {
+//     console.error('Error fetching users:', error);
+//     return { users: [], total: 0 };
+//   }
+// }
+
+/**
+ * NEW FUNCTION (WITHOUT SEARCH)
+ */
+export async function getUsers(page = 1, limit = 12) {
   try {
-    const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
+    const url = `${ENDPOINTS.users.fetchAll}?page=${page}&limit=${limit}`;
     const response = await handleApiRequest(url);
     const filteredUsers = (response.data?.users || []).filter(
       (user: UserProfile) => user.completedProfile,

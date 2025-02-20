@@ -16,8 +16,8 @@ export default function AboutPage() {
 
         <p>
           We believe that every professional has a unique story to tell and exceptional work to
-          share. Whether you're a seasoned expert or just starting your career, Profolio offers you
-          the opportunity to create a stunning online presence that truly represents your
+          share. Whether you&apos;re a seasoned expert or just starting your career, Profolio offers
+          you the opportunity to create a stunning online presence that truly represents your
           capabilities.
         </p>
 
@@ -26,7 +26,7 @@ export default function AboutPage() {
           <li>Customizable portfolio pages to highlight your best work</li>
           <li>A community of like-minded professionals for networking and collaboration</li>
           <li>Exposure to potential clients and employers browsing for talent</li>
-          <li>Tools to track your portfolio's performance and engagement</li>
+          <li>Tools to track your portfolio&apos;s performance and engagement</li>
         </ul>
 
         <h2 className="mb-4 mt-8 text-2xl font-semibold">Our Vision</h2>

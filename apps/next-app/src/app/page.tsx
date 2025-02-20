@@ -1,13 +1,11 @@
 import { Button } from '@repo/ui/components/ui/button';
-import { Card, CardContent } from '@repo/ui/components/ui/card';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { FeaturedUsers } from '../components/FeaturedProfessionals';
 import { getUsers } from '../lib/api';
 
 export default async function Home() {
-  const { users } = await getUsers(1, 6, '');
+  const { users } = await getUsers(1, 6);
   console.log(users);
 
   return (

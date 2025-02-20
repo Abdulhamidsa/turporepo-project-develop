@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import debounce from 'lodash.debounce';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface SearchFormProps {
   initialSearch?: string;
@@ -17,7 +17,7 @@ export function SearchForm({
   debounceDelay = 500,
 }: SearchFormProps) {
   const router = useRouter();
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const [query, setQuery] = useState(initialSearch);
 
   // ✅ Debounced search function (dynamic route)
@@ -36,7 +36,7 @@ export function SearchForm({
     }
 
     return () => debouncedSearch.cancel(); // Cleanup
-  }, [query]);
+  }, [debouncedSearch, query, router, searchType]);
 
   return (
     <input

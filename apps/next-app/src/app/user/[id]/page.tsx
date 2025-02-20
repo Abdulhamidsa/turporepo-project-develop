@@ -7,12 +7,13 @@ import { getUserProfile, getUserProject } from '../../../lib/api';
 
 export const dynamic = 'force-dynamic';
 
-interface ProfilePageProps {
-  params: { id: string };
+interface PublicProfilePageProps {
+  params: { id: string }; // ✅ Explicitly define params type
 }
 
-export default async function PublicProfilePage({ params }: ProfilePageProps) {
+export default async function PublicProfilePage({ params }: PublicProfilePageProps) {
   const id = params.id;
+
   const userProfile = await getUserProfile(id);
   const userProjectResponse = await getUserProject(id);
 

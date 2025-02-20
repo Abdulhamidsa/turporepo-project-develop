@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Badge } from '@repo/ui/components/ui/badge';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Code } from 'lucide-react';
+import Image from 'next/image';
 
 import ProjectModal from './ProjectModal';
 
@@ -38,9 +39,11 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
               onClick={() => setSelectedProject(project)}
             >
               <div className="overflow-hidden rounded-t-2xl">
-                <img
+                <Image
                   src={project.thumbnail || '/placeholder.svg'}
                   alt={project.title}
+                  width={300}
+                  height={200}
                   className="h-48 w-full object-cover"
                 />
               </div>

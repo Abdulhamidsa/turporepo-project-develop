@@ -5,6 +5,7 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { Badge } from '@repo/ui/components/ui/badge';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
+import Image from 'next/image';
 
 interface User {
   friendlyId: string;
@@ -32,9 +33,11 @@ export const FeaturedUsers: React.FC<FeaturedUsersProps> = ({ users }) => {
                 className="mb-12 w-[300px] flex-shrink-0 overflow-hidden transition-shadow duration-300 hover:shadow-xl"
               >
                 <CardContent className="relative p-0">
-                  <img
+                  <Image
                     src={user.profilePicture || '/placeholder.svg'}
                     alt={`Profile of ${user.username}`}
+                    width={300}
+                    height={400}
                     className="h-[400px] w-full object-cover"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
