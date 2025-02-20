@@ -13,11 +13,7 @@ function App() {
       value={{
         fetcher: swrFetcher,
         revalidateOnFocus: true, // Stops refetching when switching tabs
-        revalidateOnReconnect: true, // Stops refetching when internet reconnects
-        refreshInterval: 0, // No auto-refreshing
-        dedupingInterval: 0, // Cache data for 1 min
-        revalidateIfStale: false, // Prevents unnecessary re-fetching
-        shouldRetryOnError: false, // No retries if API fails
+        revalidateOnMount: true, // Refetches data on mount
       }}
     >
       <AuthProvider>{routing}</AuthProvider>
