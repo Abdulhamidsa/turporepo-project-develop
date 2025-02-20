@@ -44,6 +44,50 @@ export const useCreateProject = () => {
     });
 
     try {
+      // Step 1: Validate non-image fields.
+      const { title, description, url, tags } = project;
+      addProjectSchema
+        .pick({ title: true, description: true, url: true, tags: true })
+        .parse({ title, description, url, tags });
+
+      // Step 2: Calculate total media count.
+      const existingMediaCount = project.media ? project.media.length : 0;
+      const totalMediaCount = pendingMedia.length + existingMediaCount;
+
+      // Check if total media exceeds allowed limit.
+      if (totalMediaCount > 5) {
+        throw new ZodError([
+          {
+            code: 'custom',
+            message: 'You can upload a maximum of 5 images.',
+            path: ['media'],
+          },
+        ]);
+      }
+
+      // Step 3: Pre-validate required image fields.
+      if (!pendingThumbnail && !project.thumbnail) {
+        throw new ZodError([
+          {
+            code: 'custom',
+            message: 'Thumbnail is required',
+            path: ['thumbnail'],
+          },
+        ]);
+      }
+      if (totalMediaCount === 0) {
+        throw new ZodError([
+          {
+            code: 'custom',
+            message: 'At least one media image is required',
+            path: ['media'],
+          },
+        ]);
+      }
+
+      // (Progress handling is done in the component. At this point, we know validation is good.)
+
+      // Step 4: Upload images only after all validations pass.
       let thumbnailUrl = project.thumbnail;
       if (pendingThumbnail) {
         const [uploadedThumbnail] = await uploadToCloudinary([pendingThumbnail]);
@@ -56,17 +100,23 @@ export const useCreateProject = () => {
         mediaUrls = [...mediaUrls, ...uploadedMedia];
       }
 
+      // Step 5: Build final project object.
       const finalProject: AddProjectInput = {
         ...project,
         thumbnail: thumbnailUrl,
         media: mediaUrls.map((url) => ({ url })),
       };
 
-      // Validate project data
-      const validatedProject = addProjectSchema.parse(finalProject);
+      // Final full validation.
+      addProjectSchema.parse(finalProject);
 
-      // Send request to backend
-      await request<AddProjectInput>('POST', ENDPOINTS.projects.create, validatedProject);
+      // Step 6: Send request to backend.
+      await request<AddProjectInput>(
+        'POST',
+        ENDPOINTS.projects.create,
+        finalProject,
+        addProjectSchema,
+      );
 
       showToast('Project uploaded successfully!', 'success');
       await refetchAllProjects();
@@ -88,13 +138,11 @@ export const useCreateProject = () => {
           const field = err.path[0] as keyof AddProjectInput;
           fieldErrors[field] = err.message;
         });
-
         setErrors(fieldErrors);
-        showToast('Please fill all required fields correctly.', 'error');
+        showToast('Error saving project, check your inputs fileds.', 'error');
       } else {
         showToast(getErrorMessage(error), 'error');
       }
-
       return false;
     } finally {
       setLoading(false);

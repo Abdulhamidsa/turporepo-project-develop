@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Input } from '@repo/ui/components/ui/input';
 import { Label } from '@repo/ui/components/ui/label';
@@ -18,7 +18,7 @@ interface ProjectFormProps {
   setPendingThumbnail: React.Dispatch<React.SetStateAction<File | null>>;
   pendingMedia: File[];
   setPendingMedia: React.Dispatch<React.SetStateAction<File[]>>;
-  saveProject: () => void;
+  saveProject: () => Promise<boolean>;
   loading: boolean;
 }
 
@@ -32,8 +32,36 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   pendingMedia,
   setPendingMedia,
   saveProject,
-  loading,
 }) => {
+  const [progress, setProgress] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  const handleSaveProject = async () => {
+    try {
+      setProgress(10);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setIsUploading(true);
+      setProgress(30);
+
+      const success: boolean = await saveProject();
+
+      if (success) {
+        setProgress(70);
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        setProgress(100);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } else {
+        setProgress(0);
+      }
+
+      setIsUploading(false);
+    } catch (error) {
+      console.error('Failed to save project:', error);
+      setProgress(0);
+      setIsUploading(false);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setErrors((prev) => ({ ...prev, [name]: '' }));
@@ -50,8 +78,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   };
 
   return (
-    <div className="overflow-y-auto rounded-r-lg p-6">
-      <h3 className="text-foreground mb-12 text-xl font-bold">Upload Your Project</h3>
+    <div className="bg-card overflow-y-auto rounded-[var(--radius)] p-6 shadow-lg">
+      <h3 className="text-foreground mb-6 text-xl font-bold">Upload Your Project</h3>
       <div className="space-y-4">
         <div>
           <Label htmlFor="title" className="text-foreground">
@@ -62,7 +90,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             name="title"
             value={project.title || ''}
             onChange={handleInputChange}
-            className={`bg-input text-foreground border-border ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
+            className={`bg-input text-foreground border-border ${
+              errors.title ? 'border-red-500' : 'border-gray-300'
+            }`}
           />
           {errors.title && <p className="text-destructive mt-1 text-sm">{errors.title}</p>}
         </div>
@@ -76,7 +106,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             name="description"
             value={project.description || ''}
             onChange={handleInputChange}
-            className={`bg-input text-foreground border-border ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+            className={`bg-input text-foreground border-border ${
+              errors.description ? 'border-red-500' : 'border-gray-300'
+            }`}
             rows={4}
           />
           {errors.description && (
@@ -84,54 +116,30 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           )}
         </div>
 
-        <div>
-          <Label htmlFor="url" className="text-foreground">
-            Project URL
-          </Label>
-          <Input
-            id="url"
-            name="url"
-            value={project.url || ''}
-            onChange={handleInputChange}
-            className={`bg-input text-foreground border-border ${errors.url ? 'border-red-500' : 'border-gray-300'}`}
-          />
-          {errors.url && <p className="text-destructive mt-1 text-sm">{errors.url}</p>}
-        </div>
+        <ImageUploader
+          images={
+            pendingThumbnail ? [pendingThumbnail] : project.thumbnail ? [project.thumbnail] : []
+          }
+          setImages={(files) =>
+            setPendingThumbnail(files.length > 0 && files[0] instanceof File ? files[0] : null)
+          }
+          isThumbnail
+          error={errors.thumbnail}
+        />
 
-        <div>
-          <ImageUploader
-            images={
-              pendingThumbnail ? [pendingThumbnail] : project.thumbnail ? [project.thumbnail] : []
-            }
-            setImages={(files) =>
-              setPendingThumbnail(
-                files.length > 0 && files[0] instanceof File ? (files[0] as File) : null,
-              )
-            }
-            isThumbnail
-            error={errors.thumbnail}
-          />
-        </div>
+        <ImageUploader
+          images={pendingMedia.length > 0 ? pendingMedia : (project.media || []).map((m) => m.url)}
+          setImages={(files) =>
+            setPendingMedia(files.filter((file): file is File => file instanceof File))
+          }
+          error={errors.media}
+        />
 
-        <div>
-          <ImageUploader
-            images={
-              pendingMedia.length > 0 ? pendingMedia : (project.media || []).map((m) => m.url)
-            }
-            setImages={(files) =>
-              setPendingMedia(files.filter((file): file is File => file instanceof File))
-            }
-            error={errors.media}
-          />
-        </div>
+        <TagInput tags={project.tags || []} setTags={handleTagsChange} error={errors.tags} />
 
-        <div>
-          <TagInput tags={project.tags || []} setTags={handleTagsChange} error={errors.tags} />
-        </div>
-
-        {/* Save Button */}
-        <div className="mt-6 flex justify-end space-x-2">
-          <SaveButton onClick={saveProject} loading={loading} />
+        {/* Save Button + Progress Bar */}
+        <div className="mt-6">
+          <SaveButton onClick={handleSaveProject} loading={isUploading} progress={progress} />
         </div>
       </div>
     </div>

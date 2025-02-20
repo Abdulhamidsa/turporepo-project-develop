@@ -42,7 +42,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                 <Image
                   src={project.thumbnail || '/placeholder.svg'}
                   alt={project.title}
-                  width={300}
+                  width={400}
                   height={200}
                   className="h-48 w-full object-cover"
                 />

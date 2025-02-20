@@ -47,11 +47,11 @@ export const ProjectsAll = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="">
       {isLoading && projects.length === 0 ? (
         <Loading />
       ) : (
-        <div className="m-auto grid w-[500px] grid-cols-1 gap-6">
+        <div className="mx-auto grid max-w-[550px] grid-cols-1 gap-6">
           {projects.map((project, index) => (
             <ProjectCard
               key={`${project.id}-${index}`}
@@ -88,7 +88,7 @@ const ProjectCard = ({ project, onClick }: { project: ProjectType; onClick: () =
   return (
     <Card className="bg-card text-card-foreground relative w-full overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
       {/* Project Thumbnail */}
-      <div className="relative h-44 w-full cursor-pointer sm:h-56" onClick={onClick}>
+      <div className="relative h-40 w-full cursor-pointer sm:h-56" onClick={onClick}>
         {project.thumbnail ? (
           <img src={project.thumbnail} alt={project.title} className="h-full w-full object-cover" />
         ) : (

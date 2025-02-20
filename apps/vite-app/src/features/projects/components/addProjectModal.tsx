@@ -24,7 +24,7 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
 
   const { createProject, loading, errors, setErrors } = useCreateProject();
 
-  const saveProject = async () => {
+  const saveProject = async (): Promise<boolean> => {
     const success = await createProject(project, pendingThumbnail, pendingMedia);
 
     if (success) {
@@ -41,6 +41,9 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
       });
 
       onClose();
+      return true;
+    } else {
+      return false;
     }
   };
 
