@@ -43,12 +43,13 @@ export function PostFeed({ post, user }: PostProps) {
   const [comments, setComments] = useState<CommentType[]>(post.comments);
   const [showComments, setShowComments] = useState(false);
   const { deleteComment, isLoading: deletingComment } = useDeleteComment(post._id);
-
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null);
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
+
+  // State to prevent spamming the like button
+  const [isToggling, setIsToggling] = useState(false);
 
   const handleDeleteComment = async (commentId: string) => {
     const isDeleted = await deleteComment(commentId);
@@ -61,12 +62,16 @@ export function PostFeed({ post, user }: PostProps) {
   };
 
   const handleLikeClick = async () => {
+    if (isToggling) return; // Prevent spamming if already in progress
+    setIsToggling(true);
     try {
       await toggleLikePost(post._id);
-      setLikedByUser(!likedByUser);
+      setLikedByUser((prev) => !prev);
       setLikesCount((prev) => (likedByUser ? prev - 1 : prev + 1));
     } catch (error) {
       console.error('Error toggling like:', error);
+    } finally {
+      setIsToggling(false);
     }
   };
 
@@ -149,10 +154,16 @@ export function PostFeed({ post, user }: PostProps) {
       {/* Like and Comment Icon Section */}
       <CardFooter className="flex items-center justify-between space-x-2 pt-4">
         <div
-          className={`flex cursor-pointer items-center space-x-1 transition-transform duration-300 ${likedByUser ? 'text-primary scale-110' : 'text-muted-foreground'}`}
+          className={`flex cursor-pointer items-center space-x-1 transition-transform duration-300 ${
+            likedByUser ? 'text-primary scale-110' : 'text-muted-foreground'
+          } ${isToggling ? 'pointer-events-none opacity-60' : ''}`}
           onClick={handleLikeClick}
         >
-          <Heart className="h-5 w-5" />
+          {isToggling ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <Heart className="h-5 w-5" />
+          )}
           <span className="text-sm font-medium">{likesCount}</span>
         </div>
         <div
@@ -166,7 +177,9 @@ export function PostFeed({ post, user }: PostProps) {
 
       {/* Comments Section with Animation */}
       <div
-        className={`overflow-hidden transition-all duration-500 ${showComments ? 'mt-2 max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`overflow-hidden transition-all duration-500 ${
+          showComments ? 'mt-2 max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
       >
         {/* Add Comment Input */}
         <CommentBox postId={post._id} onCommentAdded={handleCommentAdded} />
@@ -178,7 +191,9 @@ export function PostFeed({ post, user }: PostProps) {
               <div
                 key={cmt._id}
                 ref={cmt._id === highlightedCommentId ? lastCommentRef : null}
-                className={`bg-card rounded-md border p-2 ${cmt._id === highlightedCommentId ? 'border-primary' : ''}`}
+                className={`bg-card rounded-md border p-2 ${
+                  cmt._id === highlightedCommentId ? 'border-primary' : ''
+                }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="mb-1 flex items-center space-x-2">

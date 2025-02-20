@@ -12,13 +12,15 @@ import { useFetchPosts } from '../hooks/useFetchAllPosts';
 
 export function PostForm({ onClose }: { onClose: () => void }) {
   const { userProfile } = useUserProfile();
+  const friendlyId = userProfile?.friendlyId ?? '';
   const [content, setContent] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { trigger, isMutating, error } = usePostSubmit();
+  const { trigger, error } = usePostSubmit(friendlyId);
   const { mutate: MutateFetchPosts } = useFetchPosts();
-
+  const [progress, setProgress] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -38,34 +40,42 @@ export function PostForm({ onClose }: { onClose: () => void }) {
     }
 
     try {
+      setIsLoading(true);
+      setProgress(10);
+
       let imageUrl: string = '';
       if (image) {
+        setProgress(30);
         const urls = await uploadToCloudinary([image]);
+
+        setProgress(70);
         imageUrl = urls[0];
       }
 
-      const payload = {
-        content,
-        image: imageUrl,
-      };
-
+      setProgress(85);
+      const payload = { content, image: imageUrl };
       await trigger(payload);
 
-      setContent('');
-      setImage(null);
-      setImagePreview(null);
-      showToast('Post uploaded successfully!', 'success');
+      setProgress(100); // Fully complete
 
+      // 🔥 Force a delay so the progress bar is visible
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setProgress(0);
+      setIsLoading(false);
+
+      showToast('Post uploaded successfully!', 'success');
       await MutateFetchPosts();
       onClose();
     } catch (err) {
       console.error('Error uploading post:', err);
       showToast('Failed to upload post.', 'error');
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="bg-card text-card-foreground mx-auto w-full max-w-md rounded-[var(--radius)]">
+    <div className="bg-card text-card-foreground mx-auto w-full max-w-md rounded-[var(--radius)] shadow-lg">
       <h3 className="text-foreground text-lg font-semibold">Create Post</h3>
       <div className="p-4">
         <div className="mb-4 flex items-center space-x-2">
@@ -108,8 +118,10 @@ export function PostForm({ onClose }: { onClose: () => void }) {
           </label>
         </div>
       </div>
+
+      {/* 🔥 Updated Save Button with Better Progress Bar */}
       <div className="flex justify-end p-4">
-        <SaveButton onClick={handleSubmit} loading={isMutating} label="Post" />
+        <SaveButton onClick={handleSubmit} loading={isLoading} label="Post" progress={progress} />
       </div>
 
       {error && <p className="text-destructive mt-2 text-center text-sm">{error.message}</p>}
