@@ -1,5 +1,6 @@
 import '@repo/ui/globals.css';
 import { ThemeProvider } from 'next-themes';
+/* eslint-disable import/order */
 import { Inter } from 'next/font/google';
 
 import { Footer } from '../components/footer';

@@ -33,6 +33,8 @@
     "@types/react": "catalog:react18",
     "@types/react-dom": "catalog:react18",
     "eslint": "catalog:eslint",
+    "eslint-config-next": "^15.1.7",
+    "eslint-plugin-import": "^2.31.0",
     "postcss": "catalog:tailwindcss",
     "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:typescript"
