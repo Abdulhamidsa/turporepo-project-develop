@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { Button } from '@repo/ui/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui/components/ui/popover';
-import { MoreVertical } from 'lucide-react';
+import { Popover, PopoverContent } from '@repo/ui/components/ui/popover';
 import { useLocation } from 'react-router-dom';
 
 import NavigationItem from './NavigationItem';
@@ -35,11 +33,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
         ))}
       </div>
       <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" className="ml-auto flex flex-col items-center">
-            <MoreVertical className="h-6 w-6" />
-          </Button>
-        </PopoverTrigger>
         <PopoverContent className="bg-card border-border w-48 rounded-lg border p-2 shadow-md">
           {sidebarOnlyItems.map((item) => (
             <NavigationItem

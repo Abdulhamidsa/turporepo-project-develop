@@ -67,18 +67,19 @@ export function NavbarApp() {
               </DropdownMenuLabel>
               {profileComplete ? (
                 <DropdownMenuItem className="p-3 text-sm">
-                  ✅ Your profile is **active**, and your portfolio is now visible on the public
+                  Your profile is **active**, and your portfolio is now visible on the public
                   domain.
                 </DropdownMenuItem>
               ) : (
                 <DropdownMenuItem
                   className="hover:bg-accent hover:text-accent-foreground cursor-pointer p-3 text-sm"
-                  onClick={() => navigate('/profile')}
+                  onClick={() => navigate('/manage')}
                 >
-                  ❌ Your profile is **not active**. Complete your profile to make your portfolio
+                  Your profile is **not active**. Complete your profile to make your portfolio
                   public!
                   <br />
-                  👉 **Click here to update your profile.**
+                  <br />
+                  **Click here to update your profile.**
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
