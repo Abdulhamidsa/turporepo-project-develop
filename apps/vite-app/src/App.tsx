@@ -12,12 +12,12 @@ function App() {
     <SWRConfig
       value={{
         fetcher: swrFetcher,
-        revalidateOnFocus: true, // Stops refetching when switching tabs (MONEY SAVER 💰)
-        revalidateOnReconnect: false, // Stops refetching when internet reconnects
-        refreshInterval: 0, // No auto-refreshing (manual fetch only)
-        dedupingInterval: 60000, // Cache data for 1 min (adjust if needed)
+        revalidateOnFocus: true, // Stops refetching when switching tabs
+        revalidateOnReconnect: true, // Stops refetching when internet reconnects
+        refreshInterval: 0, // No auto-refreshing
+        dedupingInterval: 0, // Cache data for 1 min
         revalidateIfStale: false, // Prevents unnecessary re-fetching
-        shouldRetryOnError: false, // Optional: No retries if API fails
+        shouldRetryOnError: false, // No retries if API fails
       }}
     >
       <AuthProvider>{routing}</AuthProvider>
