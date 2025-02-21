@@ -17,7 +17,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
 }) => {
   const location = useLocation();
 
-  // Check if an item is active
   const isActive = (link?: string) => location.pathname === link;
 
   return (
@@ -27,7 +26,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
           <NavigationItem
             key={item.name}
             item={item}
-            isActive={isActive(item.link)} // Determine if the item is active
+            isActive={isActive(item.link)}
             showText={false}
           />
         ))}
@@ -38,7 +37,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
             <NavigationItem
               key={item.name}
               item={item}
-              isActive={isActive(item.link)} // Determine if the item is active
+              isActive={isActive(item.link)}
               showText={true}
             />
           ))}

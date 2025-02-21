@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { UserProfile } from '@repo/data/types/types';
 import CustomModal from '@repo/ui/components/CustomModal';
@@ -37,6 +37,36 @@ export function NavbarApp() {
   const profileComplete = isProfileComplete(userProfile);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Persistent countdown state for active profile (in seconds)
+  const [countdown, setCountdown] = useState<number>(45);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null;
+    // Start countdown only if profile is complete and countdown is not finished
+    if (profileComplete && countdown > 0) {
+      // Only set up interval if one is not already running
+      if (!interval) {
+        interval = setInterval(() => {
+          setCountdown((prev) => {
+            if (prev <= 1) {
+              if (interval) clearInterval(interval);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [profileComplete, countdown]);
+
+  const handleUpdateProfileClick = () => {
+    setIsModalOpen(false);
+    navigate('/profile/edit');
+  };
+
   return (
     <header className="bg-muted border-border sticky top-0 z-50 border-b shadow-sm">
       <div className="mx-auto flex h-full items-center justify-between p-4 md:ml-16 md:mr-8">
@@ -46,54 +76,73 @@ export function NavbarApp() {
         <div className="flex items-center space-x-4">
           {/* Profile Status Button (Opens Modal) */}
           <button
-            className={`flex items-center space-x-2 rounded-lg px-3 py-1 text-sm font-medium ${
-              profileComplete ? 'text-green-500' : 'text-red-500'
-            } hover:bg-accent hover:text-accent-foreground focus:outline-none`}
+            className={`hover:bg-accent hover:text-accent-foreground flex items-center space-x-2 rounded-lg px-3 py-1 text-sm font-medium focus:outline-none ${
+              profileComplete
+                ? countdown > 0
+                  ? 'text-orange-500'
+                  : 'text-green-500'
+                : 'text-red-500'
+            }`}
             onClick={() => setIsModalOpen(true)}
           >
             {profileComplete ? (
-              <>
-                <CheckCircle className="h-4 w-4" />
-                <span>Active</span>
-              </>
-            ) : (
-              <>
+              countdown > 0 ? (
                 <AlertCircle className="h-4 w-4" />
-                <span>Not Active</span>
-              </>
+              ) : (
+                <CheckCircle className="h-4 w-4" />
+              )
+            ) : (
+              <AlertCircle className="h-4 w-4" />
             )}
+            <span>
+              {profileComplete
+                ? countdown > 0
+                  ? `Pending (${countdown}s)`
+                  : 'Active'
+                : 'Not Active'}
+            </span>
           </button>
 
           {/* Profile Status Modal */}
           <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="md">
             <h2 className="text-primary mb-2 text-lg font-bold">Profile Status</h2>
             {profileComplete ? (
-              <>
+              countdown > 0 ? (
+                // While countdown is active, show pending status
                 <p className="text-muted-foreground">
-                  Your profile is <strong>active</strong>, and your portfolio is now visible on the
-                  public domain.
+                  Your profile is <strong>pending</strong>—it is being updated. Please wait{' '}
+                  {countdown} seconds.
                 </p>
-                <Link
-                  to={`https://profoliohub.vercel.app/${loggedUser?.friendlyId}`}
-                  target="_blank"
-                  className="text-primary hover:text-primary-foreground underline"
-                >
-                  {`profoliohub.vercel.app/${loggedUser?.friendlyId}`}
-                </Link>
-              </>
+              ) : (
+                // When countdown is done, show active status with link
+                <>
+                  <p className="text-muted-foreground">
+                    Your profile is <strong>active</strong>, and your portfolio is now visible on
+                    the public domain.
+                  </p>
+                  <Link
+                    to={`https://profoliohub.vercel.app/user/${loggedUser?.friendlyId}`}
+                    target="_blank"
+                    className="text-primary hover:text-primary-foreground underline"
+                  >
+                    {`profoliohub.vercel.app/${loggedUser?.friendlyId}`}
+                  </Link>
+                </>
+              )
             ) : (
+              // If profile is incomplete, prompt to update profile
               <>
                 <p className="text-muted-foreground">
                   Your profile is <strong>not active</strong>. Complete your profile to make your
                   portfolio public.
                 </p>
                 <div className="mt-4">
-                  <Link
-                    to="/profile/edit"
+                  <button
+                    onClick={handleUpdateProfileClick}
                     className="text-primary hover:text-primary-foreground font-medium underline"
                   >
                     Click here to update your profile.
-                  </Link>
+                  </button>
                 </div>
               </>
             )}
