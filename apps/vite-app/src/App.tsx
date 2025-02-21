@@ -1,3 +1,4 @@
+// src/App.tsx
 import { useRoutes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -15,7 +16,6 @@ function App() {
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
         revalidateOnMount: true,
-        dedupingInterval: 0,
       }}
     >
       <AuthProvider>{routing}</AuthProvider>
