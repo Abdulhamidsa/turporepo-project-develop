@@ -12,91 +12,71 @@ interface ProfileHeaderProps {
 
 export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
   return (
-    <Card className="relative overflow-hidden rounded-lg shadow-lg">
-      <div className="relative h-60 w-full">
-        <Image
-          src={userProfile.coverImage || '/placeholder.jpg'}
-          alt="Cover"
-          layout="fill"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
+    <Card className="flex flex-col items-center p-8 shadow-2xl md:flex-row md:items-stretch">
+      {/* Profile Picture Section */}
+      <div className="flex flex-shrink-0 items-center justify-center md:w-1/3">
+        {userProfile.profilePicture ? (
+          <Image
+            src={userProfile.profilePicture}
+            alt={userProfile.username}
+            width={250}
+            height={250}
+            className="border-primary rounded-full border-4 shadow-lg"
+          />
+        ) : (
+          <div className="border-primary flex h-64 w-64 items-center justify-center rounded-full border-4 bg-gray-200 text-6xl font-bold text-gray-700 shadow-lg">
+            {(userProfile.username || 'NA').slice(0, 2).toUpperCase()}
+          </div>
+        )}
       </div>
-
-      <div className="relative flex flex-col items-center p-6 text-center md:flex-row md:items-end md:space-x-6 md:text-left">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 20 }}
-          className="border-border bg-background h-36 w-36 overflow-hidden rounded-full border-4 shadow-lg"
+      {/* Details Section */}
+      <div className="mt-6 flex flex-col justify-center md:mt-0 md:w-2/3 md:pl-12">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-primary text-5xl font-extrabold"
         >
-          {userProfile.profilePicture ? (
-            <Image
-              src={userProfile.profilePicture}
-              alt={userProfile.username || 'User'}
-              width={144}
-              height={144}
-              className="object-cover"
-            />
-          ) : (
-            <div className="bg-muted text-muted-foreground flex h-full w-full items-center justify-center text-3xl font-bold">
-              {(userProfile.username || 'NA').slice(0, 2).toUpperCase()}
-            </div>
-          )}
-        </motion.div>
-
-        <div className="mt-4 md:mt-0">
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-foreground text-4xl font-bold"
-          >
-            {userProfile.username}
-          </motion.h1>
+          {userProfile.username}
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-2 flex items-center gap-2 text-2xl text-gray-700"
+        >
+          <Briefcase className="text-secondary h-6 w-6" />
+          {userProfile.profession || 'No Profession Listed'}
+        </motion.p>
+        {userProfile.bio && (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-muted-foreground mt-1 flex items-center gap-2 text-xl"
+            className="mt-4 text-lg italic text-gray-600"
           >
-            <Briefcase className="text-primary h-5 w-5" />
-            {userProfile.profession || 'No profession listed'}
+            {userProfile.bio}
           </motion.p>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-muted-foreground mt-2 italic"
-          >
-            &quot;{userProfile.bio}&quot;
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mt-4 flex flex-wrap justify-center gap-4 md:justify-start"
-          >
-            {userProfile.countryOrigin && (
-              <Badge
-                variant="secondary"
-                className="bg-card text-foreground border-border flex items-center gap-2 border p-2"
-              >
-                <Globe className="text-primary h-4 w-4" />
-                {userProfile.countryOrigin}
-              </Badge>
-            )}
-            {userProfile.age && (
-              <Badge
-                variant="secondary"
-                className="bg-card text-foreground border-border flex items-center gap-2 border p-2"
-              >
-                <Calendar className="text-primary h-4 w-4" />
-                {userProfile.age} yrs
-              </Badge>
-            )}
-          </motion.div>
-        </div>
+        )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6 flex gap-4"
+        >
+          {userProfile.countryOrigin && (
+            <Badge variant="secondary" className="flex items-center gap-2 px-4 py-2">
+              <Globe className="text-secondary h-4 w-4" />
+              {userProfile.countryOrigin}
+            </Badge>
+          )}
+          {userProfile.age && (
+            <Badge variant="secondary" className="flex items-center gap-2 px-4 py-2">
+              <Calendar className="text-secondary h-4 w-4" />
+              {userProfile.age} yrs
+            </Badge>
+          )}
+        </motion.div>
       </div>
     </Card>
   );
