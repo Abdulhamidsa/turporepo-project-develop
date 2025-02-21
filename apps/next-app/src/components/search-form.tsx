@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation';
 
 interface SearchFormProps {
   initialSearch?: string;
-  searchType: 'projects' | 'users'; // 🔥 Dynamic search type
-  debounceDelay?: number; // 🔥 Custom debounce timing
+  searchType: 'projects' | 'users';
+  debounceDelay?: number;
 }
 
 export function SearchForm({
@@ -20,13 +20,11 @@ export function SearchForm({
   // const pathname = usePathname();
   const [query, setQuery] = useState(initialSearch);
 
-  // ✅ Debounced search function (dynamic route)
   const debouncedSearch = debounce((searchTerm: string) => {
     const baseRoute = searchType === 'users' ? '/users' : '/projects';
     router.push(`${baseRoute}?search=${encodeURIComponent(searchTerm)}&page=1`);
   }, debounceDelay);
 
-  // ✅ Trigger search when query changes
   useEffect(() => {
     if (query.trim() !== '') {
       debouncedSearch(query);
@@ -35,7 +33,7 @@ export function SearchForm({
       router.push(`${baseRoute}?page=1`);
     }
 
-    return () => debouncedSearch.cancel(); // Cleanup
+    return () => debouncedSearch.cancel();
   }, [debouncedSearch, query, router, searchType]);
 
   return (
