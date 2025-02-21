@@ -16,7 +16,7 @@ export function Nav() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-xl font-bold">
-            <span className="text-primary">Portfolio</span>Showcase
+            <span className="text-primary">Profolio</span>
           </Link>
 
           {/* Desktop Menu */}
