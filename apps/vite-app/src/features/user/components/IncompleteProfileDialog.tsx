@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@repo/ui/components/ui/dialog';
+import { Link } from 'react-router-dom';
 
 interface IncompleteProfileDialogProps {
   showModal: boolean;
@@ -27,8 +28,17 @@ export default function IncompleteProfileDialog({
           <DialogTitle>Profile Incomplete</DialogTitle>
           <DialogDescription>
             <p>
-              Your profile is currently private. To make it public, please complete the following
-              fields:
+              Your profile is currently private. To make it visible on the public domain, please
+              complete the required details. Once added, your public profile will be available on
+              <Link
+                to="https://profoliohub.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary ml-1 underline"
+              >
+                profoliohub.vercel.app
+              </Link>
+              .
             </p>
             <ul className="mt-2 list-inside list-disc">
               {modalContent.map((field, index) => (
