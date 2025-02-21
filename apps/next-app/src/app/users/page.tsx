@@ -1,12 +1,41 @@
-/* eslint-disable import/order */
-import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
+import React from 'react';
+
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
+import { Code, Globe, Layout, PenTool, Server } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+// eslint-disable-next-line import/order
+
+import { SearchForm } from '../../components/search-form';
+// eslint-disable-next-line import/order
+
 import { getUsers } from '../../lib/api';
-import type { User } from '../../types';
+
+const ProfessionMapping = [
+  {
+    profession: 'Software Engineer',
+    label: 'Software Engineer',
+    icon: Code,
+    color: 'text-blue-500',
+  },
+  { profession: 'UI/UX Designer', label: 'UI/UX Designer', icon: Layout, color: 'text-pink-500' },
+  { profession: 'Web Developer', label: 'Web Developer', icon: Globe, color: 'text-green-500' },
+  {
+    profession: 'Product Designer',
+    label: 'Product Designer',
+    icon: PenTool,
+    color: 'text-purple-500',
+  },
+  {
+    profession: 'DevOps Engineer',
+    label: 'DevOps Engineer',
+    icon: Server,
+    color: 'text-orange-500',
+  },
+];
 
 export const dynamic = 'force-dynamic';
 
@@ -16,53 +45,63 @@ export default async function UsersPage({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const resolvedSearchParams = searchParams;
-
   const page = Number.parseInt((resolvedSearchParams?.page as string) || '1', 10);
   if (!searchParams?.page) {
     redirect(`/users?page=1`);
   }
-  const { users, total } = await getUsers(page, 20);
+  const search = (resolvedSearchParams.search as string) || '';
+
+  const { users, total } = await getUsers(page, 20, search);
   const totalPages = Math.ceil(total / 20);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="mb-8 text-center text-3xl font-bold">Discover Professionals</h1>
-      <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {users.map((user: User) => (
-          <Link href={`/user/${user.friendlyId}`} key={user.id} className="group">
-            <Card className="transform overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl">
-              <CardContent className="relative aspect-square p-0">
-                <Avatar className="h-full w-full rounded-none">
-                  <AvatarImage
-                    src={user.profilePicture || '/default-avatar.png'}
-                    alt={user.username || 'User'}
-                    className="object-cover"
-                  />
-                  <AvatarFallback className="text-4xl">
-                    {(user.username?.slice(0, 1) || 'U').toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-0 p-4 transition-all duration-300 group-hover:bg-opacity-60">
-                  <h2 className="font-semibold text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    {user.username}
-                  </h2>
-                  <p className="text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    {user.profession}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+      <SearchForm initialSearch={search} searchType="users" />
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {users.map((user: any) => {
+          // Find the mapping for the user's profession
+          const mapping = ProfessionMapping.find((m) => m.profession === user.profession);
+          return (
+            <Link href={`/user/${user.friendlyId}`} key={user.id} className="group">
+              <Card className="transform overflow-hidden transition-all duration-300 hover:shadow-xl">
+                <CardContent className="relative p-0">
+                  <div className="relative h-64 w-full">
+                    <Image
+                      src={user.profilePicture || '/placeholder.svg'}
+                      alt={user.username || 'User'}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-t-lg"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h2 className="text-lg font-semibold">{user.username}</h2>
+                    <div className="flex items-center gap-1">
+                      {mapping ? (
+                        <>
+                          <mapping.icon className={`${mapping.color} h-5 w-5`} />
+                          <p className="text-muted-foreground text-sm">{mapping.label}</p>
+                        </>
+                      ) : (
+                        <p className="text-muted-foreground text-sm">{user.profession}</p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          );
+        })}
       </div>
       <div className="mt-12 flex justify-center space-x-4">
         {page > 1 && (
-          <Link href={`/users?page=${page - 1}`}>
+          <Link href={`/users?page=${page - 1}&search=${search}`}>
             <Button variant="outline">Previous</Button>
           </Link>
         )}
         {page < totalPages && (
-          <Link href={`/users?page=${page + 1}`}>
+          <Link href={`/users?page=${page + 1}&search=${search}`}>
             <Button variant="outline">Next</Button>
           </Link>
         )}
