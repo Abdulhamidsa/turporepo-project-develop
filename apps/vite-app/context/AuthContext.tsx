@@ -43,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('signOut error:', err);
     }
     mutate(null, false);
+    window.location.reload();
   };
 
   return (
