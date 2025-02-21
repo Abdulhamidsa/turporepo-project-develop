@@ -17,7 +17,7 @@ interface UserPostsProps {
 }
 
 const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
-  const { posts, refetch } = useUserPosts(friendlyId);
+  const { posts, mutate } = useUserPosts(friendlyId);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<UserPostType | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -30,11 +30,6 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
     setIsPostModalOpen(true);
   };
 
-  const openDeleteModal = (post: UserPostType) => {
-    setSelectedPost(post);
-    setIsDeleteModalOpen(true);
-  };
-
   const handleDelete = async () => {
     if (!selectedPost) return;
     setIsDeleting(true);
@@ -42,15 +37,16 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
     if (isDeleted) {
       setIsDeleteModalOpen(false);
       setSelectedPost(null);
-      await refetch();
+      await mutate();
     }
     setIsDeleting(false);
   };
+
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
 
   return (
     <>
-      {/* Grid container to match the projects layout */}
+      {/* Grid container to match the posts layout */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {loggedUser?.friendlyId === friendlyId && (
           <div
@@ -96,22 +92,7 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
                     Likes: {post.likes?.length || 0} | Comments: {post.comments?.length || 0}
                   </p>
                 </div>
-                {loggedUser?.username === post.userId.username && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openDeleteModal({
-                        ...post,
-                        image: post.image ?? null,
-                        comments: post.comments ?? [],
-                        likes: post.likes ?? [],
-                      });
-                    }}
-                    className="absolute right-3 top-3 rounded-full bg-red-600 p-2 text-white opacity-0 transition-all duration-300 group-hover:opacity-100"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                )}
+                {/* Delete button removed from card hover */}
               </CardContent>
             </Card>
           ))
@@ -119,9 +100,12 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
           <p className="text-muted-foreground col-span-full text-center">No posts available.</p>
         )}
       </div>
+
+      {/* Post Dialog Modal */}
       <CustomModal isOpen={isPostDialogOpen} onClose={() => setIsPostDialogOpen(false)} size="lg">
         <PostForm onClose={() => setIsPostDialogOpen(false)} />
       </CustomModal>
+
       {/* Post Modal */}
       <CustomModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} size="lg">
         {selectedPost && (
@@ -170,11 +154,23 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
                 <p className="text-center text-gray-400">No comments yet.</p>
               )}
             </div>
+            {/* Delete button inside the post modal */}
+            {loggedUser?.username === selectedPost?.userId.username && (
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="flex items-center space-x-2 rounded bg-red-600 px-4 py-2 text-white transition-all duration-300 hover:bg-red-700"
+                >
+                  <Trash2 className="h-5 w-5" />
+                  <span>Delete Post</span>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </CustomModal>
 
-      {/* Delete Modal */}
+      {/* Delete Confirmation Modal */}
       <CustomModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} size="sm">
         <div className="text-center">
           <h2 className="mb-4 text-lg font-bold">Are you sure you want to delete this post?</h2>

@@ -8,7 +8,6 @@ import { uploadToCloudinary } from '../../../../utils/CloudinaryConfige';
 import { usePostSubmit } from '../../../hooks/useCreatePost';
 import SaveButton from '../../projects/components/SaveButton';
 import { useUserProfile } from '../hooks/use.user.profile';
-import { useFetchPosts } from '../hooks/useFetchAllPosts';
 
 export function PostForm({ onClose }: { onClose: () => void }) {
   const { userProfile } = useUserProfile();
@@ -18,7 +17,6 @@ export function PostForm({ onClose }: { onClose: () => void }) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const { trigger, error } = usePostSubmit(friendlyId);
-  const { mutate: MutateFetchPosts } = useFetchPosts();
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +45,6 @@ export function PostForm({ onClose }: { onClose: () => void }) {
       if (image) {
         setProgress(30);
         const urls = await uploadToCloudinary([image]);
-
         setProgress(70);
         imageUrl = urls[0];
       }
@@ -56,16 +53,12 @@ export function PostForm({ onClose }: { onClose: () => void }) {
       const payload = { content, image: imageUrl };
       await trigger(payload);
 
-      setProgress(100); // Fully complete
-
-      // 🔥 Force a delay so the progress bar is visible
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setProgress(100);
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       setProgress(0);
       setIsLoading(false);
-
       showToast('Post uploaded successfully!', 'success');
-      await MutateFetchPosts();
       onClose();
     } catch (err) {
       console.error('Error uploading post:', err);

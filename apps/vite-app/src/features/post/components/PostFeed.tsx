@@ -48,7 +48,6 @@ export function PostFeed({ post, user }: PostProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
-  // State to prevent spamming the like button
   const [isToggling, setIsToggling] = useState(false);
 
   const handleDeleteComment = async (commentId: string) => {
@@ -62,7 +61,7 @@ export function PostFeed({ post, user }: PostProps) {
   };
 
   const handleLikeClick = async () => {
-    if (isToggling) return; // Prevent spamming if already in progress
+    if (isToggling) return;
     setIsToggling(true);
     try {
       await toggleLikePost(post._id);

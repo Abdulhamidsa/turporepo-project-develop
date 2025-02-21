@@ -16,14 +16,15 @@ type PostData = z.infer<typeof PostSchema>;
 type PostPayload = { content: string; image?: string };
 
 export const usePostSubmit = (friendlyId: string) => {
-  const { refetch } = useUserPosts(friendlyId);
+  const { mutate } = useUserPosts(friendlyId);
 
   const mutationFetcher = async (url: string, { arg }: { arg: PostPayload }) => {
     const response = await request<PostData>('POST', url, arg);
     if (!response) {
       throw new Error('Failed to create post');
     }
-    refetch();
+    await mutate();
+    // Or, if you prefer, you can call mutate() to update the cache immediately
     return response;
   };
 
