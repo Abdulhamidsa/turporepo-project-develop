@@ -8,10 +8,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 // eslint-disable-next-line import/order
-
 import { SearchForm } from '../../components/search-form';
 // eslint-disable-next-line import/order
-
 import { getUsers } from '../../lib/api';
 
 const ProfessionMapping = [
