@@ -37,7 +37,7 @@ const NavigationItem: React.FC<NavigationItemComponentProps> = ({
     return (
       <Link to={item.link} className={`${baseClasses} ${activeClasses}`} onClick={handleClick}>
         <item.icon className={`h-7 w-7 ${isActive ? 'text-accent' : 'text-muted-foreground'}`} />
-        {showText && <span className="text-primary-foreground ml-4">{item.name}</span>}
+        {showText && <span className="text-popover-foreground ml-4">{item.name}</span>}
       </Link>
     );
   }
