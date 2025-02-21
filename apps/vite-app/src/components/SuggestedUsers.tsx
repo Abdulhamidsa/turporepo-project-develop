@@ -15,19 +15,15 @@ export default function SuggestedUsers({ layout = 'vertical' }: SuggestedUsersPr
   return (
     <div
       className={cn(
-        'bg-background text-foreground rounded-lg p-4 shadow-md',
+        'bg-background text-foreground fixed rounded-lg p-4 shadow-md',
         layout === 'horizontal' ? 'flex w-full space-x-4 overflow-x-auto py-2' : 'w-full max-w-sm',
       )}
     >
       <h2 className="mb-4 text-lg font-semibold">People You May Know</h2>
 
-      {/* Loading State */}
       {isLoading && <p className="text-muted-foreground text-sm">Loading users...</p>}
 
-      {/* Error State */}
       {error && <p className="text-sm text-red-500">Failed to load users</p>}
-
-      {/* Empty State */}
 
       <div className={cn(layout === 'horizontal' ? 'flex space-x-4' : 'space-y-4')}>
         {users.map((user) => (
@@ -38,8 +34,6 @@ export default function SuggestedUsers({ layout = 'vertical' }: SuggestedUsersPr
               layout === 'horizontal' ? 'inline-flex w-64' : 'flex',
             )}
           >
-            {/* User Avatar */}
-
             <Link to={routesConfig.userPortfolioView(user.friendlyId)}>
               <Avatar className="h-12 w-12">
                 <AvatarImage
@@ -52,7 +46,6 @@ export default function SuggestedUsers({ layout = 'vertical' }: SuggestedUsersPr
               </Avatar>
             </Link>
 
-            {/* User Info */}
             <div className="flex-grow">
               <h3 className="font-semibold">{user.username || 'Unknown User'}</h3>
               <p className="text-muted-foreground text-sm">{user.profession || 'No profession'}</p>
