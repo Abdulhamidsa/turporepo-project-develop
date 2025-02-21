@@ -56,12 +56,16 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {project.tags.slice(0, 3).map((tag: any) => (
-                    <Badge key={tag.id} variant="secondary" className="bg-muted text-foreground">
+                    <Badge
+                      key={tag.id}
+                      variant="secondary"
+                      className="bg-muted text-foreground border-border"
+                    >
                       {tag.name}
                     </Badge>
                   ))}
                   {project.tags.length > 3 && (
-                    <Badge variant="secondary" className="bg-muted text-foreground">
+                    <Badge variant="secondary" className="bg-muted text-foreground border-border">
                       +{project.tags.length - 3}
                     </Badge>
                   )}
