@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
+import { Tooltip, TooltipProvider, TooltipTrigger } from '@repo/ui/components/ui/tooltip';
 import { FetchedProjectType } from '@repo/zod/validation';
 import { UserProfile } from '@repo/zod/validation/user';
-import { Plus } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Bot, Plus } from 'lucide-react';
 
 import UserPosts from '../../post/components/UserPosts';
+import AIChat from '../../projects/components/AIChat';
 import ProjectCard from '../../projects/components/ProjectCard';
 import ProjectModal from '../../projects/components/ProjectModal';
 import AddProjectModal from '../../projects/components/addProjectModal';
+import { useAIChat } from '../../projects/hooks/useAIChat';
 
 interface ProfileTabsProps {
   userProfile: UserProfile;
@@ -20,6 +24,9 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
   const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const tabsContentRef = useRef<HTMLDivElement>(null);
+  const { chatStep, chatMessages, data, loading, startChat, selectProject, sendMessage, goBack } =
+    useAIChat();
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     if (tabsContentRef.current) {
@@ -56,6 +63,46 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
             </div>
           </TabsContent>
           <TabsContent value="projects" className="mt-6">
+            <TooltipProvider>
+              <Tooltip content="AI Chat">
+                <TooltipTrigger asChild>
+                  <button
+                    className="bg-primary fixed bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110"
+                    onClick={() => setChatOpen(true)}
+                  >
+                    <Bot className="h-6 w-6 text-white" />
+                  </button>
+                </TooltipTrigger>
+              </Tooltip>
+            </TooltipProvider>
+            {/* AI Chat Drawer */}
+
+            <AnimatePresence>
+              {chatOpen && (
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                  className="fixed bottom-0 right-4 w-[350px] overflow-hidden rounded-lg bg-white shadow-lg"
+                >
+                  <AIChat
+                    {...{
+                      chatOpen,
+                      chatStep,
+                      chatMessages,
+                      data,
+                      loading,
+                      projects,
+                      startChat,
+                      selectProject,
+                      sendMessage,
+                      setChatOpen,
+                      goBack,
+                    }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               <div
                 className="bg-card hover:bg-primary-foreground group relative flex h-full w-full items-center justify-center rounded-lg border p-4 transition duration-300 ease-in-out hover:cursor-pointer"
