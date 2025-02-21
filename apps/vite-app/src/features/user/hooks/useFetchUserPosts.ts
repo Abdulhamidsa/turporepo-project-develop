@@ -17,6 +17,6 @@ export const useUserPosts = (friendlyId: string) => {
     posts: data ?? [],
     isLoading,
     isError: error,
-    refetch: mutate,
+    mutate,
   };
 };

@@ -13,9 +13,8 @@ export const userSchema = z.object({
   username: z.string(),
   friendlyId: z.string(),
   completedProfile: z.boolean(),
-  profession: z.string(),
-  countyOfOrigin: z.string(),
-  profilePicture: z.string().url().optional(), // Profile picture might be missing
+  profession: z.string().nullable(),
+  profilePicture: z.string().url().nullable(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });

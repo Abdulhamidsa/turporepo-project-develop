@@ -20,13 +20,9 @@ export const useFetchPosts = (userId?: string) => {
       return `${ENDPOINTS.posts.fetch}?limit=${limit}&page=${pageIndex + 1}`;
     },
     (url) => swrFetcher(url),
-    {
-      revalidateOnFocus: true,
-      revalidateIfStale: true,
-    },
   );
 
-  const posts = data ? data.reduce((acc, page) => [...acc, ...page.posts], [] as PostType[]) : [];
+  const posts = data ? data.reduce((desc, page) => [...desc, ...page.posts], [] as PostType[]) : [];
 
   const totalPages = data?.[0]?.totalPages ?? 0;
 
