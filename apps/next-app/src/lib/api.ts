@@ -187,8 +187,10 @@ export async function getProjects(page = 1, limit = 12, search = '') {
   try {
     const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`;
     const response = await handleApiRequest(url);
-    const projects = response.data.projects || [];
+    let projects = response.data.projects || [];
+    projects = projects.filter((project: any) => project.user?.completedProfile === true);
     const totalPages = Math.ceil(response.data.pagination.total / limit);
+    console.log('projects', projects);
     return { projects, totalPages };
   } catch (error) {
     console.error('Error fetching projects:', error);
