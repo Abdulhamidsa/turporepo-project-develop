@@ -1,4 +1,7 @@
+import { useState } from 'react';
+
 import { UserProfile } from '@repo/data/types/types';
+import CustomModal from '@repo/ui/components/CustomModal';
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { Button } from '@repo/ui/components/ui/button';
 import {
@@ -32,6 +35,7 @@ export function NavbarApp() {
   const { userProfile } = useUserProfile();
 
   const profileComplete = isProfileComplete(userProfile);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <header className="bg-muted border-border sticky top-0 z-50 border-b shadow-sm">
@@ -40,50 +44,60 @@ export function NavbarApp() {
           ProFolio
         </Link>
         <div className="flex items-center space-x-4">
-          {/* Profile Status Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className={`flex items-center space-x-2 rounded-lg px-3 py-1 text-sm font-medium ${
-                  profileComplete ? 'text-green-500' : 'text-red-500'
-                } hover:bg-accent hover:text-accent-foreground focus:outline-none`}
-              >
-                {profileComplete ? (
-                  <>
-                    <CheckCircle className="h-4 w-4" />
-                    <span>Active</span>
-                  </>
-                ) : (
-                  <>
-                    <AlertCircle className="h-4 w-4" />
-                    <span>Not Active</span>
-                  </>
-                )}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-card text-card-foreground w-64 rounded-lg shadow-lg">
-              <DropdownMenuLabel className="text-muted-foreground">
-                Profile Status
-              </DropdownMenuLabel>
-              {profileComplete ? (
-                <DropdownMenuItem className="p-3 text-sm">
-                  Your profile is **active**, and your portfolio is now visible on the public
-                  domain.
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  className="hover:bg-accent hover:text-accent-foreground cursor-pointer p-3 text-sm"
-                  onClick={() => navigate('/manage')}
+          {/* Profile Status Button (Opens Modal) */}
+          <button
+            className={`flex items-center space-x-2 rounded-lg px-3 py-1 text-sm font-medium ${
+              profileComplete ? 'text-green-500' : 'text-red-500'
+            } hover:bg-accent hover:text-accent-foreground focus:outline-none`}
+            onClick={() => setIsModalOpen(true)}
+          >
+            {profileComplete ? (
+              <>
+                <CheckCircle className="h-4 w-4" />
+                <span>Active</span>
+              </>
+            ) : (
+              <>
+                <AlertCircle className="h-4 w-4" />
+                <span>Not Active</span>
+              </>
+            )}
+          </button>
+
+          {/* Profile Status Modal */}
+          <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="md">
+            <h2 className="text-primary mb-2 text-lg font-bold">Profile Status</h2>
+            {profileComplete ? (
+              <>
+                <p className="text-muted-foreground">
+                  Your profile is <strong>active</strong>, and your portfolio is now visible on the
+                  public domain.
+                </p>
+                <Link
+                  to={`https://profoliohub.vercel.app/${loggedUser?.friendlyId}`}
+                  target="_blank"
+                  className="text-primary hover:text-primary-foreground underline"
                 >
-                  Your profile is **not active**. Complete your profile to make your portfolio
-                  public!
-                  <br />
-                  <br />
-                  **Click here to update your profile.**
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  {`profoliohub.vercel.app/${loggedUser?.friendlyId}`}
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="text-muted-foreground">
+                  Your profile is <strong>not active</strong>. Complete your profile to make your
+                  portfolio public.
+                </p>
+                <div className="mt-4">
+                  <Link
+                    to="/profile/edit"
+                    className="text-primary hover:text-primary-foreground font-medium underline"
+                  >
+                    Click here to update your profile.
+                  </Link>
+                </div>
+              </>
+            )}
+          </CustomModal>
 
           {/* User Profile */}
           <DropdownMenu>

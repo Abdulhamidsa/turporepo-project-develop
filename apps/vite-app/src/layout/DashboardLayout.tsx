@@ -28,7 +28,7 @@ const DashboardLayout: React.FC = () => {
       name: 'Profile',
       icon: User,
       link: routesConfig.profile,
-      attention: userProfile && !userProfile.completedProfile, // Check if profile needs attention
+      attention: userProfile && !userProfile.completedProfile,
     },
   ];
 
