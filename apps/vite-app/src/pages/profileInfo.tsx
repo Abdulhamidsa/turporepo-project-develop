@@ -17,11 +17,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui
 import { Textarea } from '@repo/ui/components/ui/textarea';
 import { showToast } from '@repo/ui/components/ui/toaster';
 import { defaultUserProfile } from '@repo/zod/validation/user';
-import { Check, Loader, Pen } from 'lucide-react';
+import { AlertCircle, Check, Loader, Pen } from 'lucide-react';
 
 import { getErrorMessage } from '../../utils/getErrorMessage';
 import AgePicker from '../components/AgePicker';
 import CredentialsPage from '../features/user/components/CredentialsPage';
+import IncompleteProfileDialog from '../features/user/components/IncompleteProfileDialog';
+import ProfilePictureEdit from '../features/user/components/ProfilePicture';
 import { useUserProfile } from '../features/user/hooks/use.user.profile';
 import { useUpdateUserProfile } from '../features/user/hooks/useUpdateUserProfile';
 
@@ -98,6 +100,9 @@ export default function ProfileInfo() {
     }
   };
 
+  const [modalContent, setModalContent] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
   // Stop editing on Enter press (optional)
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -105,14 +110,42 @@ export default function ProfileInfo() {
     }
   };
 
+  const handleOpenModal = () => {
+    const missingFields: string[] = [];
+    if (!userProfile.username) missingFields.push('Username');
+    if (!userProfile.profession) missingFields.push('Profession');
+    if (!userProfile.countryOrigin) missingFields.push('Country');
+    if (!userProfile.age) missingFields.push('Age');
+    if (!userProfile.bio) missingFields.push('Bio');
+    if (!userProfile.profilePicture) missingFields.push('Profile Picture');
+    setModalContent(missingFields);
+    setShowModal(true);
+  };
+
   return (
     <div className="container mx-auto p-2 sm:p-4 md:p-6">
       {/* Banner if profile is incomplete */}
-
       <Card className="bg-card text-card-foreground mx-auto w-full max-w-4xl">
         <CardHeader>
           <CardTitle className="text-lg font-bold sm:text-xl md:text-2xl">Edit Profile</CardTitle>
         </CardHeader>
+        {userProfile.completedProfile === false && (
+          <div
+            className="ml-2 flex w-fit cursor-pointer items-center gap-2 rounded p-2 hover:bg-red-200"
+            onClick={handleOpenModal}
+          >
+            <AlertCircle className="h-5 w-5 text-red-500" />
+            <span className="text-sm font-medium text-red-500">
+              Incomplete Profile – click here for details
+            </span>
+          </div>
+        )}
+
+        <IncompleteProfileDialog
+          showModal={showModal}
+          setShowModal={setShowModal}
+          modalContent={modalContent}
+        />
 
         <Tabs
           defaultValue="personalInfo"
@@ -123,13 +156,19 @@ export default function ProfileInfo() {
           <TabsList className="flex justify-start space-x-2 bg-transparent pl-2 sm:space-x-4 sm:pb-10 sm:pl-4 md:pl-6">
             <TabsTrigger
               value="personalInfo"
-              className={`whitespace-nowrap py-1 sm:px-4 sm:py-2 ${activeTab === 'personalInfo' ? 'border-primary border-b-2' : 'bg-transparent'}`}
+              className={`whitespace-nowrap py-1 sm:px-4 sm:py-2 ${
+                activeTab === 'personalInfo' ? 'border-primary border-b-2' : 'bg-transparent'
+              }`}
             >
               Personal Info
             </TabsTrigger>
             <TabsTrigger
               value="credentials"
-              className={`whitespace-nowrap px-2 py-1 sm:px-4 sm:py-2 ${activeTab === 'credentials' ? 'border-primary border-b-2 bg-transparent' : 'bg-transparent'}`}
+              className={`whitespace-nowrap px-2 py-1 sm:px-4 sm:py-2 ${
+                activeTab === 'credentials'
+                  ? 'border-primary border-b-2 bg-transparent'
+                  : 'bg-transparent'
+              }`}
             >
               Credentials
             </TabsTrigger>
@@ -139,6 +178,9 @@ export default function ProfileInfo() {
           <TabsContent value="personalInfo">
             <CardContent>
               <div className="space-y-4 sm:space-y-6">
+                <div className="flex w-fit cursor-pointer">
+                  <ProfilePictureEdit label="Profile Picture" field="profilePicture" />
+                </div>
                 {Object.entries(profileData).map(([key, value]) => {
                   if (
                     [
@@ -151,7 +193,7 @@ export default function ProfileInfo() {
                       'friendlyId',
                     ].includes(key)
                   ) {
-                    return null; // Skip these fields
+                    return null;
                   }
 
                   return (
