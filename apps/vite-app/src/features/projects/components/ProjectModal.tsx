@@ -97,31 +97,16 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
       </div>
       {/* Content Section */}
       <div className="bg-card rounded-b-lg p-6">
-        <div className="mb-4 flex items-start justify-between">
+        <div className="mb-4">
           {/* Project Title */}
-          <div>
-            <h2 className="text-primary text-2xl font-bold leading-tight">{project.title}</h2>
-            <div className="mt-2 flex items-center space-x-2">
-              <Avatar className="border-border h-10 w-10 border">
-                <AvatarImage src={user.profilePicture} alt={user.username} />
-                <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <span className="text-muted-foreground text-sm font-medium">{user.username}</span>
-            </div>
+          <h2 className="text-primary text-2xl font-bold leading-tight">{project.title}</h2>
+          <div className="mt-2 flex items-center space-x-2">
+            <Avatar className="border-border h-10 w-10 border">
+              <AvatarImage src={user.profilePicture} alt={user.username} />
+              <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <span className="text-muted-foreground text-sm font-medium">{user.username}</span>
           </div>
-          {loggedUser?.friendlyId === user.friendlyId && (
-            <Button
-              variant="destructive"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsModalOpen(true);
-              }}
-              className="flex items-center space-x-2 rounded-full bg-red-600 p-2 text-white transition-all duration-300 hover:bg-red-700"
-            >
-              <Trash2 className="h-5 w-5" />
-              <span>Delete</span>
-            </Button>
-          )}
         </div>
 
         {/* Project Description */}
@@ -154,6 +139,23 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
             <ExternalLink className="mr-2 h-5 w-5" /> Visit Project
           </a>
         </Button>
+
+        {/* Delete Button moved to the end */}
+        {loggedUser?.friendlyId === user.friendlyId && (
+          <div className="mt-4 flex justify-end">
+            <Button
+              variant="destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsModalOpen(true);
+              }}
+              className="flex items-center space-x-2 rounded bg-red-600 p-2 text-white transition-all duration-300 hover:bg-red-700"
+            >
+              <Trash2 className="h-5 w-5" />
+              <span>Delete</span>
+            </Button>
+          </div>
+        )}
       </div>
       {/* Custom Delete Confirmation Modal */}
       <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="md">
