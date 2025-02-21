@@ -1,11 +1,9 @@
-'use client';
-
 import * as React from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@repo/ui/components/ui/card';
 import { Input } from '@repo/ui/components/ui/input';
-import { ScrollArea } from '@repo/ui/components/ui/scroll-area';
+import { SimpleScrollArea } from '@repo/ui/components/ui/scroll-area';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Bot, Loader2, MessageSquare, RefreshCw, Send, X } from 'lucide-react';
 
@@ -62,11 +60,8 @@ export default function AIChat({
     }
   }, [data, chatStep]);
 
-  console.log('chatMessages', chatMessages);
-  console.log('data', data);
-
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-16 right-4 z-50">
       <AnimatePresence>
         {!chatOpen ? (
           <motion.div
@@ -85,29 +80,45 @@ export default function AIChat({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
           >
-            <Card className="w-[400px] shadow-xl">
+            <Card className="w-[90vw] max-w-[400px] shadow-xl">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">AI Chat Assistant</CardTitle>
                 <Button variant="ghost" size="icon" onClick={() => setChatOpen(false)}>
                   <X className="h-4 w-4" />
                 </Button>
               </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[400px] pr-4" ref={chatContainerRef}>
+              <CardContent className="p-4">
+                <SimpleScrollArea className="h-[400px] md:pr-4" ref={chatContainerRef}>
                   {chatStep === 'list-projects' && (
-                    <ProjectList projects={projects} selectProject={selectProject} />
+                    <>
+                      <Bot className="ml-1 h-8 w-8" />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-muted mb-4 flex items-center rounded-lg px-3 py-2"
+                      >
+                        <span className="text-sm text-white">
+                          Hi! I'm your AI Chat Assistant. I analyze your project data to suggest
+                          improvements and ideas to optimize your projects. Let's get started!
+                        </span>
+                      </motion.div>
+                      <ProjectList projects={projects} selectProject={selectProject} />
+                    </>
                   )}
                   {chatStep === 'choose-action' && (
                     <ActionSelector sendMessage={sendMessage} goBack={goBack} />
                   )}
-                  {(chatStep === 'select-project' || chatStep === 'finished') && (
-                    <ChatMessages messages={chatMessages} />
+                  {chatStep === 'select-project' && (
+                    <>
+                      <ChatMessages messages={chatMessages} />
+                    </>
                   )}
+                  {chatStep === 'finished' && <ChatMessages messages={chatMessages} />}
                   {chatStep === 'finished' && data.length > 0 && (
                     <ResponseSection title="Results" data={data} ref={resultRef} />
                   )}
                   {chatStep === 'finished' && (
-                    <div className="mt-4 flex space-x-2">
+                    <div className="mt-4 flex flex-wrap items-start gap-2">
                       <Button variant="outline" size="sm" onClick={() => sendMessage('refresh')}>
                         <RefreshCw className="mr-2 h-4 w-4" />
                         Refresh
@@ -123,7 +134,7 @@ export default function AIChat({
                       <Loader2 className="h-8 w-8 animate-spin text-white" />
                     </div>
                   )}
-                </ScrollArea>
+                </SimpleScrollArea>
               </CardContent>
               <CardFooter>
                 <div className="flex w-full items-center space-x-2">
@@ -219,9 +230,7 @@ function ChatMessages({ messages }: { messages: { role: 'user' | 'ai'; text: str
           className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
         >
           <div
-            className={`rounded-lg px-3 py-2 ${
-              msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
-            }`}
+            className={`rounded-lg px-3 py-2 ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
           >
             {msg.role === 'ai' && <Bot className="mb-2 h-4 w-4" />}
             {msg.text}
@@ -236,9 +245,8 @@ const ResponseSection = React.forwardRef(function ResponseSection(
   { title, data }: { title: string; data: ResultItem[] },
   ref: React.Ref<HTMLDivElement>,
 ) {
-  console.log('ResponseSection data:', data);
   return (
-    <div className="mt-4 space-y-2" ref={ref}>
+    <div className="mt-4 w-fit space-y-2" ref={ref}>
       <h4 className="font-semibold text-white">{title}</h4>
       {data.map((item, idx) => (
         <motion.div
