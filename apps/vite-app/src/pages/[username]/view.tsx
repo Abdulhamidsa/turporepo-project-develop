@@ -17,8 +17,6 @@ export default function ProfileViewPage() {
   const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
   const { userProfile } = useUserProfileView();
 
-  // const { userProfile } = useUserProfile();
-
   const { user, projects, isLoading, error } = useUserProjectsView(userProfile.friendlyId ?? '');
 
   const tabsContentRef = useRef<HTMLDivElement>(null);
