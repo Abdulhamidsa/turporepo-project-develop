@@ -67,7 +67,7 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
               <Tooltip content="AI Chat">
                 <TooltipTrigger asChild>
                   <button
-                    className="bg-primary fixed bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110"
+                    className="bg-primary fixed bottom-16 right-3 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110"
                     onClick={() => setChatOpen(true)}
                   >
                     <Bot className="h-6 w-6 text-white" />
