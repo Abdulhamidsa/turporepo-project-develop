@@ -51,3 +51,20 @@ export type GetUserProjectResponse = {
     user: User;
   };
 };
+
+export type ProjectFeatured = {
+  id: string;
+  title: string;
+  thumbnail: string;
+  description: string;
+  tags: { id: string; name: string }[];
+  user?: {
+    username: string;
+    profilePicture?: string;
+    profession?: string;
+  };
+};
+
+export type FeaturedProjectsProps = {
+  projects: ProjectFeatured[];
+};
