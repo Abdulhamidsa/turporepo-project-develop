@@ -1,13 +1,13 @@
-export interface Tag {
+export type Tag = {
   id: string;
   name: string;
-}
+};
 
-export interface Media {
+export type Media = {
   url: string;
-}
+};
 
-export interface Project {
+export type Project = {
   id: string;
   title: string;
   description: string;
@@ -16,9 +16,9 @@ export interface Project {
   thumbnail: string;
   tags: Tag[];
   featured?: boolean;
-}
+};
 
-export interface User {
+export type User = {
   id: string;
   bio: string;
   countryOrigin: string;
@@ -42,4 +42,12 @@ export interface User {
     limit: number;
     totalPages: number;
   };
-}
+};
+
+export type GetUserProjectResponse = {
+  success: boolean;
+  data: {
+    projects: Project[];
+    user: User;
+  };
+};
