@@ -19,12 +19,12 @@ export function Nav() {
             <span className="text-primary">Profolio</span>
           </Link>
 
-          {/* Desktop Menu */}
+          {/* Desktop */}
           <div className="hidden items-center space-x-4 md:flex">
             <NavLinks />
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile */}
           <div className="md:hidden">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>

@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 'use client';
 
 import React, { useRef, useState } from 'react';
@@ -8,7 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/ui
 import { ChevronLeft, ChevronRight, Code, Globe, Layout, PenTool, Server } from 'lucide-react';
 import Image from 'next/image';
 
+import { FeaturedProjectsProps, ProjectFeatured } from '../types';
 import ProjectModal from './ProjectModal';
+
+/* eslint-disable import/order */
 
 const Objectives = [
   {
@@ -38,26 +42,9 @@ const Objectives = [
   },
 ];
 
-interface Project {
-  id: string;
-  title: string;
-  thumbnail: string;
-  description: string;
-  tags: { id: string; name: string }[];
-  user?: {
-    username: string;
-    profilePicture?: string;
-    profession?: string;
-  };
-}
-
-interface FeaturedProjectsProps {
-  projects: Project[];
-}
-
 export const FeaturedProjects: React.FC<FeaturedProjectsProps> = ({ projects }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectFeatured | null>(null);
 
   const scrollPrev = () => {
     if (carouselRef.current) {
