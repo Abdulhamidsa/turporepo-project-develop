@@ -69,8 +69,8 @@ export function PostForm({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="bg-card text-card-foreground mx-auto w-full max-w-md rounded-[var(--radius)] shadow-lg">
-      <h3 className="text-foreground text-lg font-semibold">Create Post</h3>
-      <div className="p-4">
+      <h3 className="text-foreground pb-8 text-2xl font-semibold">Add a Post</h3>
+      <div className="md:p-4">
         <div className="mb-4 flex items-center space-x-2">
           <Avatar className="h-8 w-8">
             <AvatarImage src={userProfile.profilePicture ?? '/placeholder.png'} alt="Your Name" />
@@ -113,7 +113,7 @@ export function PostForm({ onClose }: { onClose: () => void }) {
       </div>
 
       {/* 🔥 Updated Save Button with Better Progress Bar */}
-      <div className="flex justify-end p-4">
+      <div className="flex justify-end pb-4 pt-4 md:p-4">
         <SaveButton onClick={handleSubmit} loading={isLoading} label="Post" progress={progress} />
       </div>
 
