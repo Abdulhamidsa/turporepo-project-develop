@@ -76,14 +76,13 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
               </Tooltip>
             </TooltipProvider>
             {/* AI Chat Drawer */}
-
             <AnimatePresence>
               {chatOpen && (
                 <motion.div
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 50 }}
-                  className="fixed bottom-0 right-4 w-[350px] overflow-hidden rounded-lg bg-white shadow-lg"
+                  className="fixed bottom-16 right-4 z-50 w-[350px] overflow-hidden rounded-lg bg-white shadow-lg"
                 >
                   <AIChat
                     {...{
