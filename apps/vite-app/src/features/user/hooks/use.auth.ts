@@ -26,6 +26,7 @@ type AuthContextType = {
   isLoading: boolean;
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
+  refetchUser: () => Promise<void>;
 };
 type User = {
   friendlyId: string;
@@ -90,10 +91,10 @@ export const useSignin = () => {
 
   // SWR mutation to POST /auth/signin
   const { trigger, isMutating, error } = useSWRMutation<
-    SigninResponse, // data shape
-    Error, // error shape
-    string, // key type
-    SigninPayload // argument type
+    SigninResponse,
+    Error,
+    string,
+    SigninPayload
   >(ENDPOINTS.auth.signin, mutationFetcher);
 
   const signin = async (payload: SigninPayload) => {
@@ -112,13 +113,12 @@ export const useSignin = () => {
   };
 };
 
-// Define the type for credentials
 export type CredentialsType = {
   email: string;
   password: string;
 };
 
-// Hook to fetch credentials
+// fetch credentials
 export const useFetchCredentials = () => {
   const { data, error, mutate } = useSWR<CredentialsType | null>(
     ENDPOINTS.auth.credentials,
@@ -136,7 +136,7 @@ export const useFetchCredentials = () => {
   };
 };
 
-// Update credentials hook
+// Update credentials
 export type UpdateCredentialsPayload = {
   email?: string | undefined;
   password?: string | undefined;
@@ -155,6 +155,41 @@ export const useUpdateCredentials = () => {
   );
   return {
     updateCredentials: trigger,
+    isSubmitting: isMutating,
+    error: error ? getErrorMessage(error) : null,
+  };
+};
+
+// delete account
+export const useDeleteAccount = () => {
+  const { signOut } = useAuth();
+
+  const mutationFetcher = async (url: string) => {
+    try {
+      await request('DELETE', url);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      if (message.includes('already deactivated')) {
+        console.warn('User is already deactivated, proceeding with sign-out.');
+      } else {
+        throw new Error(message);
+      }
+    }
+  };
+
+  const { trigger, isMutating, error } = useSWRMutation(ENDPOINTS.auth.delete, mutationFetcher);
+
+  const deleteAccount = async () => {
+    try {
+      await trigger();
+      await signOut();
+    } catch (err) {
+      throw new Error(getErrorMessage(err));
+    }
+  };
+
+  return {
+    deleteAccount,
     isSubmitting: isMutating,
     error: error ? getErrorMessage(error) : null,
   };

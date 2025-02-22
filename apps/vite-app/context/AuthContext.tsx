@@ -43,7 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('signOut error:', err);
     }
     mutate(null, false);
-    window.location.reload();
   };
 
   return (
@@ -54,6 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         signIn,
         signOut,
+        refetchUser: mutate as unknown as () => Promise<void>,
       }}
     >
       {children}
