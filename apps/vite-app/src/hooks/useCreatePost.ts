@@ -3,6 +3,7 @@ import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
 import { request } from '../../api/request';
+import { useFetchPosts } from '../features/user/hooks/useFetchAllPosts';
 import { useUserPosts } from '../features/user/hooks/useFetchUserPosts';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
@@ -17,6 +18,7 @@ type PostPayload = { content: string; image?: string };
 
 export const usePostSubmit = (friendlyId: string) => {
   const { mutate } = useUserPosts(friendlyId);
+  const { refreshPosts } = useFetchPosts();
 
   const mutationFetcher = async (url: string, { arg }: { arg: PostPayload }) => {
     const response = await request<PostData>('POST', url, arg);
@@ -24,6 +26,8 @@ export const usePostSubmit = (friendlyId: string) => {
       throw new Error('Failed to create post');
     }
     await mutate();
+    await refreshPosts();
+
     // Or, if you prefer, you can call mutate() to update the cache immediately
     return response;
   };

@@ -8,7 +8,7 @@ import { request } from '../../../../api/request';
 import { swrFetcher } from '../../../../api/swrFetcher';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
-export const useFetchPosts = (userId?: string) => {
+export const useFetchPosts = () => {
   const [limit] = useState(5);
   const { data, error, size, setSize, mutate, isValidating } = useSWRInfinite<{
     posts: PostType[];
@@ -16,13 +16,12 @@ export const useFetchPosts = (userId?: string) => {
     currentPage: number;
   }>(
     (pageIndex) => {
-      if (!userId) return null; // Prevent fetching if no user
       return `${ENDPOINTS.posts.fetch}?limit=${limit}&page=${pageIndex + 1}`;
     },
     (url) => swrFetcher(url),
   );
 
-  const posts = data ? data.reduce((desc, page) => [...desc, ...page.posts], [] as PostType[]) : [];
+  const posts = data ? data.reduce((asc, page) => [...asc, ...page.posts], [] as PostType[]) : [];
 
   const totalPages = data?.[0]?.totalPages ?? 0;
 
@@ -46,16 +45,15 @@ export const useFetchPosts = (userId?: string) => {
                 ),
               }))
             : currentData,
-        false, // Optimistic update, don't re-fetch yet
+        true,
       );
 
       await request('POST', ENDPOINTS.posts.like, { postId });
 
-      // 🚀 Revalidate to fetch fresh data
       mutate(undefined, { revalidate: true });
     } catch (error) {
       console.error('Error toggling like:', error);
-      mutate(); // Rollback in case of failure
+      mutate();
     }
   };
 
@@ -77,6 +75,6 @@ export const useFetchPosts = (userId?: string) => {
     isValidating,
     totalPages,
     currentPage: size,
-    mutate,
+    refreshPosts: mutate,
   };
 };
