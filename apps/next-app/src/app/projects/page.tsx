@@ -1,12 +1,15 @@
-// app/projects/page.tsx
 import React from 'react';
 
 import ProjectsListClient from '../../components/ProjectsListClient';
 // eslint-disable-next-line import/order
-import { SearchForm } from '../../components/search-form';
+import { SearchForm } from '../../components/SearchForm';
 // eslint-disable-next-line import/order
 import { getProjects } from '../../lib/api';
 
+export const metadata = {
+  title: 'Explore Projects - ProFolio',
+  description: 'Browse and discover top projects created by professionals in various industries.',
+};
 export const dynamic = 'force-dynamic';
 
 export default async function ProjectsPage({
@@ -24,8 +27,8 @@ export default async function ProjectsPage({
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="mb-8 text-3xl font-bold">All Projects</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl">All Projects</h1>
       <SearchForm initialSearch={search} searchType="projects" />
       <ProjectsListClient projects={projects} page={page} totalPages={totalPages} search={search} />
     </div>

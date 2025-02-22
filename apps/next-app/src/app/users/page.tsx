@@ -8,9 +8,15 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 // eslint-disable-next-line import/order
-import { SearchForm } from '../../components/search-form';
+import { SearchForm } from '../../components/SearchForm';
 // eslint-disable-next-line import/order
 import { getUsers } from '../../lib/api';
+
+export const metadata = {
+  title: 'Discover Professionals - ProFolio',
+  description:
+    'Find top professionals across various fields, including software engineering, design, DevOps, and more.',
+};
 
 const ProfessionMapping = [
   {
@@ -54,7 +60,7 @@ export default async function UsersPage({
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-center text-3xl font-bold">Discover Professionals</h1>
+      <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl">Discover Professionals</h1>
       <SearchForm initialSearch={search} searchType="users" />
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {users.map((user: any) => {
@@ -68,13 +74,12 @@ export default async function UsersPage({
                     <Image
                       src={user.profilePicture || '/placeholder.svg'}
                       alt={user.username || 'User'}
-                      layout="fill"
-                      objectFit="cover"
+                      fill
                       className="rounded-t-lg"
                     />
                   </div>
                   <div className="p-4">
-                    <h2 className="text-lg font-semibold">{user.username}</h2>
+                    <h2 className="pb-1 text-lg font-semibold">{user.username}</h2>
                     <div className="flex items-center gap-1">
                       {mapping ? (
                         <>

@@ -8,7 +8,7 @@ import { getUserProfile, getUserProject } from '../../../lib/api';
 export const dynamic = 'force-dynamic';
 
 interface PublicProfilePageProps {
-  params: { id: string }; // ✅ Explicitly define params type
+  params: { id: string };
 }
 
 export default async function PublicProfilePage({ params }: PublicProfilePageProps) {
@@ -24,11 +24,11 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
   const userProjects = userProjectResponse?.data?.projects || [];
 
   return (
-    <div className="bg-background-muted dark:bg-background text-foreground dark:text-primary-foreground min-h-screen p-8">
+    <div className="bg-background-muted dark:bg-background text-foreground dark:text-primary-foreground min-h-screen p-4 md:p-8">
       <div className="border-border bg-card dark:bg-muted mx-auto max-w-5xl overflow-hidden rounded-lg border shadow-lg">
         <Suspense fallback={<LoadingSpinner />}>
-          <ProfileHeader userProfile={userProfile} />
-          <div className="bg-card grid gap-8 p-8">
+          <div className="flex flex-col gap-8">
+            <ProfileHeader userProfile={userProfile} />
             <ProjectsSection projects={userProjects} />
           </div>
         </Suspense>
