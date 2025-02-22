@@ -34,6 +34,7 @@ export const getEndpoints = (baseUrl: string) => ({
     signout: `${baseUrl}/signout`,
     refreshToken: `${baseUrl}/auth/refresh-token`,
     loggedUser: `${baseUrl}/logged-user`,
+    delete: `${baseUrl}/user`,
   },
   comments: {},
   notifications: {
