@@ -3,12 +3,13 @@ import { useState } from 'react';
 import { getEndpoints } from '@repo/api/endpoints';
 
 import { request } from '../../api/request';
-import { useFetchPosts } from '../features/user/hooks/useFetchAllPosts';
+
+// import { useFetchPosts } from '../features/user/hooks/useFetchAllPosts';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 
 export const useDeleteComment = (postId: string) => {
-  const { mutate } = useFetchPosts();
+  // const { mutate } = useFetchPosts();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +23,7 @@ export const useDeleteComment = (postId: string) => {
       const response = await request('DELETE', ENDPOINTS.posts.deleteComment(postId, commentId));
 
       if (response) {
-        mutate();
+        // mutate();
         return true;
       }
 

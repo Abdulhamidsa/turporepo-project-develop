@@ -5,13 +5,14 @@ import { frontendCommentSchema } from '@repo/zod/validation/post';
 import { z } from 'zod';
 
 import { request } from '../../api/request';
-import { useFetchPosts } from '../features/user/hooks/useFetchAllPosts';
+
+// import { useFetchPosts } from '../features/user/hooks/useFetchAllPosts';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 export const useAddComment = (postId: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { mutate } = useFetchPosts();
+  // const { mutate } = useFetchPosts();
   const submitComment = async (text: string) => {
     if (!text.trim()) return;
 
@@ -31,7 +32,7 @@ export const useAddComment = (postId: string) => {
         console.error('Validation Errors:', commentsValidation.error.errors);
         throw new Error('Invalid API response structure for comments');
       }
-      mutate();
+      // mutate();
       return commentsValidation.data; // Return the updated comments
     } catch (err) {
       console.error('Error adding comment:', err);
