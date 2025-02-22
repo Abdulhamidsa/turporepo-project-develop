@@ -10,9 +10,7 @@ export async function swrFetcher<T>(
 ): Promise<T> {
   try {
     const response = await request<unknown>('GET', url);
-    console.log('Received data:', response); // Debugging API response
-
-    // Automatically wrap the schema in z.array if the response is an array
+    console.log('Received data:', response);
     let validatedSchema = schema;
     if (Array.isArray(response) && schema && !(schema instanceof z.ZodArray)) {
       validatedSchema = z.array(schema) as unknown as ZodSchema<T>;
