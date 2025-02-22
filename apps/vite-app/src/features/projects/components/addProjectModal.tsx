@@ -50,13 +50,12 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
   return (
     <CustomModal size="3xl" isOpen={isOpen} onClose={onClose}>
       <div className="grid h-auto gap-4 md:h-[500px] md:grid-cols-2">
-        {/* Project Preview - Always visible */}
         <div className="hidden md:block">
           <ProjectPreview project={project} pendingThumbnail={pendingThumbnail} />
         </div>
 
         {/* Project Form */}
-        <div className="max-h-[450px] overflow-y-auto p-4">
+        <div className="max-h-[500px] overflow-y-auto p-4">
           <ProjectForm
             project={project}
             setProject={setProject}
