@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
-import { Dialog, DialogContent, DialogHeader } from '@repo/ui/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@repo/ui/components/ui/dialog';
 import { Briefcase, Globe, Palette, Rocket, Users, Zap } from 'lucide-react';
 
 import SignupForm from '../features/auth/components/SignUpForm';
@@ -125,8 +125,11 @@ export default function Auth() {
 
       {/* Dialog for Forms */}
       <Dialog open={!!isSignIn.mode} onOpenChange={closeModal}>
-        <DialogContent className="bg-card text-card-foreground fixed left-1/2 top-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2 transform rounded-lg p-8 shadow-xl sm:w-[400px]">
-          <DialogHeader></DialogHeader>
+        <DialogContent
+          aria-describedby={undefined}
+          className="bg-card text-card-foreground fixed left-1/2 top-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2 transform rounded-lg p-8 shadow-xl sm:w-[400px]"
+        >
+          <DialogTitle></DialogTitle>
           {isSignIn.mode === 'signin' ? (
             <SigninForm
               setIsSignIn={(val) => setIsSignIn({ mode: val ? 'signin' : 'signup' })}
