@@ -13,9 +13,11 @@ function App() {
     <SWRConfig
       value={{
         fetcher: swrFetcher,
-        revalidateOnFocus: true,
-        revalidateOnReconnect: true,
-        revalidateOnMount: true,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        dedupingInterval: 30000,
+        errorRetryCount: 3,
+        errorRetryInterval: 5000,
       }}
     >
       <AuthProvider>{routing}</AuthProvider>
