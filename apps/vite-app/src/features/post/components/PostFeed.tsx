@@ -131,9 +131,10 @@ export function PostFeed({ post, user }: PostProps) {
             </Avatar>
           </Link>
         )}
+
         <div className="flex-grow leading-tight">
-          <div className="flex items-center space-x-2">
-            <h4 className="text-foreground pr-1 text-lg font-bold">{user.username}</h4>
+          <div className="flex flex-col items-start space-y-1 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0">
+            <h4 className="text-foreground text-lg font-bold">{user.username}</h4>
             <ProfessionBadge profession={user.profession} />
           </div>
           <p className="text-muted-foreground text-xs">{timeAgo(post.createdAt)}</p>
