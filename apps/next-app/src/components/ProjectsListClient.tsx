@@ -5,14 +5,13 @@ import React, { useState } from 'react';
 import { Badge } from '@repo/ui/components/ui/badge';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/ui/card';
-// Import Lucide icons
 import { Code, Globe, Layout, PenTool, Server } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import ProjectModal from './ProjectModal';
 
-const Objectives = [
+export const Objectives = [
   {
     profession: 'Software Engineer',
     objective: 'Software Engineering',
