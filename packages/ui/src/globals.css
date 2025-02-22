@@ -1,55 +1,73 @@
 @tailwind base;
+@custom-variant dark (&:is(.dark *));
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Base Colors - Light Mode */
-    --background: #e5e5e5; /* Soft warm gray */
-    --foreground: #333333; /* Dark grayish black for text */
-    --card: #f5f5f5; /* Off-white for better contrast */
+    --background: #e5e5e5;
+    --foreground: #333333;
+    --card: #f5f5f5;
     --card-foreground: #1a1a1a;
     --popover: #f5f5f5;
     --popover-foreground: #1a1a1a;
-    --primary: #008080; /* Blue-green */
-    --primary-foreground: #ffffff; /* White text on primary */
-    --secondary: #00a8a8; /* Cool teal */
+    --primary: #008080;
+    --primary-foreground: #ffffff;
+    --secondary: #00a8a8;
     --secondary-foreground: #1a1a1a;
-    --muted: #d1d1d1; /* Light gray for muted elements */
+    --muted: #d1d1d1;
     --muted-foreground: #6b7280;
-    --accent: #005f5f; /* Deep teal */
+    --accent: #005f5f;
     --accent-foreground: #ffffff;
-    --destructive: #b71c1c; /* Dark red for errors */
+    --destructive: #b71c1c;
     --destructive-foreground: #ffffff;
-    --border: #c7c7c7; /* Softer gray for borders */
-    --input: #c7c7c7; /* Matches border */
-    --ring: #008080; /* Matches primary for focus */
+    --border: #c7c7c7;
+    --input: #c7c7c7;
+    --ring: #008080;
     --radius: 0.4rem;
   }
 
   .dark {
-    /* Base Colors - Dark Mode */
-    --background: #121212; /* Keeping your deep dark gray */
-    --foreground: #e0e0e0; /* Soft white text */
-    --card: #1e1e1e; /* Dark gray for cards */
+    --background: #121212;
+    --foreground: #e0e0e0;
+    --card: #1e1e1e;
     --card-foreground: #e0e0e0;
     --popover: #1e1e1e;
     --popover-foreground: #e0e0e0;
-    --primary: #008080; /* Blue-green */
+    --primary: #008080;
     --primary-foreground: #ffffff;
-    --secondary: #00a8a8; /* Cool teal */
+    --secondary: #00a8a8;
     --secondary-foreground: #e0e0e0;
-    --muted: #2d2d2d; /* Dark gray for muted elements */
+    --muted: #2d2d2d;
     --muted-foreground: #cacacb;
-    --accent: #005f5f; /* Deeper teal */
+    --accent: #005f5f;
     --accent-foreground: #ffffff;
-    --destructive: #b71c1c; /* Dark red for errors */
+    --destructive: #b71c1c;
     --destructive-foreground: #ffffff;
-    --border: #3f3f3f; /* Dark gray for borders */
+    --border: #3f3f3f;
     --input: #3f3f3f;
-    --ring: #008080; /* Matches primary for focus */
+    --ring: #008080;
     --radius: 0.4rem;
   }
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 10px;
+  border: 3px solid var(--muted);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--secondary);
 }
 
 @layer base {
@@ -72,5 +90,34 @@
 
   .animate-scroll {
     animation: scrollLeftToRight 45s linear infinite;
+  }
+}
+
+@theme inline {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
   }
 }
