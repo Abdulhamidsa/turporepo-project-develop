@@ -60,7 +60,7 @@ const DashboardLayout: React.FC = () => {
         onClose={toggleSidebar}
       />
       <Overlay isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
-      <main className="m-auto max-w-screen-lg flex-1 overflow-auto p-4 md:p-8">
+      <main className="m-auto max-w-screen-lg flex-1 overflow-auto md:p-4">
         <Outlet />
       </main>
       <footer className="mb-16">
