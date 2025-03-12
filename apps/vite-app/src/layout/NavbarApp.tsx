@@ -14,6 +14,7 @@ import {
 import { AlertCircle, CheckCircle, LogOut, Settings } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { routesConfig } from '../../routes/routesConfig';
 import { useAuth } from '../features/user/hooks/use.auth';
 import { useUserProfile } from '../features/user/hooks/use.user.profile';
 import { DarkModeToggle } from './DarkModeToggle';
@@ -39,13 +40,16 @@ export function NavbarApp() {
 
   const handleUpdateProfileClick = () => {
     setIsModalOpen(false);
-    navigate('/profile/edit');
+    navigate(routesConfig.profile);
   };
 
   return (
     <header className="bg-muted border-border sticky top-0 z-50 border-b shadow-sm">
       <div className="mx-auto flex h-full items-center justify-between p-4 md:ml-16 md:mr-8">
-        <Link to="/" className="text-primary hover:text-primary-foreground text-xl font-bold">
+        <Link
+          to={routesConfig.home}
+          className="text-primary hover:text-primary-foreground text-xl font-bold"
+        >
           ProFolio
         </Link>
         <div className="flex items-center space-x-4">
@@ -64,7 +68,6 @@ export function NavbarApp() {
             <span>{profileComplete ? 'Active' : 'Not Active'}</span>
           </button>
 
-          {/* Profile Status Modal */}
           <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="md">
             <h2 className="text-primary mb-2 text-lg font-bold">Profile Status</h2>
             {profileComplete ? (
@@ -73,11 +76,11 @@ export function NavbarApp() {
                   Your profile is <strong>active</strong> and your portfolio is now visible.
                 </p>
                 <Link
-                  to={`https://profoliohub.vercel.app/user/${loggedUser?.friendlyId}`}
+                  to={`https://profoliohub.vercel.app${routesConfig.userPortfolioView(loggedUser?.friendlyId || '')}`}
                   target="_blank"
                   className="text-primary hover:text-primary-foreground underline"
                 >
-                  {`profoliohub.vercel.app/${loggedUser?.friendlyId}`}
+                  {`profoliohub.vercel.app${routesConfig.userPortfolioView(loggedUser?.friendlyId || '')}`}
                 </Link>
               </>
             ) : (
@@ -120,7 +123,7 @@ export function NavbarApp() {
             <DropdownMenuContent className="bg-card text-card-foreground w-48 rounded-lg shadow-lg">
               <DropdownMenuLabel className="text-muted-foreground">Account</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigate('/settings')}
+                onClick={() => navigate(routesConfig.settings)}
                 className="hover:bg-accent hover:text-accent-foreground flex items-center space-x-2 rounded-md p-2"
               >
                 <Settings className="h-4 w-4" />
