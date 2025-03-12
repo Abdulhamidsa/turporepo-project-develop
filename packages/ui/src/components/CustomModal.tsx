@@ -53,7 +53,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 p-4 md:p-0 flex items-center justify-center bg-black bg-opacity-50"
+          className="fixed inset-0 z-50 p-6 md:p-0 flex items-center justify-center bg-black bg-opacity-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -73,7 +73,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
             >
               <X className="h-6 w-6" />
             </button>
-            <div className=" p-2 md:p-6">{children}</div>
+            <div className=" p-3 md:p-6">{children}</div>
           </motion.div>
         </motion.div>
       )}
