@@ -69,7 +69,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           >
             <button
               onClick={onClose}
-              className="text-muted-foreground hover:text-foreground absolute right-2 top-2"
+              className=" hover:text-foreground absolute -right-2 -top-3 text-primary z-10"
             >
               <X className="h-6 w-6" />
             </button>
