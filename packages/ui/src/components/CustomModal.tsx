@@ -73,7 +73,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
             >
               <X className="h-6 w-6" />
             </button>
-            <div className="p-6">{children}</div>
+            <div className=" p-2 md:p-6">{children}</div>
           </motion.div>
         </motion.div>
       )}

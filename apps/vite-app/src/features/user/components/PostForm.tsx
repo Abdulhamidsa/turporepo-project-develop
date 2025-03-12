@@ -25,7 +25,6 @@ export function PostForm({
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // Set initial content when the component mounts or when initialContent changes
   useEffect(() => {
     if (initialContent) {
       setContent(initialContent);
@@ -107,15 +106,15 @@ export function PostForm({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="What's on your mind?"
-        className="border-border bg-muted text-muted-foreground focus:ring-primary h-28 w-full rounded-md border p-3 text-sm focus:outline-none focus:ring-2 sm:text-base"
+        className="border-border bg-muted text-muted-foreground focus:ring-primary h-24 w-full rounded-md border p-3 text-sm focus:outline-none focus:ring-2 sm:text-base"
       />
 
       {imagePreview && (
-        <div className="relative mt-4">
+        <div className="relative mt-4 flex items-center justify-center">
           <img
-            src={imagePreview || '/placeholder.svg'}
+            src={imagePreview}
             alt="Preview"
-            className="h-auto max-h-80 w-full rounded-md object-contain"
+            className="h-auto max-h-[200px] w-auto max-w-full rounded-md object-contain"
           />
           <button
             className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
@@ -126,24 +125,27 @@ export function PostForm({
         </div>
       )}
 
-      <div className="relative mt-4">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="hidden"
-          id="image-upload"
-        />
-        <label
-          htmlFor="image-upload"
-          className="border-border bg-muted hover:border-muted-foreground flex h-32 w-full cursor-pointer items-center justify-center rounded-md border border-dashed transition-all duration-300"
-        >
-          <div className="flex flex-col items-center">
-            <ImagePlus className="text-muted-foreground h-8 w-8" />
-            <span className="text-muted-foreground mt-2 text-sm">Click to upload image</span>
-          </div>
-        </label>
-      </div>
+      {/* Smaller Upload Button */}
+      {!imagePreview && (
+        <div className="relative mt-4 flex flex-col items-center">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+            id="image-upload"
+          />
+          <label
+            htmlFor="image-upload"
+            className="border-border bg-muted hover:border-muted-foreground flex h-20 w-full cursor-pointer items-center justify-center rounded-md border border-dashed transition-all duration-300"
+          >
+            <div className="flex flex-col items-center">
+              <ImagePlus className="text-muted-foreground h-6 w-6" />
+              <span className="text-muted-foreground mt-1 text-xs">Click to add an image</span>
+            </div>
+          </label>
+        </div>
+      )}
 
       <div className="flex justify-end pt-4">
         <SaveButton onClick={handleSubmit} loading={isLoading} label="Post" progress={progress} />
