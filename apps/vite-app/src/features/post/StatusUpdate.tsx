@@ -24,9 +24,7 @@ export default function StatusUpdate() {
 
   return (
     <div>
-      {/* Full Status Update UI for Larger Screens */}
       <div className="bg-card mb-6 hidden space-y-4 rounded-lg p-4 shadow md:block">
-        {/* Textarea */}
         <Textarea
           value={status}
           onChange={(e) => setStatus(e.target.value)}
@@ -34,7 +32,6 @@ export default function StatusUpdate() {
           className="border-border focus:ring-primary w-full rounded-md border px-3 py-2 text-sm focus:outline-none"
         />
 
-        {/* Post Button */}
         <div className="flex justify-end">
           <Button
             onClick={handlePost}
@@ -46,14 +43,12 @@ export default function StatusUpdate() {
         </div>
       </div>
 
-      {/* Modal for Adding Status */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Status</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Textarea */}
             <Textarea
               value={status}
               onChange={(e) => setStatus(e.target.value)}
