@@ -25,6 +25,11 @@ const DashboardLayout: React.FC = () => {
         : routesConfig.home,
     },
     {
+      name: 'Projects',
+      icon: Briefcase,
+      link: routesConfig.projects,
+    },
+    {
       name: 'Profile',
       icon: User,
       link: routesConfig.profile,
