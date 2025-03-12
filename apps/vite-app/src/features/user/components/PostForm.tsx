@@ -1,24 +1,41 @@
-import { useState } from 'react';
+'use client';
+
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { showToast } from '@repo/ui/components/ui/toaster';
-import { ImagePlus } from 'lucide-react';
+import { ImagePlus, X } from 'lucide-react';
 
 import { uploadToCloudinary } from '../../../../utils/CloudinaryConfige';
 import { usePostSubmit } from '../../../hooks/useCreatePost';
 import SaveButton from '../../projects/components/SaveButton';
 import { useUserProfile } from '../hooks/use.user.profile';
 
-export function PostForm({ onClose }: { onClose: () => void }) {
+export function PostForm({
+  onClose,
+  initialContent = '',
+}: {
+  onClose: () => void;
+  initialContent?: string;
+}) {
   const { userProfile } = useUserProfile();
   const friendlyId = userProfile?.friendlyId ?? '';
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string>(initialContent);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Set initial content when the component mounts or when initialContent changes
+  useEffect(() => {
+    if (initialContent) {
+      setContent(initialContent);
+    }
+  }, [initialContent]);
 
   const { trigger, error } = usePostSubmit(friendlyId);
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -31,6 +48,11 @@ export function PostForm({ onClose }: { onClose: () => void }) {
     }
   };
 
+  const removeImage = () => {
+    setImage(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = async () => {
     if (!content && !image) {
       showToast('At least a text or an image is required.', 'error');
@@ -41,7 +63,7 @@ export function PostForm({ onClose }: { onClose: () => void }) {
       setIsLoading(true);
       setProgress(10);
 
-      let imageUrl: string = '';
+      let imageUrl = '';
       if (image) {
         setProgress(30);
         const urls = await uploadToCloudinary([image]);
@@ -68,56 +90,66 @@ export function PostForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="bg-card text-card-foreground mx-auto w-full max-w-md rounded-[var(--radius)] shadow-lg">
-      <h3 className="text-foreground pb-8 text-2xl font-semibold">Add a Post</h3>
-      <div className="md:p-4">
-        <div className="mb-4 flex items-center space-x-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={userProfile.profilePicture ?? '/placeholder.png'} alt="Your Name" />
-            <AvatarFallback>{userProfile.username?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
-          </Avatar>
-          <span className="text-foreground text-sm font-semibold">{userProfile.username}</span>
-        </div>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="What's on your mind?"
-          className="border-border bg-muted text-muted-foreground focus:ring-ring h-20 w-full rounded-[var(--radius)] border p-2 text-sm focus:outline-none focus:ring-2"
-        />
-        <div className="relative mt-4">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden"
-            id="image-upload"
-          />
-          <label
-            htmlFor="image-upload"
-            className="border-border bg-muted hover:border-muted-foreground flex h-24 w-full cursor-pointer items-center justify-center rounded-[var(--radius)] border-2 border-dashed transition-colors duration-300"
-          >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="max-h-full rounded-[var(--radius)] object-contain"
-              />
-            ) : (
-              <div className="flex flex-col items-center">
-                <ImagePlus className="text-muted-foreground h-6 w-6" />
-                <span className="text-muted-foreground mt-1 text-xs">Add an image</span>
-              </div>
-            )}
-          </label>
-        </div>
+    <div className="bg-card text-card-foreground mx-auto w-full max-w-lg rounded-lg p-4 shadow-lg sm:p-6">
+      <h3 className="text-foreground pb-4 text-xl font-semibold">Add a Post</h3>
+
+      <div className="mb-4 flex items-center space-x-3">
+        <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
+          <AvatarImage src={userProfile.profilePicture ?? '/placeholder.png'} alt="Your Name" />
+          <AvatarFallback>{userProfile.username?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
+        </Avatar>
+        <span className="text-foreground text-sm font-semibold sm:text-base">
+          {userProfile.username}
+        </span>
       </div>
 
-      {/* 🔥 Updated Save Button with Better Progress Bar */}
-      <div className="flex justify-end pb-4 pt-4 md:p-4">
+      <textarea
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        placeholder="What's on your mind?"
+        className="border-border bg-muted text-muted-foreground focus:ring-primary h-28 w-full rounded-md border p-3 text-sm focus:outline-none focus:ring-2 sm:text-base"
+      />
+
+      {imagePreview && (
+        <div className="relative mt-4">
+          <img
+            src={imagePreview || '/placeholder.svg'}
+            alt="Preview"
+            className="h-auto max-h-80 w-full rounded-md object-contain"
+          />
+          <button
+            className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+            onClick={removeImage}
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      <div className="relative mt-4">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
+          id="image-upload"
+        />
+        <label
+          htmlFor="image-upload"
+          className="border-border bg-muted hover:border-muted-foreground flex h-32 w-full cursor-pointer items-center justify-center rounded-md border border-dashed transition-all duration-300"
+        >
+          <div className="flex flex-col items-center">
+            <ImagePlus className="text-muted-foreground h-8 w-8" />
+            <span className="text-muted-foreground mt-2 text-sm">Click to upload image</span>
+          </div>
+        </label>
+      </div>
+
+      <div className="flex justify-end pt-4">
         <SaveButton onClick={handleSubmit} loading={isLoading} label="Post" progress={progress} />
       </div>
 
-      {error && <p className="text-destructive mt-2 text-center text-sm">{error.message}</p>}
+      {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
     </div>
   );
 }

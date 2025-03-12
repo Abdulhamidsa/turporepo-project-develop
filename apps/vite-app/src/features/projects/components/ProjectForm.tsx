@@ -38,16 +38,30 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
   const handleSaveProject = async () => {
     try {
-      setProgress(10);
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      setProgress(5);
       setIsUploading(true);
-      setProgress(30);
+
+      for (let i = 10; i <= 60; i += 10) {
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        setProgress(i);
+      }
+
+      // Upload Thumbnail
+      if (pendingThumbnail) {
+        setProgress(70);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      if (pendingMedia.length > 0) {
+        for (let i = 70; i <= 90; i += 5) {
+          await new Promise((resolve) => setTimeout(resolve, 150));
+          setProgress(i);
+        }
+      }
 
       const success: boolean = await saveProject();
 
       if (success) {
-        setProgress(70);
-        await new Promise((resolve) => setTimeout(resolve, 300));
         setProgress(100);
         await new Promise((resolve) => setTimeout(resolve, 500));
       } else {
@@ -78,7 +92,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   };
 
   return (
-    <div className="bg-card overflow-y-auto rounded-[var(--radius)] p-6 shadow-lg">
+    <div className="bg-card overflow-y-auto p-1 rounded-[var(--radius)] md:p-6 shadow-lg">
       <h3 className="text-foreground mb-6 text-xl font-bold">Upload Your Project</h3>
       <div className="space-y-4">
         <div>
