@@ -80,7 +80,6 @@ type SigninResponse = {
 };
 
 // src/hooks/useSignin.ts
-
 export const useSignin = () => {
   const { signIn } = useAuth();
 
@@ -88,8 +87,6 @@ export const useSignin = () => {
     const response = await request<SigninResponse>('POST', url, arg);
     return response;
   };
-
-  // SWR mutation to POST /auth/signin
   const { trigger, isMutating, error } = useSWRMutation<
     SigninResponse,
     Error,

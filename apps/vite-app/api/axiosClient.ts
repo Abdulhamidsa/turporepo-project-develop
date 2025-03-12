@@ -2,13 +2,12 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-// Create Axios instance
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // to include cookies with requests
+  withCredentials: true,
 });
 
 const IGNORED_ENDPOINTS = ['/logged-user'];
