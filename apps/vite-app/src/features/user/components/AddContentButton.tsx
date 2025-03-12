@@ -2,67 +2,124 @@ import { useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { Button } from '@repo/ui/components/ui/button';
-import { Input } from '@repo/ui/components/ui/input';
-import { Edit, FolderPlus } from 'lucide-react';
+import { Card, CardContent } from '@repo/ui/components/ui/card';
+import { Textarea } from '@repo/ui/components/ui/textarea';
+import { showToast } from '@repo/ui/components/ui/toaster';
+import { ImagePlus, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import CustomModal from '../../../../../../packages/ui/src/components/CustomModal';
 import { routesConfig } from '../../../../routes/routesConfig';
-import AddProjectModal from '../../projects/components/addProjectModal';
+import { usePostSubmit } from '../../../hooks/useCreatePost';
+import { StatusForm } from '../../post/components/StatusForm';
+import { useUserProfile } from '../../user/hooks/use.user.profile';
 import { useAuth } from '../hooks/use.auth';
 import { PostForm } from './PostForm';
 
 export function AddContentButton() {
-  const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
-  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const { loggedUser } = useAuth();
+  const { userProfile } = useUserProfile();
+  const friendlyId = userProfile?.friendlyId ?? loggedUser?.friendlyId ?? '';
+
+  const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
+  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
+  const [content, setContent] = useState('');
+  const [isPosting, setIsPosting] = useState(false);
+
+  const { trigger, error } = usePostSubmit(friendlyId);
+
+  const handleDirectPost = async () => {
+    if (!content.trim()) {
+      showToast('Status cannot be empty.', 'error');
+      return;
+    }
+
+    try {
+      setIsPosting(true);
+      const payload = { content };
+      await trigger(payload);
+
+      setContent('');
+      setInputFocused(false);
+      showToast('Status posted successfully!', 'success');
+    } catch (err) {
+      console.error('Error posting status:', err);
+      showToast('Failed to post status.', 'error');
+    } finally {
+      setIsPosting(false);
+    }
+  };
 
   return (
-    <div className="bg-card space-y-4 rounded-md p-4 shadow-md">
-      {/* Input section like Facebook */}
-      <div className="flex items-center space-x-3 sm:space-x-4">
-        <Link
-          to={loggedUser?.friendlyId ? routesConfig.userPortfolioView(loggedUser.friendlyId) : '#'}
-        >
-          <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
-            <AvatarImage src={loggedUser?.profilePicture || '/placeholder-avatar.png'} />
-            <AvatarFallback>{loggedUser?.username.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
-          </Avatar>
-        </Link>
+    <Card className="bg-background shadow-sm m-auto w-full max-w-xl">
+      <CardContent className="p-4">
+        <div className="flex items-center gap-3">
+          <Link
+            to={loggedUser?.friendlyId ? routesConfig.userPortfolio(loggedUser.friendlyId) : '#'}
+          >
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={loggedUser?.profilePicture} />
+              <AvatarFallback>{loggedUser?.username?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
+            </Avatar>
+          </Link>
 
-        <Input
-          placeholder="What's on your mind?"
-          className="bg-background border-muted flex-1 cursor-pointer rounded-full border py-2 text-sm focus:ring-0 sm:py-3 sm:text-base"
-          onClick={() => setIsPostDialogOpen(true)}
-          readOnly
-        />
-      </div>
+          <Textarea
+            placeholder="What's on your mind?"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className={`flex-1 bg-muted resize-none rounded-xl px-4 py-2 text-sm border focus:border-primary focus:bg-background transition ${
+              inputFocused ? 'h-20' : 'h-10'
+            }`}
+            onFocus={() => setInputFocused(true)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                if (!content.trim()) {
+                  setInputFocused(false);
+                }
+              }
+            }}
+          />
+        </div>
 
-      {/* Buttons Section */}
-      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-around sm:gap-0">
-        <Button
-          variant="ghost"
-          className="flex w-fit items-center justify-center space-x-2 border hover:bg-white hover:text-black sm:w-auto"
-          onClick={() => setIsPostDialogOpen(true)}
-        >
-          <Edit className="text-primary h-5 w-5" />
-          <span className="text-sm sm:text-base">Add Post</span>
-        </Button>
-        <Button
-          variant="ghost"
-          className="flex w-fit items-center justify-center space-x-2 border hover:bg-white hover:text-black sm:w-auto"
-          onClick={() => setIsProjectDialogOpen(true)}
-        >
-          <FolderPlus className="text-primary h-5 w-5" />
-          <span className="text-sm sm:text-base">Add Project</span>
-        </Button>
-      </div>
+        <div className="flex justify-between mt-3 items-center">
+          <Button
+            variant="ghost"
+            className="flex ml-auto items-center gap-2 px-3 py-2 hover:bg-muted transition"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsPostDialogOpen(true);
+            }}
+          >
+            <ImagePlus className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium">Add Media</span>
+          </Button>
 
-      {/* Modals */}
-      <CustomModal isOpen={isPostDialogOpen} onClose={() => setIsPostDialogOpen(false)} size="lg">
-        <PostForm onClose={() => setIsPostDialogOpen(false)} />
+          <Button
+            onClick={handleDirectPost}
+            disabled={!content.trim() || isPosting}
+            size="sm"
+            className="flex items-center ml-2 gap-2"
+          >
+            {isPosting ? 'Posting...' : 'Post'}
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {error && <p className="mt-2 text-sm text-red-500">{error.message}</p>}
+      </CardContent>
+
+      <CustomModal
+        isOpen={isStatusDialogOpen}
+        onClose={() => setIsStatusDialogOpen(false)}
+        size="lg"
+      >
+        <StatusForm onClose={() => setIsStatusDialogOpen(false)} initialContent={content} />
       </CustomModal>
-      <AddProjectModal isOpen={isProjectDialogOpen} onClose={() => setIsProjectDialogOpen(false)} />
-    </div>
+
+      <CustomModal isOpen={isPostDialogOpen} onClose={() => setIsPostDialogOpen(false)} size="lg">
+        <PostForm onClose={() => setIsPostDialogOpen(false)} initialContent={content} />
+      </CustomModal>
+    </Card>
   );
 }

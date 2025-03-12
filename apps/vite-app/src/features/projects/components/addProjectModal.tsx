@@ -54,8 +54,7 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
           <ProjectPreview project={project} pendingThumbnail={pendingThumbnail} />
         </div>
 
-        {/* Project Form */}
-        <div className="max-h-[500px] overflow-y-auto p-4">
+        <div className="max-h-[500px] overflow-y-auto md:p-4">
           <ProjectForm
             project={project}
             setProject={setProject}

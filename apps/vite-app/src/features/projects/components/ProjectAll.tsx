@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import CustomModal from '@repo/ui/components/CustomModal';
 import Loading from '@repo/ui/components/ui/Loading';
@@ -6,55 +6,43 @@ import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avat
 import { Badge } from '@repo/ui/components/ui/badge';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
-import { ArrowUp } from 'lucide-react';
-import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { timeAgo } from '@repo/utils/timeCalculation';
+import { ChevronLeft, ChevronRight, ExternalLink, FolderPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { ProfessionBadge } from '../../../../../../packages/ui/src/components/ProfessionBadge';
 import { routesConfig } from '../../../../routes/routesConfig';
 import { ProjectType, useProjects } from '../hooks/useProjects';
+import AddProjectModal from './addProjectModal';
 
 export const ProjectsAll = () => {
   const { projects, isLoading, loadMore } = useProjects();
-  const loaderRef = useRef<HTMLDivElement | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(null);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) loadMore();
-    });
-
-    const currentLoader = loaderRef.current;
-    if (currentLoader) observer.observe(currentLoader);
-
-    return () => {
-      if (currentLoader) observer.unobserve(currentLoader);
-    };
-  }, [loadMore]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 100);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
 
   return (
-    <div className="">
+    <div className="relative p-5">
+      <div className="flex justify-center mb-6">
+        <Button
+          onClick={() => setIsAddProjectOpen(true)}
+          className="relative flex items-center gap-2 rounded-lg bg-gradient-to-r  px-6 py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-2xl"
+          variant="outline"
+        >
+          <span className="relative flex items-center">
+            <FolderPlus className="h-6 w-6 transition-transform duration-200" />
+            <span className="ml-2">Add a Project!</span>
+          </span>
+        </Button>
+      </div>
+
+      {/* Projects Grid */}
       {isLoading && projects.length === 0 ? (
         <Loading />
       ) : (
-        <div className="mx-auto grid max-w-[550px] grid-cols-1 gap-6">
-          {projects.map((project, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          {projects.map((project) => (
             <ProjectCard
-              key={`${project.id}-${index}`}
+              key={project.id}
               project={project}
               onClick={() => setSelectedProject(project)}
             />
@@ -62,8 +50,14 @@ export const ProjectsAll = () => {
         </div>
       )}
 
-      <div ref={loaderRef} className="h-10" />
+      {/* Load More Button */}
+      <div className="flex justify-center mt-8">
+        <Button onClick={loadMore} className=" border border-primary px-4 py-2 rounded-lg">
+          Load More
+        </Button>
+      </div>
 
+      {/* Modals */}
       {selectedProject && (
         <ProjectModal
           project={selectedProject}
@@ -72,13 +66,8 @@ export const ProjectsAll = () => {
         />
       )}
 
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="bg-primary hover:bg-secondary fixed bottom-6 right-6 z-50 rounded-full p-3 text-white shadow-lg transition-transform duration-300"
-        >
-          <ArrowUp className="h-6 w-6" />
-        </button>
+      {isAddProjectOpen && (
+        <AddProjectModal isOpen={isAddProjectOpen} onClose={() => setIsAddProjectOpen(false)} />
       )}
     </div>
   );
@@ -103,15 +92,15 @@ const ProjectCard = ({ project, onClick }: { project: ProjectType; onClick: () =
       </div>
 
       <CardContent className="p-4">
-        {/* Project Title and Created Date */}
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-foreground truncate text-lg font-semibold sm:text-xl">
             {project.title}
           </h2>
-          {/* <p className="text-xs text-muted-foreground whitespace-nowrap">{timeAgo(project.createdAt)}</p> */}
+          <p className="text-xs text-muted-foreground whitespace-nowrap">
+            {timeAgo(project.createdAt)}
+          </p>
         </div>
 
-        {/* User Info */}
         <div className="mt-2 flex items-center gap-3">
           {project.user.friendlyId && (
             <Link to={routesConfig.userPortfolioView(project.user.friendlyId)}>
