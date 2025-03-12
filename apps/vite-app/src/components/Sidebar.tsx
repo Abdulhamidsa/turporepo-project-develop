@@ -10,7 +10,7 @@ interface SidebarProps {
   isOpen: boolean;
   navigationItems: NavigationItemProps[];
   sidebarOnlyItems: NavigationItemProps[];
-  onClose: () => void; // Add onClose prop
+  onClose: () => void;
 }
 
 export interface NavigationItemProps {
