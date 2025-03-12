@@ -20,8 +20,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   const isActive = (link?: string) => location.pathname === link;
 
   return (
-    <nav className="bg-card border-border fixed bottom-0 flex w-full items-center justify-between border-t md:hidden">
-      <div className="flex flex-grow justify-center gap-10">
+    <nav className="bg-card border-border fixed bottom-0 flex w-full items-center justify-center border-t md:hidden">
+      <div className="flex flex-grow justify-center gap-3">
         {navigationItems.map((item) => (
           <NavigationItem
             key={item.name}
