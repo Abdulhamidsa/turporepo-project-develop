@@ -4,6 +4,7 @@ import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/ui/card';
 import Link from 'next/link';
 
+
 export default function ForProfessionals() {
   return (
     <div className="container mx-auto px-6 py-12">
