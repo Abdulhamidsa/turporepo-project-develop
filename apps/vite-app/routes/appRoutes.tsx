@@ -5,7 +5,9 @@ import DashboardLayout from '../src/layout/DashboardLayout';
 import ProfilePage from '../src/pages/[username]/manage';
 import ProfileView from '../src/pages/[username]/view';
 import Feed from '../src/pages/feed';
+import Posts from '../src/pages/posts';
 import ProfileInfo from '../src/pages/profileInfo';
+import Projects from '../src/pages/projects';
 import Settings from '../src/pages/settings';
 import { AuthOrRedirect } from '../utils/AuthRedirect';
 import { ProtectedRoute } from './protectedRoutes';
@@ -28,8 +30,12 @@ export const appRoutes: RouteObject[] = [
         element: <Feed />,
       },
       {
-        path: routesConfig.feed,
-        element: <Feed />,
+        path: routesConfig.posts,
+        element: <Posts />,
+      },
+      {
+        path: routesConfig.projects,
+        element: <Projects />,
       },
       {
         path: routesConfig.userPortfolio(':friendlyId'),
