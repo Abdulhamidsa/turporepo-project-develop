@@ -56,7 +56,7 @@ export const appRoutes: RouteObject[] = [
     ],
   },
   {
-    path: '*', // Catch-all 404 for unknown routes
+    path: '*',
     element: <NotFound />,
   },
 ];

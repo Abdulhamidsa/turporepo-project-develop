@@ -3,6 +3,7 @@ import '@repo/ui/globals.css';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 
+import BackToPortfolioButton from '../components/BackToPortfolioButton';
 import { Footer } from '../components/Footer';
 import { Nav } from '../components/Nav';
 
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-grow">{children}</main>
             <Footer />
           </div>
+          <BackToPortfolioButton />
         </ThemeProvider>
       </body>
     </html>

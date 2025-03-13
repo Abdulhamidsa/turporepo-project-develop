@@ -1,3 +1,4 @@
+import BackToPortfolioButton from '@repo/ui/components/BackToPortfolioButton';
 import { useRoutes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -19,7 +20,10 @@ function App() {
         errorRetryInterval: 5000,
       }}
     >
-      <AuthProvider>{routing}</AuthProvider>
+      <AuthProvider>
+        {routing}
+        <BackToPortfolioButton />
+      </AuthProvider>
     </SWRConfig>
   );
 }
