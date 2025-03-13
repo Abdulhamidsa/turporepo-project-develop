@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useRoutes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
