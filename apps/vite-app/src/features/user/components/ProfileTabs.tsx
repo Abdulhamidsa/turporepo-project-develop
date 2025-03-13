@@ -46,9 +46,7 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="posts" className="mt-6">
-            <div className="">
-              <UserPosts friendlyId={userProfile.friendlyId ?? ''} />
-            </div>
+            <UserPosts friendlyId={userProfile.friendlyId ?? ''} />
           </TabsContent>
           <TabsContent value="projects" className="mt-6">
             <TooltipProvider>
@@ -106,7 +104,6 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
                   key={project.id}
                   project={{
                     ...project,
-                    url: project.url ?? '',
                   }}
                   onClick={() => setSelectedProject(project)}
                   friendlyId={userProfile.friendlyId ?? ''}
