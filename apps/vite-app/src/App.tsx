@@ -1,10 +1,10 @@
-import BackToPortfolioButton from '@repo/ui/components/BackToPortfolioButton';
 import { useRoutes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import { swrFetcher } from '../api/swrFetcher';
 import { AuthProvider } from '../context/AuthContext';
 import { appRoutes } from '../routes/appRoutes';
+import BackToPortfolioButton from './components/BackToPortfolioButton';
 
 function App() {
   const routing = useRoutes(appRoutes);

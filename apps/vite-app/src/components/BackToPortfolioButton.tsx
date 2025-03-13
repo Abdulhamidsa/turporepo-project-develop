@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
+import { Button } from '@repo/ui/components/ui/button';
 import { ArrowLeftCircle } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-
-import { Button } from './ui/button';
 
 const STORAGE_KEY = 'fromPortfolio';
 const EXPIRATION_TIME = 2 * 60 * 1000;
