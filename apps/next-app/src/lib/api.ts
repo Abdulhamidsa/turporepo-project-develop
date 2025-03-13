@@ -18,18 +18,24 @@ function getFullUrl(url: string): string {
 async function handleApiRequest(url: string, options?: RequestInit) {
   try {
     const fullUrl = getFullUrl(url);
+    console.log('Fetching URL:', fullUrl);
+
     const res = await fetch(fullUrl, {
       cache: 'force-cache',
       next: { revalidate: 30 },
       ...options,
     });
+    console.log('Response received with status:', res.status);
 
     if (!res.ok) {
       const errorBody = await res.json().catch(() => null);
+      console.error('Fetch error, response not ok:', errorBody);
       throw new AppError('API request failed', res.status, errorBody || res.statusText);
     }
 
-    return await res.json();
+    const json = await res.json();
+    console.log('Response JSON:', json);
+    return json;
   } catch (error) {
     if (error instanceof AppError) {
       console.error(`Error ${error.status}: ${error.message}`, error.details);
