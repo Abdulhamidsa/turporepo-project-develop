@@ -23,7 +23,7 @@ export default function SigninForm({
   } = useForm<SignInFormData>({
     resolver: signInResolver,
     defaultValues: {
-      email: prefillValues?.email || '',
+      email: prefillValues?.email ?? '',
     },
   });
 
