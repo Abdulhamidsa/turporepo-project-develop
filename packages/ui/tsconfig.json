@@ -12,6 +12,6 @@
       "@repo/ui/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/lib", "lib"],
+  "include": ["src", "src/lib", "lib", "src/components/BackToPortfolioButton.tsx"],
   "exclude": ["node_modules"]
 }
