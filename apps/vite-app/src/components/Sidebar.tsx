@@ -47,13 +47,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       className={`bg-card border-border fixed left-0 top-0 z-50 h-dvh border-r transition-transform duration-300 ${isOpen ? 'w-64 translate-x-0' : '-translate-x-full'}`}
     >
       <div className="flex h-full flex-col">
-        {/* Navigation Items */}
         <div
           className={`flex-1 overflow-y-auto transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
         >
           <nav className="mt-4 space-y-2">{navigationItems.map((item) => renderNavItem(item))}</nav>
         </div>
-        {/* Sidebar Only Items */}
         <div
           className={`mb-4 space-y-2 px-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
         >
