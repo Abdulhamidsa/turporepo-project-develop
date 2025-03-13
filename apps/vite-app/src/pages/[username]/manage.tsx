@@ -39,7 +39,7 @@ export default function ProfilePage() {
       <div className="bg-background min-h-screen">
         <CoverSection coverImage={userProfile.coverImage ?? null} />
 
-        <div className="container mx-auto -mt-32 px-4 sm:-mt-40 sm:px-6 lg:px-8">
+        <div className="container mx-auto -mt-32 px-2 sm:-mt-40 sm:px-6 lg:px-8">
           <ProfileDetails userProfile={userProfile} />
           <div ref={tabsContentRef}>
             <ProfileTabs
@@ -60,7 +60,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Add Project Modal */}
       <AddProjectModal isOpen={isProjectDialogOpen} onClose={() => setIsProjectDialogOpen(false)} />
     </PageTransition>
   );
