@@ -51,7 +51,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       </label>
 
       <div className="mt-2">
-        {/* Thumbnail Preview */}
         {isThumbnail && images.length > 0 && (
           <div className="group relative h-24 w-24">
             <img
@@ -59,14 +58,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               alt="Thumbnail"
               className="h-full w-full rounded-lg object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
             />
-            {/* Hover Overlay with Magnifying Icon (Clickable Now) */}
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <Search
                 className="h-6 w-6 cursor-pointer text-white"
                 onClick={() => openPreview(images[0])}
               />
             </div>
-            {/* Remove Image Button */}
             <button
               onClick={() => removeFile(images[0])}
               className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-white shadow-md hover:bg-red-700"

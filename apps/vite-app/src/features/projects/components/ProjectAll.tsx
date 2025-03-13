@@ -76,7 +76,6 @@ export const ProjectsAll = () => {
 const ProjectCard = ({ project, onClick }: { project: ProjectType; onClick: () => void }) => {
   return (
     <Card className="bg-card text-card-foreground relative w-full overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
-      {/* Project Thumbnail */}
       <div className="relative h-40 w-full cursor-pointer sm:h-56" onClick={onClick}>
         {project.thumbnail ? (
           <img src={project.thumbnail} alt={project.title} className="h-full w-full object-cover" />

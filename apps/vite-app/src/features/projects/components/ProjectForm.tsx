@@ -4,6 +4,7 @@ import { Input } from '@repo/ui/components/ui/input';
 import { Label } from '@repo/ui/components/ui/label';
 import { Textarea } from '@repo/ui/components/ui/textarea';
 import { AddProjectInput } from '@repo/zod/validation';
+import { X } from 'lucide-react';
 
 import ImageUploader from './ImageUploader';
 import SaveButton from './SaveButton';
@@ -46,7 +47,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         setProgress(i);
       }
 
-      // Upload Thumbnail
       if (pendingThumbnail) {
         setProgress(70);
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -91,6 +91,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     setProject((prev) => ({ ...prev, tags }));
   };
 
+  const removeThumbnail = () => {
+    setPendingThumbnail(null);
+    setProject((prev) => ({ ...prev, thumbnail: '' }));
+  };
+
   return (
     <div className="bg-card overflow-y-auto p-1 rounded-[var(--radius)] md:p-6 shadow-lg">
       <h3 className="text-foreground mb-6 text-xl font-bold">Upload Your Project</h3>
@@ -130,24 +135,42 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           )}
         </div>
 
-        <ImageUploader
-          images={
-            pendingThumbnail ? [pendingThumbnail] : project.thumbnail ? [project.thumbnail] : []
-          }
-          setImages={(files) =>
-            setPendingThumbnail(files.length > 0 && files[0] instanceof File ? files[0] : null)
-          }
-          isThumbnail
-          error={errors.thumbnail}
-        />
+        {pendingThumbnail || project.thumbnail ? (
+          <div className="relative mt-4 flex justify-center">
+            <img
+              src={pendingThumbnail ? URL.createObjectURL(pendingThumbnail) : project.thumbnail}
+              alt="Thumbnail Preview"
+              className="h-40 w-auto rounded-md object-contain"
+            />
+            <button
+              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
+              onClick={removeThumbnail}
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        ) : (
+          <ImageUploader
+            images={[]}
+            setImages={(files) =>
+              setPendingThumbnail(files.length > 0 && files[0] instanceof File ? files[0] : null)
+            }
+            isThumbnail
+            error={errors.thumbnail}
+          />
+        )}
 
-        <ImageUploader
-          images={pendingMedia.length > 0 ? pendingMedia : (project.media || []).map((m) => m.url)}
-          setImages={(files) =>
-            setPendingMedia(files.filter((file): file is File => file instanceof File))
-          }
-          error={errors.media}
-        />
+        {pendingMedia.length < 5 && (
+          <ImageUploader
+            images={
+              pendingMedia.length > 0 ? pendingMedia : (project.media || []).map((m) => m.url)
+            }
+            setImages={(files) =>
+              setPendingMedia(files.filter((file): file is File => file instanceof File))
+            }
+            error={errors.media}
+          />
+        )}
 
         <TagInput tags={project.tags || []} setTags={handleTagsChange} error={errors.tags} />
 
