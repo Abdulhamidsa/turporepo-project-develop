@@ -15,7 +15,11 @@ Card.displayName = 'Card';
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
+    <div
+      ref={ref}
+      className={cn('flex flex-col space-y-1.5 py-3 px-3 md:p-6', className)}
+      {...props}
+    />
   ),
 );
 CardHeader.displayName = 'CardHeader';
@@ -40,7 +44,7 @@ CardDescription.displayName = 'CardDescription';
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+    <div ref={ref} className={cn(' p-4 md:p-6 pt-0', className)} {...props} />
   ),
 );
 CardContent.displayName = 'CardContent';
