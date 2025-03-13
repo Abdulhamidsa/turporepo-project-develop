@@ -5,11 +5,20 @@ import 'server-only';
 import { GetUserProjectResponse } from '../types';
 import { AppError } from '../utils/app.error';
 
-const ENDPOINTS = getEndpoints(process.env.NEXT_PUBLIC_BASE_URL as string);
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+const ENDPOINTS = getEndpoints(BASE_URL);
+
+function getFullUrl(url: string): string {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `${BASE_URL}${url}`;
+}
 
 async function handleApiRequest(url: string, options?: RequestInit) {
   try {
-    const res = await fetch(url, {
+    const fullUrl = getFullUrl(url);
+    const res = await fetch(fullUrl, {
       cache: 'force-cache',
       next: { revalidate: 30 },
       ...options,
@@ -83,7 +92,7 @@ export async function getUserProfile(friendlyId: string) {
 }
 
 /**
- * 🔥 Get User Projects (Fast Revalidation)
+ *  Get User Projects (Fast Revalidation)
  */
 export async function getUserProject(friendlyId: string): Promise<GetUserProjectResponse | null> {
   try {
