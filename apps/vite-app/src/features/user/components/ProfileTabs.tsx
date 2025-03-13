@@ -31,11 +31,16 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
   useEffect(() => {
     if (tabsContentRef.current) {
       const tabContents = tabsContentRef.current.querySelectorAll("[role='tabpanel']");
+
       let maxHeight = 0;
       tabContents.forEach((tabContent) => {
         maxHeight = Math.max(maxHeight, tabContent.scrollHeight);
       });
-      tabsContentRef.current.style.minHeight = `${maxHeight}px`;
+
+      const currentHeight = tabsContentRef.current.clientHeight;
+      if (maxHeight > currentHeight) {
+        tabsContentRef.current.style.height = `${maxHeight}px`;
+      }
     }
   }, [projects, userProfile]);
 

@@ -15,7 +15,7 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-card text-card-foreground relative mb-8 rounded-lg p-6 shadow-xl sm:p-8"
+      className="bg-card text-card-foreground relative mb-8 rounded-lg p-3 md:p-6 shadow-xl sm:p-8"
     >
       <div className="flex flex-col items-center sm:flex-row sm:items-start sm:space-x-8">
         {/* Avatar */}
@@ -23,7 +23,6 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
           <ProfilePictureEdit label="Profile Picture" field="profilePicture" />
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 text-center sm:text-left">
           <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{userProfile.username}</h1>
           <p className="text-muted-foreground text-lg sm:text-xl">@{userProfile.friendlyId}</p>

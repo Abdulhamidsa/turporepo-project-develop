@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Briefcase, Home, Settings, User } from 'lucide-react';
+import { BriefcaseBusiness, Home, KanbanSquare, Settings, UserCircle } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 
 import { routesConfig } from '../../routes/routesConfig';
@@ -19,19 +19,19 @@ const DashboardLayout: React.FC = () => {
     { name: 'Home', icon: Home, link: routesConfig.home },
     {
       name: 'My Portfolio',
-      icon: Briefcase,
+      icon: BriefcaseBusiness,
       link: userProfile?.username
         ? routesConfig.userPortfolio(userProfile.username)
         : routesConfig.home,
     },
     {
       name: 'Projects',
-      icon: Briefcase,
+      icon: KanbanSquare,
       link: routesConfig.projects,
     },
     {
       name: 'Profile',
-      icon: User,
+      icon: UserCircle,
       link: routesConfig.profile,
       attention: userProfile && !userProfile.completedProfile,
     },

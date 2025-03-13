@@ -46,7 +46,6 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
 
   return (
     <>
-      {/* Grid container to match the posts layout */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {loggedUser?.friendlyId === friendlyId && (
           <div
@@ -64,7 +63,7 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
           posts.map((post) => (
             <Card
               key={post._id}
-              className="bg-card text-card-foreground group relative w-full cursor-pointer overflow-hidden"
+              className="bg-card text-card-foreground group relative w-full cursor-pointer overflow-hidden rounded-lg shadow-md transition hover:shadow-lg"
               onClick={() =>
                 openPostModal({
                   ...post,
@@ -81,18 +80,26 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
             >
               <CardContent className="relative p-0">
                 {post.image ? (
-                  <img src={post.image} alt="Post" className="h-64 w-full object-cover" />
+                  <img src={post.image} alt="Post" className="h-56 w-full object-cover" />
                 ) : (
-                  <div className="text-card bg-card flex h-64 w-full items-center justify-center"></div>
+                  <div className="text-card bg-card flex h-56 w-full items-center justify-center">
+                    <p className="text-muted-foreground text-sm">No image</p>
+                  </div>
                 )}
+
                 <div className="absolute inset-0 bg-black bg-opacity-0 transition-all duration-300 ease-in-out group-hover:bg-opacity-40"></div>
+
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                  <h3 className="mb-2 text-xl font-bold">{post.content || 'No Content'}</h3>
-                  <p className="text-muted-foreground mb-4 text-sm">
+                  <h3 className="mb-2 text-lg font-bold line-clamp-2">
+                    {post.content && post.content.length > 100
+                      ? `${post.content.slice(0, 100)}...`
+                      : (post.content ?? 'No Content')}
+                  </h3>
+
+                  <p className="text-muted-foreground text-xs">
                     Likes: {post.likes?.length || 0} | Comments: {post.comments?.length || 0}
                   </p>
                 </div>
-                {/* Delete button removed from card hover */}
               </CardContent>
             </Card>
           ))
@@ -154,7 +161,6 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
                 <p className="text-center text-gray-400">No comments yet.</p>
               )}
             </div>
-            {/* Delete button inside the post modal */}
             {loggedUser?.username === selectedPost?.userId.username && (
               <div className="mt-4 flex justify-end">
                 <button
@@ -162,7 +168,6 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
                   className="flex items-center space-x-2 rounded bg-red-600 px-4 py-2 text-white transition-all duration-300 hover:bg-red-700"
                 >
                   <Trash2 className="h-5 w-5" />
-                  <span>Delete Post</span>
                 </button>
               </div>
             )}
@@ -170,17 +175,16 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
         )}
       </CustomModal>
 
-      {/* Delete Confirmation Modal */}
       <CustomModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} size="sm">
         <div className="text-center">
-          <h2 className="mb-4 text-lg font-bold">Are you sure you want to delete this post?</h2>
+          <h2 className="mb-4 text-lg  font-bold">Are you sure you want to delete this post?</h2>
           <div className="flex justify-center space-x-4">
             <button
               onClick={handleDelete}
-              className="bg-primary hover:bg-primary-dark rounded-md px-4 py-2 text-white"
+              className="bg-destructive hover:bg-primary-dark rounded-md px-4 py-2 text-white"
               disabled={isDeleting}
             >
-              {isDeleting ? <Loader className="h-5 w-5 animate-spin" /> : 'Yes, Delete'}
+              {isDeleting ? <Loader className="h-5 w-5 animate-spin " /> : 'Yes, Delete'}
             </button>
             <button
               onClick={() => setIsDeleteModalOpen(false)}
