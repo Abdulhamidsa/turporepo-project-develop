@@ -74,9 +74,8 @@ export default async function UsersPage({
                     <Image
                       src={user.profilePicture || '/placeholder.svg'}
                       alt={user.username || 'User'}
-                      width={400}
-                      height={300}
-                      className="h-48 w-full object-cover"
+                      layout="fill"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="p-4">
