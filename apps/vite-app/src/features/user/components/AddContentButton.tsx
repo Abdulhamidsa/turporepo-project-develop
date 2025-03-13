@@ -52,7 +52,7 @@ export function AddContentButton() {
   };
 
   return (
-    <Card className="bg-background shadow-sm m-auto w-full max-w-xl">
+    <Card className="bg-background t shadow-sm m-auto w-full max-w-xl">
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           <Link

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
 import { Tooltip, TooltipProvider, TooltipTrigger } from '@repo/ui/components/ui/tooltip';
@@ -23,14 +23,13 @@ interface ProfileTabsProps {
 const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
   const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
-  const tabsContentRef = useRef<HTMLDivElement>(null);
   const { chatStep, chatMessages, data, loading, startChat, selectProject, sendMessage, goBack } =
     useAIChat();
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
     <>
-      <div ref={tabsContentRef} className="min-h-[500px]">
+      <div className="min-h-[500px]">
         <Tabs defaultValue="posts" className="mt-8">
           <TabsList className="bg-muted border-border grid w-full grid-cols-2 overflow-hidden rounded-lg border">
             <TabsTrigger

@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@repo/ui/c
 import { Input } from '@repo/ui/components/ui/input';
 import { SimpleScrollArea } from '@repo/ui/components/ui/scroll-area';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Bot, Loader2, MessageSquare, RefreshCw, Send, X } from 'lucide-react';
+import { ArrowLeft, Bot, Loader2, MessageSquare, Send, X } from 'lucide-react';
 
 import { ChatMessage, ResultItem } from '../hooks/useAIChat';
 
@@ -53,7 +53,6 @@ export default function AIChat({
     }
   };
 
-  // When results update, scroll to the top of the results section.
   React.useEffect(() => {
     if (chatStep === 'finished' && data.length > 0 && resultRef.current) {
       resultRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -117,7 +116,7 @@ export default function AIChat({
                   {chatStep === 'finished' && data.length > 0 && (
                     <ResponseSection title="Results" data={data} ref={resultRef} />
                   )}
-                  {chatStep === 'finished' && (
+                  {/* {chatStep === 'finished' && (
                     <div className="mt-4 flex flex-wrap items-start gap-2">
                       <Button variant="outline" size="sm" onClick={() => sendMessage('refresh')}>
                         <RefreshCw className="mr-2 h-4 w-4" />
@@ -128,7 +127,7 @@ export default function AIChat({
                         Pick Another Project
                       </Button>
                     </div>
-                  )}
+                  )} */}
                   {loading && (
                     <div className="mt-2 flex justify-center">
                       <Loader2 className="h-8 w-8 animate-spin text-white" />
