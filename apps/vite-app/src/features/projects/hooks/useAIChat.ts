@@ -68,7 +68,7 @@ export const useAIChat = () => {
 
   const goBack = () => {
     setChatStep('list-projects');
-    setData([]); // Clear results when going back
+    setData([]);
   };
 
   const sendMessage = async (message: string) => {
@@ -87,14 +87,13 @@ export const useAIChat = () => {
         return;
       }
       setRefreshLoading(true);
-      setData([]); // 💥 Clear previous results before refreshing
+      setData([]);
     } else {
       setLoading(true);
     }
 
     setChatMessages((prev) => [...prev, { role: 'user', text: message }]);
 
-    // **Ensure lastAction is properly set when sending a new message**
     const validActions: ActionOption[] = [
       'ideas',
       'improve',
@@ -118,6 +117,7 @@ export const useAIChat = () => {
     if (isRefresh && lastAction) {
       payload.lastMode = lastAction;
     }
+
     try {
       const response = await fetch(ENDPOINTS.projects.projectAi, {
         method: 'POST',

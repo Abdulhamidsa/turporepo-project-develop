@@ -44,7 +44,6 @@ export const useProjects = (initialLimit = 5) => {
     },
   );
 
-  // Ensure projects are loaded in the correct order
   const projects = data ? data.flatMap((page) => page.projects) : [];
 
   const totalPages = data?.[0]?.pagination.total ? Math.ceil(data[0].pagination.total / limit) : 0;
@@ -57,7 +56,6 @@ export const useProjects = (initialLimit = 5) => {
 
   const toggleLike = async (projectId: string) => {
     try {
-      // Optimistic UI update to toggle like status
       mutate(
         (currentData) =>
           currentData
