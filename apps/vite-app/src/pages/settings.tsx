@@ -1,23 +1,23 @@
 import { useState } from 'react';
 
 import CustomModal from '@repo/ui/components/CustomModal';
-import { Switch } from '@repo/ui/components/ui/switch';
+// import { Switch } from '@repo/ui/components/ui/switch';
 import { showToast } from '@repo/ui/components/ui/toaster';
 import { useNavigate } from 'react-router-dom';
 
 import { useDeleteAccount } from '../features/user/hooks/use.auth';
 
 export default function SettingsPage() {
-  const [isPublic, setIsPublic] = useState(false);
+  // const [isPublic, setIsPublic] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const { deleteAccount, isSubmitting } = useDeleteAccount();
 
-  const handleTogglePublic = () => {
-    setIsPublic((prev) => !prev);
-    showToast(`Account is now ${!isPublic ? 'public' : 'private'}`, 'success');
-  };
+  // const handleTogglePublic = () => {
+  //   setIsPublic((prev) => !prev);
+  //   showToast(`Account is now ${!isPublic ? 'public' : 'private'}`, 'success');
+  // };
 
   const handleDeleteAccount = () => {
     setDeleteModalOpen(true);
@@ -41,7 +41,7 @@ export default function SettingsPage() {
       <h1 className="text-foreground mb-6 text-center text-3xl font-bold">Settings</h1>
 
       <div className="space-y-6">
-        <div className="bg-muted flex items-center justify-between rounded-lg p-4">
+        {/* <div className="bg-muted flex items-center justify-between rounded-lg p-4">
           <div>
             <h2 className="text-lg font-medium">Account Visibility</h2>
             <p className="text-muted-foreground text-sm">
@@ -49,7 +49,7 @@ export default function SettingsPage() {
             </p>
           </div>
           <Switch checked={isPublic} onCheckedChange={handleTogglePublic} />
-        </div>
+        </div> */}
 
         <div className="bg-destructive/10 rounded-lg p-4">
           <h2 className="text-destructive text-lg font-medium">Delete Account</h2>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
 import { Tooltip, TooltipProvider, TooltipTrigger } from '@repo/ui/components/ui/tooltip';
@@ -28,25 +28,9 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
     useAIChat();
   const [chatOpen, setChatOpen] = useState(false);
 
-  useEffect(() => {
-    if (tabsContentRef.current) {
-      const tabContents = tabsContentRef.current.querySelectorAll("[role='tabpanel']");
-
-      let maxHeight = 0;
-      tabContents.forEach((tabContent) => {
-        maxHeight = Math.max(maxHeight, tabContent.scrollHeight);
-      });
-
-      const currentHeight = tabsContentRef.current.clientHeight;
-      if (maxHeight > currentHeight) {
-        tabsContentRef.current.style.height = `${maxHeight}px`;
-      }
-    }
-  }, [projects, userProfile]);
-
   return (
     <>
-      <div ref={tabsContentRef}>
+      <div ref={tabsContentRef} className="min-h-[500px]">
         <Tabs defaultValue="posts" className="mt-8">
           <TabsList className="bg-muted border-border grid w-full grid-cols-2 overflow-hidden rounded-lg border">
             <TabsTrigger
