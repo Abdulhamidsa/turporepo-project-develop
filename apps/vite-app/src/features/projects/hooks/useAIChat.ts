@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
 import { getEndpoints } from '@repo/api/endpoints';
+import { showToast } from '@repo/ui/components/ui/toaster';
+import { z } from 'zod';
+
+import { request } from '../../../../api/request';
+import { getErrorMessage } from '../../../../utils/getErrorMessage';
 
 export type ChatStep = 'list-projects' | 'select-project' | 'choose-action' | 'finished';
 
@@ -8,7 +13,7 @@ export type ChatMessage = {
   role: 'user' | 'ai';
   text: string;
 };
-const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
+
 export type ResultItem = { title: string; description: string };
 
 export type ActionOption =
@@ -25,7 +30,7 @@ export type ChatPayload = {
   step: ChatStep;
   selectedProject: string | null;
   message: string;
-  lastMode?: ActionOption;
+  lastMode?: ActionOption | undefined;
 };
 
 export type ApiResponse = {
@@ -35,18 +40,21 @@ export type ApiResponse = {
   data?: ResultItem[];
 };
 
-/**
- * Hook for managing AI Chat functionality with refresh support and proper types.
- */
+const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
+
+const chatMessageSchema = z.object({
+  message: z.string().min(1, 'Message cannot be empty'),
+});
+
 export const useAIChat = () => {
-  const [chatOpen, setChatOpen] = useState<boolean>(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const [chatStep, setChatStep] = useState<ChatStep>('list-projects');
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [data, setData] = useState<ResultItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [refreshLoading, setRefreshLoading] = useState<boolean>(false);
-  const [lastAction, setLastAction] = useState<ActionOption | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [refreshLoading, setRefreshLoading] = useState(false);
+  const [lastAction] = useState<ActionOption | null>(null);
 
   const startChat = () => {
     setChatOpen(true);
@@ -72,95 +80,61 @@ export const useAIChat = () => {
   };
 
   const sendMessage = async (message: string) => {
+    if (loading || refreshLoading) return;
+
     const isRefresh = message.trim().toLowerCase() === 'refresh';
 
-    if (isRefresh) {
-      if (!lastAction) {
-        console.warn('⚠️ Refresh failed: No previous action to refresh.');
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            role: 'ai',
-            text: 'Error: No previous action to refresh. Try selecting an option first.',
-          },
-        ]);
+    try {
+      chatMessageSchema.parse({ message });
+
+      if (isRefresh && !lastAction) {
+        showToast('No previous action to refresh. Try selecting an option first.', 'error');
         return;
       }
-      setRefreshLoading(true);
-      setData([]);
-    } else {
-      setLoading(true);
-    }
 
-    setChatMessages((prev) => [...prev, { role: 'user', text: message }]);
+      if (isRefresh) {
+        setRefreshLoading(true);
+      } else {
+        setLoading(true);
+      }
+      setChatMessages((prev) => [...prev, { role: 'user', text: message }]);
 
-    const validActions: ActionOption[] = [
-      'ideas',
-      'improve',
-      'similar',
-      'weaknesses',
-      'expansion',
-      'monetize',
-      'audience',
-      'rewrite',
-    ];
-    if (!isRefresh && validActions.includes(message as ActionOption)) {
-      setLastAction(message as ActionOption);
-    }
+      const payload: ChatPayload = {
+        step: chatStep,
+        selectedProject,
+        message,
+        lastMode: isRefresh ? (lastAction ?? undefined) : undefined,
+      };
 
-    const payload: ChatPayload = {
-      step: chatStep,
-      selectedProject,
-      message,
-    };
+      const resData = await request<ApiResponse>('POST', ENDPOINTS.projects.projectAi, payload);
 
-    if (isRefresh && lastAction) {
-      payload.lastMode = lastAction;
-    }
-
-    try {
-      const response = await fetch(ENDPOINTS.projects.projectAi, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        credentials: 'include',
-      });
-
-      const resData: ApiResponse = await response.json();
       if (resData.success) {
         setChatStep(resData.step);
         const aiResponseText =
-          resData.message ||
+          resData.message ??
           (resData.data?.length
             ? `Here is what I found for **${selectedProject}**:`
             : `No new results for **${selectedProject}**.`);
 
         setChatMessages((prev) => [...prev, { role: 'ai', text: aiResponseText }]);
-        setData(resData.data || []);
+        setData(resData.data ?? []);
       } else {
         setChatMessages((prev) => [
           ...prev,
-          {
-            role: 'ai',
-            text: resData.message || 'I didn’t understand that. Please choose a valid option.',
-          },
+          { role: 'ai', text: resData.message || 'Invalid input. Try again.' },
         ]);
       }
     } catch (error) {
-      console.error('⚠️ AI Chat Error:', error);
-      setChatMessages((prev) => [...prev, { role: 'ai', text: 'Error connecting to AI service.' }]);
-    }
-
-    if (isRefresh) {
-      setRefreshLoading(false);
-    } else {
+      if (error instanceof z.ZodError) {
+        showToast('Invalid message format.', 'error');
+      } else {
+        showToast(getErrorMessage(error), 'error');
+      }
+    } finally {
       setLoading(false);
+      setRefreshLoading(false);
     }
   };
-
-  //   useEffect(() => {
-  //     console.log('📌 Updated Data:', data);
-  //   }, [data]);
 
   return {
     chatOpen,

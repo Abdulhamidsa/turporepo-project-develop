@@ -24,7 +24,7 @@ export const getEndpoints = (baseUrl: string) => ({
     delete: `/project`,
     create: `/project`,
     fetchAll: `/projects`,
-    projectAi: `api/ai/generate`,
+    projectAi: `/ai/generate`,
   },
   auth: {
     signin: `/auth/signin`,
