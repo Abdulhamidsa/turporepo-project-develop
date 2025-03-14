@@ -112,7 +112,7 @@ export default function AIChat({
                       <ChatMessages messages={chatMessages} />
                     </>
                   )}
-                  {chatStep === 'finished' && <ChatMessages messages={chatMessages} />}
+                  <ChatMessages messages={chatMessages} />
                   {chatStep === 'finished' && data.length > 0 && (
                     <ResponseSection title="Results" data={data} ref={resultRef} />
                   )}

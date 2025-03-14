@@ -91,7 +91,6 @@ export const useAIChat = () => {
         showToast('No previous action to refresh. Try selecting an option first.', 'error');
         return;
       }
-
       if (isRefresh) {
         setRefreshLoading(true);
       } else {
