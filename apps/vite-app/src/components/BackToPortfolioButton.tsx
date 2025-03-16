@@ -1,53 +1,55 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
-import { ArrowRightCircle } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-
-const STORAGE_KEY = 'fromPortfolio';
-const EXPIRATION_TIME = 2 * 60 * 1000;
+import { motion } from 'framer-motion';
+import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 
 const BackToPortfolioButton: React.FC = () => {
-  const location = useLocation();
-  const [isFromPortfolio, setIsFromPortfolio] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const queryFrom = params.get('from');
-    const storedData = sessionStorage.getItem(STORAGE_KEY);
-
-    if (queryFrom === 'portfolio') {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ timestamp: Date.now() }));
-      setIsFromPortfolio(true);
-    } else if (storedData) {
-      const { timestamp } = JSON.parse(storedData);
-      if (Date.now() - timestamp < EXPIRATION_TIME) {
-        setIsFromPortfolio(true);
-      } else {
-        sessionStorage.removeItem(STORAGE_KEY);
-        setIsFromPortfolio(false);
-      }
-    }
-  }, [location.search]);
-
-  const handleBackToPortfolio = () => {
-    sessionStorage.removeItem(STORAGE_KEY);
+  const handleRedirect = () => {
+    sessionStorage.removeItem('fromPortfolio');
     window.location.href = 'https://abdulhamid-sa.vercel.app/projects';
   };
 
-  if (!isFromPortfolio) return null;
-
   return (
-    <div className="fixed bottom-20 -left-32 z-50 transition-all duration-300 ease-in-out hover:left-0">
-      <Button
-        onClick={handleBackToPortfolio}
-        className="flex items-center bg-transparent border hover:border border-primary rounded-md bg-opacity-15 backdrop-blur-md px-5 py-6 shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:bg-opacity-25 active:scale-95"
-      >
-        Back to Portfolio
-        <ArrowRightCircle className="w-6 h-6" />
-      </Button>
+    <div className="fixed bottom-24 left-0 z-50 flex items-center">
+      {!isOpen && (
+        <motion.button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="flex items-center bg-background rounded-md justify-center h-10 w-10 p-1 shadow-lg transition-transform active:scale-95"
+          initial={{ x: 0 }}
+          animate={{ x: 0 }}
+        >
+          <ArrowRightCircle className="w-6 h-6 text-white" />
+        </motion.button>
+      )}
+
+      {isOpen && (
+        <motion.div
+          initial={{ x: -150, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+          className="ml-2 flex items-center"
+        >
+          <Button
+            onClick={handleRedirect}
+            className="flex items-center gap-2 border relative bg-background border-primary rounded-md bg-opacity-15 backdrop-blur-md px-5 py-4 shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl  active:scale-95"
+          >
+            Back to Portfolio
+          </Button>
+
+          {/* Left Icon (Closes the button) */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center justify-center h-10 w-10 rounded-sm shadow-lg transition-transform active:scale-95"
+          >
+            <ArrowLeftCircle className="w-6 h-6 text-white" />
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 };
