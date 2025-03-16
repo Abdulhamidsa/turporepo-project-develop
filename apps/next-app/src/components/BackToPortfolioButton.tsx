@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
-import { ArrowLeftCircle } from 'lucide-react';
+import { ArrowRightCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 const STORAGE_KEY = 'fromPortfolio';
@@ -43,13 +43,13 @@ const BackToPortfolioLogic: React.FC = () => {
   if (!isFromPortfolio) return null;
 
   return (
-    <div className="fixed bottom-30 left-5 z-50">
+    <div className="fixed bottom-20 -left-32 z-50 transition-all duration-300 ease-in-out hover:left-0">
       <Button
         onClick={handleBackToPortfolio}
-        className="flex items-center gap-2 rounded-full bg-opacity-15 backdrop-blur-md px-6 py-2 shadow-lg transition-all hover:shadow-xl hover:bg-opacity-25 active:scale-95"
+        className="flex items-center bg-transparent border hover:border border-primary rounded-md bg-opacity-15 backdrop-blur-md px-5 py-6 shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:bg-opacity-25 active:scale-95"
       >
-        <ArrowLeftCircle className="w-6 h-6" />
-        <span>Back to Portfolio</span>
+        Back to Portfolio
+        <ArrowRightCircle className="w-6 h-6" />
       </Button>
     </div>
   );
