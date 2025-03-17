@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Button } from '@repo/ui/components/ui/button';
 import { motion } from 'framer-motion';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 
 const STORAGE_KEY = 'fromPortfolio';
 const EXPIRATION_TIME = 2 * 60 * 1000;
@@ -11,12 +10,10 @@ const EXPIRATION_TIME = 2 * 60 * 1000;
 const BackToPortfolioButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFromPortfolio, setIsFromPortfolio] = useState(false);
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Check if URL has `from=portfolio`
-    const queryFrom = searchParams?.get('from');
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryFrom = urlParams.get('from');
     if (queryFrom === 'portfolio') {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ timestamp: Date.now() }));
       setIsFromPortfolio(true);
@@ -35,7 +32,7 @@ const BackToPortfolioButton: React.FC = () => {
         }
       }
     }
-  }, [searchParams]);
+  }, []);
 
   const handleRedirect = () => {
     sessionStorage.removeItem(STORAGE_KEY);
