@@ -72,7 +72,6 @@ const BackToPortfolioLogic: React.FC = () => {
             Back to Portfolio
           </Button>
 
-          {/* Left Icon (Closes the button) */}
           <button
             type="button"
             onClick={() => setIsOpen(false)}

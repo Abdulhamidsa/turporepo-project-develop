@@ -1,16 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import { motion } from 'framer-motion';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 
+const STORAGE_KEY = 'fromPortfolio';
+const EXPIRATION_TIME = 2 * 60 * 1000;
+
 const BackToPortfolioButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFromPortfolio, setIsFromPortfolio] = useState(false);
+
+  useEffect(() => {
+    const storedData = sessionStorage.getItem(STORAGE_KEY);
+    if (storedData) {
+      try {
+        const { timestamp } = JSON.parse(storedData);
+        if (Date.now() - timestamp < EXPIRATION_TIME) {
+          setIsFromPortfolio(true);
+        } else {
+          sessionStorage.removeItem(STORAGE_KEY);
+        }
+      } catch (error) {
+        sessionStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, []);
 
   const handleRedirect = () => {
-    sessionStorage.removeItem('fromPortfolio');
+    sessionStorage.removeItem(STORAGE_KEY);
     window.location.href = 'https://abdulhamid-sa.vercel.app/projects';
   };
+
+  if (!isFromPortfolio) return null;
 
   return (
     <div className="fixed bottom-24 left-0 z-50 flex items-center">
