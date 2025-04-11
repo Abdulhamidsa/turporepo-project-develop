@@ -149,10 +149,9 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
                 e.stopPropagation();
                 setIsModalOpen(true);
               }}
-              className="flex items-center space-x-2 rounded bg-red-600 p-2 text-white transition-all duration-300 hover:bg-red-700"
+              className="flex items-center space-x-2 rounded bg-red-600 p-3.5 text-white transition-all duration-300 hover:bg-red-700"
             >
               <Trash2 className="h-5 w-5" />
-              <span>Delete</span>
             </Button>
           </div>
         )}
