@@ -1,7 +1,6 @@
 export class AppError extends Error {
   constructor(
     public message: string,
-    /** Optional HTTP status code (e.g., 400, 401, 500) */
     public statusCode?: number,
   ) {
     super(message);
