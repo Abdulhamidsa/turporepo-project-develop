@@ -4,8 +4,8 @@ import { getEndpoints } from '@repo/api/endpoints';
 import { showToast } from '@repo/ui/components/ui/toaster';
 import { z } from 'zod';
 
-import { request } from '../../../../api/request';
-import { getErrorMessage } from '../../../../utils/getErrorMessage';
+import { request } from '../../api/request';
+import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export type ChatStep = 'list-projects' | 'select-project' | 'choose-action' | 'finished';
 
@@ -91,11 +91,13 @@ export const useAIChat = () => {
         showToast('No previous action to refresh. Try selecting an option first.', 'error');
         return;
       }
+
       if (isRefresh) {
         setRefreshLoading(true);
       } else {
         setLoading(true);
       }
+
       setChatMessages((prev) => [...prev, { role: 'user', text: message }]);
 
       const payload: ChatPayload = {
@@ -105,22 +107,24 @@ export const useAIChat = () => {
         lastMode: isRefresh ? (lastAction ?? undefined) : undefined,
       };
 
-      const resData = await request<ApiResponse>('POST', ENDPOINTS.projects.projectAi, payload);
+      const resData = await request<ResultItem[]>('POST', ENDPOINTS.projects.projectAi, payload);
 
-      if (resData.success) {
-        setChatStep(resData.step);
-        const aiResponseText =
-          resData.message ??
-          (resData.data?.length
-            ? `Here is what I found for **${selectedProject}**:`
-            : `No new results for **${selectedProject}**.`);
+      setChatStep('finished');
+      setData(resData);
 
-        setChatMessages((prev) => [...prev, { role: 'ai', text: aiResponseText }]);
-        setData(resData.data ?? []);
+      if (resData.length) {
+        setChatMessages((prev) => [
+          ...prev,
+          { role: 'ai', text: `Here is what I found for **${selectedProject}**:` },
+          {
+            role: 'ai',
+            text: `Would you like to do more with **${selectedProject}**?\nChoose one:\n- ideas\n- improve\n- similar\n- weaknesses\n- expansion\n- monetize\n- audience\n- rewrite`,
+          },
+        ]);
       } else {
         setChatMessages((prev) => [
           ...prev,
-          { role: 'ai', text: resData.message || 'Invalid input. Try again.' },
+          { role: 'ai', text: `No new results for **${selectedProject}**.` },
         ]);
       }
     } catch (error) {

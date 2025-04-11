@@ -2,7 +2,7 @@ import { getEndpoints } from '@repo/api/endpoints';
 import { FetchedProjectType } from '@repo/zod/validation';
 import useSWR from 'swr';
 
-import { swrFetcher } from '../../../../api/swrFetcher';
+import { swrFetcher } from '../../api/swrFetcher';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 type UserProjectsResponse = {
