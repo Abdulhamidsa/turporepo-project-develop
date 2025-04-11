@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avat
 import { showToast } from '@repo/ui/components/ui/toaster';
 import { ImagePlus, X } from 'lucide-react';
 
-import { uploadToCloudinary } from '../../../../utils/CloudinaryConfige';
+import { uploadToCloudinary } from '../../../../utils/cloudinary/CloudinaryConfige';
 import { usePostSubmit } from '../../../hooks/useCreatePost';
 import SaveButton from '../../projects/components/SaveButton';
 import { useUserProfile } from '../hooks/use.user.profile';

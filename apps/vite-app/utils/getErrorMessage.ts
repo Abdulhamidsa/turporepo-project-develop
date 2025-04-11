@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { AppError } from '../api/errors';
+import { AppError } from './errors';
 
 export const getErrorMessage = (error: unknown): string => {
   // If it’s one of our custom AppErrors:

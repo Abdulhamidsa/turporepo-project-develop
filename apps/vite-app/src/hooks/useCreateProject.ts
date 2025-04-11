@@ -6,10 +6,10 @@ import { AddProjectInput, addProjectSchema } from '@repo/zod/validation';
 import { ZodError } from 'zod';
 
 import { request } from '../../api/request';
-import { uploadToCloudinary } from '../../utils/CloudinaryConfige';
+import { uploadToCloudinary } from '../../utils/cloudinary/CloudinaryConfige';
 import { getErrorMessage } from '../../utils/getErrorMessage';
-import { useProjects } from '../features/projects/hooks/useProjects';
 import { useUserProjects } from '../features/user/hooks/useUserProjects';
+import { useProjects } from './useProjects';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 

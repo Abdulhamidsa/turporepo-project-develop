@@ -9,7 +9,7 @@ import {
 import { showToast } from '@repo/ui/components/ui/toaster';
 import { Camera, Loader } from 'lucide-react';
 
-import { uploadToCloudinary } from '../../../../utils/CloudinaryConfige';
+import { uploadToCloudinary } from '../../../../utils/cloudinary/CloudinaryConfige';
 import { useUserProfile } from '../hooks/use.user.profile';
 import { useUpdateUserProfile } from '../hooks/useUpdateUserProfile';
 

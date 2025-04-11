@@ -7,12 +7,12 @@ import { UserProfile } from '@repo/zod/validation/user';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bot, Plus } from 'lucide-react';
 
+import { useAIChat } from '../../../hooks/useAIChat';
 import UserPosts from '../../post/components/UserPosts';
 import AIChat from '../../projects/components/AIChat';
 import ProjectCard from '../../projects/components/ProjectCard';
 import ProjectModal from '../../projects/components/ProjectModal';
 import AddProjectModal from '../../projects/components/addProjectModal';
-import { useAIChat } from '../../projects/hooks/useAIChat';
 
 interface ProfileTabsProps {
   userProfile: UserProfile;

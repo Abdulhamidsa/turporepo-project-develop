@@ -1,7 +1,7 @@
 import { showToast } from '@repo/ui/components/ui/toaster';
 import useSWR, { mutate } from 'swr';
 
-import { uploadToCloudinary } from '../../utils/CloudinaryConfige';
+import { uploadToCloudinary } from '../../utils/cloudinary/CloudinaryConfige';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
 export function useImageUpload() {

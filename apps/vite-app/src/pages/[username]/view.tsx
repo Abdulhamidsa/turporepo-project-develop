@@ -9,8 +9,8 @@ import { getCountryFlagIcon } from '../../../utils/generateCountryFlag';
 import UserPosts from '../../features/post/components/UserPosts';
 import ProjectCard from '../../features/projects/components/ProjectCard';
 import ProjectModal from '../../features/projects/components/ProjectModal';
-import { useUserProjectsView } from '../../features/projects/hooks/useUserProjectsView';
 import { useUserProfileView } from '../../features/user/hooks/useUserProfileView';
+import { useUserProjectsView } from '../../hooks/useUserProjectsView';
 import PageTransition from '../../layout/animation/PageTransition';
 
 export default function ProfileViewPage() {
