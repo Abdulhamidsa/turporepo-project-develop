@@ -1,6 +1,7 @@
 import NotFound from '@repo/ui/components/NotFound';
 import { RouteObject } from 'react-router-dom';
 
+import { AuthOrRedirect } from '../src/features/auth/components/AuthRedirect';
 import DashboardLayout from '../src/layout/DashboardLayout';
 import ProfilePage from '../src/pages/[username]/manage';
 import ProfileView from '../src/pages/[username]/view';
@@ -9,7 +10,6 @@ import Posts from '../src/pages/posts';
 import ProfileInfo from '../src/pages/profileInfo';
 import Projects from '../src/pages/projects';
 import Settings from '../src/pages/settings';
-import { AuthOrRedirect } from '../utils/AuthRedirect';
 import { ProtectedRoute } from './protectedRoutes';
 import { routesConfig } from './routesConfig';
 

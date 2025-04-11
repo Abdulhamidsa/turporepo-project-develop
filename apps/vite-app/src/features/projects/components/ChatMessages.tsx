@@ -1,14 +1,12 @@
-import { FC } from 'react';
-
 import { motion } from 'framer-motion';
 
-import { ChatMessage } from '../hooks/useAIChat';
+import { ChatMessage } from '../../../hooks/useAIChat';
 
 interface ChatMessagesProps {
   chatMessages: ChatMessage[];
 }
 
-const ChatMessages: FC<ChatMessagesProps> = ({ chatMessages }) => {
+export default function ChatMessages({ chatMessages }: ChatMessagesProps) {
   return (
     <div className="space-y-4">
       {chatMessages.map((msg, index) => (
@@ -20,7 +18,9 @@ const ChatMessages: FC<ChatMessagesProps> = ({ chatMessages }) => {
           className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
         >
           <div
-            className={`rounded-lg px-3 py-2 ${msg.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-700 text-white'}`}
+            className={`rounded-lg px-3 py-2 ${
+              msg.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-700 text-white'
+            }`}
           >
             {msg.text}
           </div>
@@ -28,6 +28,4 @@ const ChatMessages: FC<ChatMessagesProps> = ({ chatMessages }) => {
       ))}
     </div>
   );
-};
-
-export default ChatMessages;
+}

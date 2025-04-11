@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { ZodSchema } from 'zod';
 
+import { AppError } from '../utils/errors';
 import axiosInstance from './axiosClient';
-import { AppError } from './errors';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -24,6 +24,7 @@ export async function request<T>(
     });
 
     const { success, data: responseData, message } = response.data;
+    console.log('API response:', response.data);
     if (!success) {
       throw new AppError(message || 'Unknown error occurred', response.status);
     }

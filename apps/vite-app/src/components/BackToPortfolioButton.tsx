@@ -27,6 +27,7 @@ const BackToPortfolioButton: React.FC = () => {
           } else {
             sessionStorage.removeItem(STORAGE_KEY);
           }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           sessionStorage.removeItem(STORAGE_KEY);
         }

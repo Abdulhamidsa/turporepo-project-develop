@@ -7,7 +7,7 @@ import { SimpleScrollArea } from '@repo/ui/components/ui/scroll-area';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Bot, Loader2, MessageSquare, Send, X } from 'lucide-react';
 
-import { ChatMessage, ResultItem } from '../hooks/useAIChat';
+import { ChatMessage, ResultItem } from '../../../hooks/useAIChat';
 
 interface AIChatProps {
   chatOpen: boolean;
@@ -104,30 +104,16 @@ export default function AIChat({
                       <ProjectList projects={projects} selectProject={selectProject} />
                     </>
                   )}
+
+                  <ChatMessages messages={chatMessages} />
                   {chatStep === 'choose-action' && (
                     <ActionSelector sendMessage={sendMessage} goBack={goBack} />
                   )}
-                  {chatStep === 'select-project' && (
-                    <>
-                      <ChatMessages messages={chatMessages} />
-                    </>
-                  )}
-                  <ChatMessages messages={chatMessages} />
+
                   {chatStep === 'finished' && data.length > 0 && (
                     <ResponseSection title="Results" data={data} ref={resultRef} />
                   )}
-                  {/* {chatStep === 'finished' && (
-                    <div className="mt-4 flex flex-wrap items-start gap-2">
-                      <Button variant="outline" size="sm" onClick={() => sendMessage('refresh')}>
-                        <RefreshCw className="mr-2 h-4 w-4" />
-                        Refresh
-                      </Button>
-                      <Button variant="secondary" size="sm" onClick={goBack}>
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Pick Another Project
-                      </Button>
-                    </div>
-                  )} */}
+
                   {loading && (
                     <div className="mt-2 flex justify-center">
                       <Loader2 className="h-8 w-8 animate-spin text-white" />
@@ -199,7 +185,7 @@ function ActionSelector({
     'Analyze audience',
   ];
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 mb-6">
       {actions.map((action, idx) => (
         <Button
           key={idx}
@@ -210,8 +196,8 @@ function ActionSelector({
           {action}
         </Button>
       ))}
-      <Button variant="secondary" className="w-full" onClick={goBack}>
-        <ArrowLeft className="mr-2 h-4 w-4" /> Pick Another Project
+      <Button variant="secondary" className="w-full " onClick={goBack}>
+        <ArrowLeft className="mr-2 h-4 w-4 " /> Pick Another Project
       </Button>
     </div>
   );

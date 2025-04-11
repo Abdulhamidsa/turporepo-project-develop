@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 import { ProfessionBadge } from '../../../../../../packages/ui/src/components/ProfessionBadge';
 import { routesConfig } from '../../../../routes/routesConfig';
-import { ProjectType, useProjects } from '../hooks/useProjects';
+import { ProjectType, useProjects } from '../../../hooks/useProjects';
 import AddProjectModal from './addProjectModal';
 
 export const ProjectsAll = () => {
@@ -40,7 +40,7 @@ export const ProjectsAll = () => {
         <Loading />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-          {projects.map((project) => (
+          {projects.map((project: ProjectType) => (
             <ProjectCard
               key={project.id}
               project={project}
@@ -125,7 +125,7 @@ const ProjectCard = ({ project, onClick }: { project: ProjectType; onClick: () =
         {/* Project Tags */}
         {project.tags.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
-            {project.tags.slice(0, 3).map((tag) => (
+            {project.tags.slice(0, 3).map((tag: { id: string; name: string }) => (
               <Badge
                 key={tag.id}
                 className="border-border text-foreground rounded-md border bg-transparent px-3 py-1 text-xs"
@@ -168,7 +168,7 @@ const ProjectModal = ({
   }
 
   return (
-    <CustomModal size="lg" isOpen={isOpen} onClose={onClose}>
+    <CustomModal size="2xl" isOpen={isOpen} onClose={onClose}>
       {/* Image Section */}
       <div className="relative h-72 overflow-hidden rounded-t-lg shadow-md">
         <img
@@ -225,7 +225,7 @@ const ProjectModal = ({
 
         {/* Tags Section */}
         <div className="mb-6 flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
+          {project.tags.map((tag: { id: string; name: string }) => (
             <Badge
               key={tag.id}
               variant="secondary"

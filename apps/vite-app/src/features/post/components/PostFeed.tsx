@@ -11,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { ProfessionBadge } from '../../../../../../packages/ui/src/components/ProfessionBadge';
 import { routesConfig } from '../../../../routes/routesConfig';
-import { toggleLikePost } from '../../../../services/postService';
+import { toggleLikePost } from '../../../hooks/toggleLikePost';
 import { useDeleteComment } from '../../../hooks/useDeleteComment';
 import { useAuth } from '../../user/hooks/use.auth';
 import { CommentBox } from './CommentBox';
@@ -154,16 +154,14 @@ export function PostFeed({ post, user }: PostProps) {
       {/* Like and Comment Icon Section */}
       <CardFooter className="flex items-center justify-between space-x-2 pt-4">
         <div
-          className={`flex cursor-pointer items-center space-x-1 transition-transform duration-300 ${
-            likedByUser ? 'text-primary scale-110' : 'text-muted-foreground'
+          className={`flex gap-2 cursor-pointer items-center transition-transform duration-300
           } ${isToggling ? 'pointer-events-none opacity-60' : ''}`}
           onClick={handleLikeClick}
         >
-          {isToggling ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
-          ) : (
-            <Heart className="h-5 w-5" />
-          )}
+          <Heart
+            className={`h-6 w-6 ${likedByUser ? 'fill-primary text-gray-100/70' : 'text-muted-foreground'}`}
+          />
+
           <span className="text-sm font-medium">{likesCount}</span>
         </div>
         <div
@@ -241,7 +239,7 @@ export function PostFeed({ post, user }: PostProps) {
           <div className="flex justify-center space-x-4">
             <button
               onClick={confirmDeleteComment}
-              className="bg-primary hover:bg-primary-dark rounded-md px-4 py-2 text-white"
+              className="bg-destructive rounded-md px-4 py-2 text-white"
             >
               Yes, Delete
             </button>

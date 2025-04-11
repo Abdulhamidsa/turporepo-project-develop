@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import CustomModal from '@repo/ui/components/CustomModal';
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
+import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { timeAgo } from '@repo/utils/timeCalculation';
 import { UserPostType } from '@repo/zod/validation/post';
@@ -163,12 +164,13 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
             </div>
             {loggedUser?.username === selectedPost?.userId.username && (
               <div className="mt-4 flex justify-end">
-                <button
+                <Button
+                  variant="destructive"
                   onClick={() => setIsDeleteModalOpen(true)}
-                  className="flex items-center space-x-2 rounded bg-red-600 px-4 py-2 text-white transition-all duration-300 hover:bg-red-700"
+                  className="flex items-center space-x-2 rounded bg-red-600 p-3.5 text-white transition-all duration-300 hover:bg-red-700"
                 >
                   <Trash2 className="h-5 w-5" />
-                </button>
+                </Button>
               </div>
             )}
           </div>
