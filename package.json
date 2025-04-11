@@ -25,7 +25,7 @@
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "turbo": "^2.4.2",
+    "turbo": "^2.5.0",
     "typescript": "catalog:typescript"
   },
   "packageManager": "pnpm@9.12.0"
