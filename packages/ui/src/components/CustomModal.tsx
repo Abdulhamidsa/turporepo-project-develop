@@ -3,6 +3,8 @@ import React, { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
+import { Button } from './ui/button';
+
 interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -60,20 +62,22 @@ const CustomModal: React.FC<CustomModalProps> = ({
         >
           <motion.div
             ref={modalRef}
-            className={`bg-card text-card-foreground relative w-full rounded-lg shadow-lg ${size ? sizeClasses[size] : ''}`}
+            className={`bg-card text-card-foreground relative w-full rounded-lg shadow-lg p-2 ${
+              size ? sizeClasses[size] : ''
+            }`}
             style={{ width: width || undefined, height: height || undefined }}
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <button
+            <Button
               onClick={onClose}
-              className=" hover:text-foreground absolute -right-2 -top-3 text-primary z-10"
+              className="float-end z-10 flex items-center justify-center h-8 w-8 rounded-full bg-white/20 text-white transition-all hover:bg-white/30 hover:text-white"
             >
-              <X className="h-6 w-6" />
-            </button>
-            <div className=" p-3 md:p-6">{children}</div>
+              <X className="h-5 w-5" />
+            </Button>
+            <div className="p-3 md:p-6">{children}</div>
           </motion.div>
         </motion.div>
       )}
