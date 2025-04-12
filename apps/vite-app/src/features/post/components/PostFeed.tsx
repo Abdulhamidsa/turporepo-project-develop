@@ -158,10 +158,15 @@ export function PostFeed({ post, user }: PostProps) {
           } ${isToggling ? 'pointer-events-none opacity-60' : ''}`}
           onClick={handleLikeClick}
         >
-          <Heart
-            className={`h-6 w-6 ${likedByUser ? 'fill-primary text-gray-100/70' : 'text-muted-foreground'}`}
-          />
-
+          {isToggling ? (
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          ) : (
+            <Heart
+              className={`h-6 w-6 ${
+                likedByUser ? 'fill-primary text-gray-100/70' : 'text-muted-foreground'
+              }`}
+            />
+          )}
           <span className="text-sm font-medium">{likesCount}</span>
         </div>
         <div
