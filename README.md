@@ -31,7 +31,17 @@ cd turporepo-project-develop
 pnpm install
 ```
 
-### 3. Run all apps in dev mode
+### 3. Create environment files
+
+```bash
+# For Vite app
+echo "VITE_BASE_URL=http://localhost:4000/api" > apps/vite-app/.env.local
+
+# For Next.js app
+echo "NEXT_PUBLIC_BASE_URL=http://localhost:4000/api" > apps/next-app/.env
+```
+
+### 4. Run all apps in dev mode
 
 ```bash
 pnpm dev
@@ -43,6 +53,24 @@ You can also filter specific apps during development:
 pnpm dev --filter vite-app
 pnpm dev --filter next-app
 ```
+
+---
+
+## Environment Variables
+
+Each app manages its own environment variables:
+
+### Vite App
+
+- Uses a `.env.local` file
+- Public variables must start with `VITE_`
+
+### Next.js App
+
+- Uses a `.env` or `.env.local` file
+- Public variables must start with `NEXT_PUBLIC_`
+
+> ⚠️ Without the proper prefixes, the variables will not be accessible in the browser.
 
 ---
 
