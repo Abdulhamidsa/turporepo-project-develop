@@ -13,8 +13,8 @@ function App() {
     <SWRConfig
       value={{
         fetcher: swrFetcher,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
+        revalidateOnFocus: true,
+        revalidateOnReconnect: true,
         dedupingInterval: 30000,
         errorRetryCount: 3,
         errorRetryInterval: 5000,

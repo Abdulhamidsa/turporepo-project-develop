@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
 import { FetchedProjectType } from '@repo/zod/validation';
 import 'flag-icon-css/css/flag-icons.min.css';
-import { Briefcase, CakeIcon, LucideHome } from 'lucide-react';
 
-import { getCountryFlagIcon } from '../../../utils/generateCountryFlag';
+import ProfileCardView from '../../components/ProfileCardView';
 import UserPosts from '../../features/post/components/UserPosts';
 import ProjectCard from '../../features/projects/components/ProjectCard';
 import ProjectModal from '../../features/projects/components/ProjectModal';
@@ -13,11 +12,9 @@ import { useUserProfileView } from '../../features/user/hooks/useUserProfileView
 import { useUserProjectsView } from '../../hooks/useUserProjectsView';
 import PageTransition from '../../layout/animation/PageTransition';
 
-export default function ProfileViewPage() {
-  const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
+function GetCorrectHeight() {
   const { userProfile } = useUserProfileView();
-
-  const { user, projects, isLoading, error } = useUserProjectsView(userProfile.friendlyId ?? '');
+  const { projects } = useUserProjectsView(userProfile.friendlyId ?? '');
 
   const tabsContentRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +29,14 @@ export default function ProfileViewPage() {
       tabsContentRef.current.style.minHeight = `${maxHeight}px`;
     }
   }, [userProfile, projects]);
+}
+
+export default function ProfileViewPage() {
+  const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
+  const { userProfile } = useUserProfileView();
+  GetCorrectHeight();
+
+  const { user, projects, isLoading, error } = useUserProjectsView(userProfile.friendlyId ?? '');
 
   return (
     <PageTransition>
@@ -46,44 +51,9 @@ export default function ProfileViewPage() {
         </div>
 
         {/* Profile Card Section */}
-        <div className="bg-popover relative mx-auto -mt-24 w-full max-w-5xl p-6 shadow-lg">
-          <div className="flex flex-col items-center sm:flex-row sm:items-start">
-            <div className="relative h-40 w-40 rounded-full border-4 border-white shadow-lg">
-              <img
-                src={userProfile.profilePicture || '/default-avatar.png'}
-                alt="Profile"
-                className="h-full w-full rounded-full object-cover"
-              />
-            </div>
 
-            <div className="mt-6 flex-1 text-center sm:ml-10 sm:mt-0 sm:text-left">
-              <h2 className="text-foreground text-3xl font-bold">{userProfile.username}</h2>
-              <p className="text-lg">@{userProfile.friendlyId}</p>
-              <p className="text-muted-foreground mt-1">{userProfile.bio || 'No bio available'}</p>
-              <div className="text-muted-foreground mt-4 space-y-2">
-                <p className="flex items-center justify-center sm:justify-start">
-                  <Briefcase className="mr-2 h-5 w-5" />
-                  {userProfile.profession || 'No profession listed'}
-                </p>
-                <p className="flex items-center justify-center sm:justify-start">
-                  <LucideHome className="mr-2 h-5 w-5" />
-                  {userProfile.countryOrigin ? (
-                    <span
-                      className={`flag-icon flag-icon-${getCountryFlagIcon(userProfile.countryOrigin)}`}
-                      style={{ fontSize: '20px' }}
-                    ></span>
-                  ) : (
-                    <span>No country listed</span>
-                  )}
-                </p>
-                <p className="flex items-center justify-center sm:justify-start">
-                  <CakeIcon className="mr-2 h-5 w-5" />
-                  {userProfile.age ? `${userProfile.age} years old` : 'Age not provided'}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProfileCardView />
+
         {/* Tabs Section */}
         <div className="mt-12 w-full max-w-5xl px-6">
           <Tabs defaultValue="posts">
