@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { useRoutes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -22,6 +23,7 @@ function App() {
     >
       <AuthProvider>
         {routing}
+        <Analytics />
         <BackToPortfolioButton />
       </AuthProvider>
     </SWRConfig>
