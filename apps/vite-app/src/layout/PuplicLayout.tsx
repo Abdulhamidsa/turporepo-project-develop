@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import { Outlet } from 'react-router-dom';
 
 type AppLayoutProps = {
@@ -9,6 +10,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     <div>
       <main>
         {children}
+        <Analytics />
         <Outlet />
       </main>
     </div>

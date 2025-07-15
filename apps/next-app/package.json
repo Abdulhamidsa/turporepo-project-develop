@@ -15,6 +15,7 @@
     "@repo/hooks": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/zod": "workspace:*",
+    "@vercel/analytics": "^1.5.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.2",
     "lodash.debounce": "^4.0.8",

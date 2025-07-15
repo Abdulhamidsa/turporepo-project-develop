@@ -1,5 +1,6 @@
 /* eslint-disable import/order */
 import '@repo/ui/globals.css';
+import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 
@@ -43,7 +44,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="flex min-h-screen flex-col">
             <Nav />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow">
+              {children}
+              <Analytics />
+            </main>
             <Footer />
           </div>
           <BackToPortfolioButton />
