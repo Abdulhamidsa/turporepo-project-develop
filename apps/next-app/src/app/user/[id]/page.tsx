@@ -24,14 +24,17 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
   const userProjects = userProjectResponse?.data?.projects || [];
 
   return (
-    <div className="bg-background-muted dark:bg-background text-foreground dark:text-primary-foreground min-h-screen p-4 md:p-8">
-      <div className="border-border bg-card dark:bg-muted mx-auto max-w-5xl overflow-hidden rounded-lg border shadow-lg">
-        <Suspense fallback={<LoadingSpinner />}>
-          <div className="flex flex-col gap-8">
-            <ProfileHeader userProfile={userProfile} />
-            <ProjectsSection projects={userProjects} />
-          </div>
-        </Suspense>
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4">
+      <div className="mx-auto max-w-4xl">
+        {/* CV-like Paper Background */}
+        <div className="bg-white dark:bg-slate-800 shadow-2xl rounded-none border-l-4 border-blue-600 dark:border-blue-400">
+          <Suspense fallback={<LoadingSpinner />}>
+            <div className="divide-y divide-gray-200 dark:divide-slate-700">
+              <ProfileHeader userProfile={userProfile} />
+              <ProjectsSection projects={userProjects} />
+            </div>
+          </Suspense>
+        </div>
       </div>
     </div>
   );
