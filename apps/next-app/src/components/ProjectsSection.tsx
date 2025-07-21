@@ -16,119 +16,138 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
   const [selectedProject, setSelectedProject] = useState(null);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="px-8 py-12"
-    >
-      {/* Section Header */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-1 h-8 bg-primary rounded-full"></div>
-          <h2 className="text-3xl font-bold text-foreground tracking-tight">
-            Portfolio & Projects
-          </h2>
+    <div className="bg-slate-800">
+      {/* CV Section Header */}
+      <div className="bg-slate-750 px-8 py-6 border-b border-slate-600">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <Code className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white tracking-tight">PROFESSIONAL PORTFOLIO</h2>
+            <p className="text-slate-400 text-sm">Featured projects and technical achievements</p>
+          </div>
         </div>
-        <p className="text-muted-foreground text-lg font-light max-w-2xl">
-          A collection of my professional work and personal projects showcasing technical skills and
-          creativity.
-        </p>
       </div>
 
-      {projects.length > 0 ? (
-        <div className="space-y-8">
-          {projects.map((project: any, index: number) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative"
-            >
-              {/* Project Card */}
-              <div
-                className="bg-card shadow-md hover:shadow-lg transition-shadow duration-300 border border-border overflow-hidden cursor-pointer rounded-lg"
-                onClick={() => setSelectedProject(project)}
+      {/* Projects Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="p-8"
+      >
+        {projects.length > 0 ? (
+          <div className="grid gap-6">
+            {projects.map((project: any, index: number) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="relative"
               >
-                <div className="lg:flex">
-                  {/* Project Image */}
-                  <div className="lg:w-1/3 relative overflow-hidden">
-                    <div className="aspect-video lg:aspect-square relative">
-                      <Image
-                        src={project.thumbnail || '/placeholder.svg'}
-                        alt={project.title}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
-                  </div>
-
-                  {/* Project Content */}
-                  <div className="lg:w-2/3 p-8">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-card-foreground mb-2 hover:text-primary transition-colors">
-                          {project.title}
-                        </h3>
-                        <div className="flex items-center gap-2 text-primary mb-4">
-                          <Code className="w-5 h-5" />
-                          <span className="font-medium text-sm uppercase tracking-wide">
-                            Project #{index + 1}
-                          </span>
-                        </div>
+                {/* CV-Style Project Entry */}
+                <div
+                  className="bg-slate-700 border border-slate-600 rounded-lg p-6 hover:border-indigo-500 transition-colors cursor-pointer group"
+                  onClick={() => setSelectedProject(project)}
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    {/* Project Image */}
+                    <div className="lg:col-span-1">
+                      <div className="aspect-square rounded-lg overflow-hidden border border-slate-600">
+                        <Image
+                          src={project.thumbnail || '/placeholder.svg'}
+                          alt={project.title}
+                          width={200}
+                          height={200}
+                          className="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
+                        />
                       </div>
                     </div>
 
-                    <p className="text-muted-foreground leading-relaxed mb-6 font-light text-lg">
-                      {project.description}
-                    </p>
+                    {/* Project Details */}
+                    <div className="lg:col-span-3 space-y-4">
+                      {/* Header */}
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+                        <div>
+                          <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">
+                            {project.title}
+                          </h3>
+                          <div className="flex items-center gap-2 text-indigo-400 mt-1">
+                            <span className="text-sm font-medium">
+                              PROJECT #{String(index + 1).padStart(2, '0')}
+                            </span>
+                            <span className="w-1 h-1 bg-indigo-400 rounded-full"></span>
+                            <span className="text-sm text-slate-400">Featured Work</span>
+                          </div>
+                        </div>
+                      </div>
 
-                    {/* Technologies Used */}
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-card-foreground uppercase tracking-wide">
-                        Technologies Used
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.map((tag: any) => (
-                          <span
-                            key={tag.id}
-                            className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-sm font-medium border border-border"
-                          >
-                            {tag.name}
-                          </span>
-                        ))}
+                      {/* Description */}
+                      <p className="text-slate-300 leading-relaxed">{project.description}</p>
+
+                      {/* Technologies */}
+                      <div className="space-y-2">
+                        <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                          TECHNOLOGIES & SKILLS
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {project.tags.map((tag: any) => (
+                            <span
+                              key={tag.id}
+                              className="px-3 py-1 bg-slate-800 border border-slate-600 text-slate-300 rounded-full text-xs font-medium hover:border-indigo-500 transition-colors"
+                            >
+                              {tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Action Indicator */}
+                      <div className="flex items-center gap-2 text-slate-500 text-sm">
+                        <span>Click to view detailed information</span>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Connecting Line for CV Style */}
-              {index < projects.length - 1 && (
-                <div className="absolute left-8 bottom-0 w-px h-8 bg-gradient-to-b from-border to-transparent"></div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-16">
-          <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-            <Code className="w-10 h-10 text-muted-foreground" />
+                {/* CV Timeline Line */}
+                {index < projects.length - 1 && (
+                  <div className="absolute left-6 bottom-0 w-px h-6 bg-gradient-to-b from-slate-600 to-transparent"></div>
+                )}
+              </motion.div>
+            ))}
           </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">No Projects Yet</h3>
-          <p className="text-muted-foreground">
-            Projects will appear here once they are added to the portfolio.
-          </p>
-        </div>
-      )}
-
-      <AnimatePresence>
-        {selectedProject && (
-          <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+        ) : (
+          <div className="text-center py-16">
+            <div className="w-20 h-20 bg-slate-700 border border-slate-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <Code className="w-10 h-10 text-slate-500" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">No Projects Available</h3>
+            <p className="text-slate-400">Portfolio projects will be displayed here once added.</p>
+          </div>
         )}
-      </AnimatePresence>
-    </motion.div>
+
+        <AnimatePresence>
+          {selectedProject && (
+            <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   );
 }

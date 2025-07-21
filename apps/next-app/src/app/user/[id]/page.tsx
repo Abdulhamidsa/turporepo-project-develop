@@ -24,12 +24,17 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
   const userProjects = userProjectResponse?.data?.projects || [];
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="mx-auto max-w-4xl">
-        {/* CV-like Paper Background */}
-        <div className="bg-card shadow-2xl rounded-none border-l-4 border-primary">
+    <div className="min-h-screen bg-slate-900 py-8 px-4">
+      <div className="mx-auto max-w-5xl">
+        {/* CV Document Container */}
+        <div className="bg-slate-800 shadow-2xl border border-slate-700 relative overflow-hidden">
+          {/* CV Header with Large Letters */}
+          <div className="absolute top-4 right-6 text-6xl font-bold text-slate-700/20 select-none">
+            CV
+          </div>
+
           <Suspense fallback={<LoadingSpinner />}>
-            <div className="divide-y divide-border">
+            <div className="relative z-10">
               <ProfileHeader userProfile={userProfile} />
               <ProjectsSection projects={userProjects} />
             </div>
