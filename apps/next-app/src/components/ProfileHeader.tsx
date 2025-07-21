@@ -10,7 +10,7 @@ interface ProfileHeaderProps {
 
 export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
   return (
-    <div className="px-8 py-12 bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-700 dark:to-indigo-800 text-white">
+    <div className="px-8 py-12 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
       <div className="flex flex-col lg:flex-row items-start gap-8">
         {/* Professional Avatar */}
         <motion.div
@@ -19,7 +19,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
           transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 20 }}
           className="flex-shrink-0"
         >
-          <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full border-4 border-white shadow-xl overflow-hidden bg-white/10">
+          <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full border-4 border-primary-foreground shadow-xl overflow-hidden bg-primary-foreground/10">
             {userProfile.profilePicture ? (
               <Image
                 src={userProfile.profilePicture}
@@ -29,7 +29,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-white text-3xl lg:text-4xl font-bold bg-white/20">
+              <div className="w-full h-full flex items-center justify-center text-primary-foreground text-3xl lg:text-4xl font-bold bg-primary-foreground/20">
                 {(userProfile.username || 'NA').slice(0, 2).toUpperCase()}
               </div>
             )}
@@ -46,7 +46,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
             <h1 className="text-4xl lg:text-5xl font-bold mb-2 tracking-tight">
               {userProfile.username}
             </h1>
-            <div className="flex items-center gap-3 text-xl lg:text-2xl text-blue-100">
+            <div className="flex items-center gap-3 text-xl lg:text-2xl text-primary-foreground/90">
               <Briefcase className="w-6 h-6" />
               <span className="font-medium">{userProfile.profession || 'Professional'}</span>
             </div>
@@ -59,7 +59,9 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
               transition={{ delay: 0.4 }}
               className="max-w-2xl"
             >
-              <p className="text-lg text-blue-50 leading-relaxed font-light">{userProfile.bio}</p>
+              <p className="text-lg text-primary-foreground/80 leading-relaxed font-light">
+                {userProfile.bio}
+              </p>
             </motion.div>
           )}
 
@@ -70,15 +72,19 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
             className="flex flex-wrap gap-4 pt-2"
           >
             {userProfile.countryOrigin && (
-              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                <Globe className="w-5 h-5 text-blue-200" />
-                <span className="text-white font-medium">{userProfile.countryOrigin}</span>
+              <div className="flex items-center gap-2 bg-primary-foreground/20 backdrop-blur-sm rounded-full px-4 py-2">
+                <Globe className="w-5 h-5 text-primary-foreground/80" />
+                <span className="text-primary-foreground font-medium">
+                  {userProfile.countryOrigin}
+                </span>
               </div>
             )}
             {userProfile.age && (
-              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                <Calendar className="w-5 h-5 text-blue-200" />
-                <span className="text-white font-medium">{userProfile.age} years old</span>
+              <div className="flex items-center gap-2 bg-primary-foreground/20 backdrop-blur-sm rounded-full px-4 py-2">
+                <Calendar className="w-5 h-5 text-primary-foreground/80" />
+                <span className="text-primary-foreground font-medium">
+                  {userProfile.age} years old
+                </span>
               </div>
             )}
           </motion.div>

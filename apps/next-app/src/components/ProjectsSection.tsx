@@ -25,12 +25,12 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
       {/* Section Header */}
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+          <div className="w-1 h-8 bg-primary rounded-full"></div>
+          <h2 className="text-3xl font-bold text-foreground tracking-tight">
             Portfolio & Projects
           </h2>
         </div>
-        <p className="text-gray-600 dark:text-gray-300 text-lg font-light max-w-2xl">
+        <p className="text-muted-foreground text-lg font-light max-w-2xl">
           A collection of my professional work and personal projects showcasing technical skills and
           creativity.
         </p>
@@ -48,7 +48,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
             >
               {/* Project Card */}
               <div
-                className="bg-white dark:bg-slate-700 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-slate-600 overflow-hidden cursor-pointer transform hover:-translate-y-1"
+                className="bg-card shadow-md hover:shadow-lg transition-shadow duration-300 border border-border overflow-hidden cursor-pointer rounded-lg"
                 onClick={() => setSelectedProject(project)}
               >
                 <div className="lg:flex">
@@ -59,9 +59,9 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                         src={project.thumbnail || '/placeholder.svg'}
                         alt={project.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                   </div>
 
@@ -69,10 +69,10 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                   <div className="lg:w-2/3 p-8">
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        <h3 className="text-2xl font-bold text-card-foreground mb-2 hover:text-primary transition-colors">
                           {project.title}
                         </h3>
-                        <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 mb-4">
+                        <div className="flex items-center gap-2 text-primary mb-4">
                           <Code className="w-5 h-5" />
                           <span className="font-medium text-sm uppercase tracking-wide">
                             Project #{index + 1}
@@ -81,20 +81,20 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                       </div>
                     </div>
 
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 font-light text-lg">
+                    <p className="text-muted-foreground leading-relaxed mb-6 font-light text-lg">
                       {project.description}
                     </p>
 
                     {/* Technologies Used */}
                     <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide">
+                      <h4 className="text-sm font-semibold text-card-foreground uppercase tracking-wide">
                         Technologies Used
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {project.tags.map((tag: any) => (
                           <span
                             key={tag.id}
-                            className="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium border border-blue-200 dark:border-blue-700"
+                            className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-sm font-medium border border-border"
                           >
                             {tag.name}
                           </span>
@@ -107,20 +107,18 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
 
               {/* Connecting Line for CV Style */}
               {index < projects.length - 1 && (
-                <div className="absolute left-8 bottom-0 w-px h-8 bg-gradient-to-b from-gray-300 to-transparent dark:from-gray-600"></div>
+                <div className="absolute left-8 bottom-0 w-px h-8 bg-gradient-to-b from-border to-transparent"></div>
               )}
             </motion.div>
           ))}
         </div>
       ) : (
         <div className="text-center py-16">
-          <div className="w-20 h-20 bg-gray-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Code className="w-10 h-10 text-gray-400 dark:text-gray-500" />
+          <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <Code className="w-10 h-10 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            No Projects Yet
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h3 className="text-xl font-semibold text-foreground mb-2">No Projects Yet</h3>
+          <p className="text-muted-foreground">
             Projects will appear here once they are added to the portfolio.
           </p>
         </div>
