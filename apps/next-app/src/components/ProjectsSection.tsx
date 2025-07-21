@@ -20,7 +20,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
       {/* CV Section Header */}
       <div className="bg-slate-750 px-8 py-6 border-b border-slate-600">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center">
             <Code className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -49,7 +49,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
               >
                 {/* CV-Style Project Entry */}
                 <div
-                  className="bg-slate-700 border border-slate-600 rounded-lg p-6 hover:border-indigo-500 transition-colors cursor-pointer group"
+                  className="bg-slate-700 border border-slate-600 rounded-lg p-6 hover:border-gray-500 transition-colors cursor-pointer group"
                   onClick={() => setSelectedProject(project)}
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -71,14 +71,14 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                       {/* Header */}
                       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
                         <div>
-                          <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">
+                          <h3 className="text-xl font-bold text-white group-hover:text-gray-300 transition-colors">
                             {project.title}
                           </h3>
-                          <div className="flex items-center gap-2 text-indigo-400 mt-1">
+                          <div className="flex items-center gap-2 text-gray-400 mt-1">
                             <span className="text-sm font-medium">
                               PROJECT #{String(index + 1).padStart(2, '0')}
                             </span>
-                            <span className="w-1 h-1 bg-indigo-400 rounded-full"></span>
+                            <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
                             <span className="text-sm text-slate-400">Featured Work</span>
                           </div>
                         </div>
@@ -96,7 +96,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                           {project.tags.map((tag: any) => (
                             <span
                               key={tag.id}
-                              className="px-3 py-1 bg-slate-800 border border-slate-600 text-slate-300 rounded-full text-xs font-medium hover:border-indigo-500 transition-colors"
+                              className="px-3 py-1 bg-slate-800 border border-slate-600 text-slate-300 rounded-full text-xs font-medium hover:border-gray-500 transition-colors"
                             >
                               {tag.name}
                             </span>

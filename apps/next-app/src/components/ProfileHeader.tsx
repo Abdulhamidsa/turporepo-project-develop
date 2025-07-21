@@ -12,7 +12,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
   return (
     <div className="relative">
       {/* CV Header Section */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-8 border-b-4 border-indigo-500">
+      <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-8 border-b-4 border-gray-500">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
           {/* Profile Picture */}
           <motion.div
@@ -22,7 +22,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
             className="flex justify-center lg:justify-start"
           >
             <div className="relative">
-              <div className="w-32 h-32 rounded-lg border-4 border-indigo-400 shadow-2xl overflow-hidden bg-slate-600">
+              <div className="w-32 h-32 rounded-lg border-4 border-gray-400 shadow-2xl overflow-hidden bg-slate-600">
                 {userProfile.profilePicture ? (
                   <Image
                     src={userProfile.profilePicture}
@@ -32,13 +32,13 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-indigo-300 text-3xl font-bold bg-slate-600">
+                  <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl font-bold bg-slate-600">
                     {(userProfile.username || 'NA').slice(0, 2).toUpperCase()}
                   </div>
                 )}
               </div>
               {/* Professional Badge */}
-              <div className="absolute -bottom-2 -right-2 bg-indigo-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
+              <div className="absolute -bottom-2 -right-2 bg-gray-600 text-white px-2 py-1 rounded-md text-xs font-semibold">
                 PRO
               </div>
             </div>
@@ -54,11 +54,9 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
               <h1 className="text-4xl lg:text-5xl font-bold text-white mb-2 tracking-tight">
                 {userProfile.username}
               </h1>
-              <div className="flex items-center justify-center lg:justify-start gap-3 text-xl text-indigo-300 mb-4">
+              <div className="flex items-center justify-center lg:justify-start gap-3 text-xl text-gray-300 mb-4">
                 <Briefcase className="w-6 h-6" />
-                <span className="font-medium">
-                  {userProfile.profession || 'Professional Developer'}
-                </span>
+                <span className="font-medium">{userProfile.profession || 'Professional'}</span>
               </div>
 
               {userProfile.bio && (
@@ -77,7 +75,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
             >
               {userProfile.countryOrigin && (
                 <div className="flex items-center gap-2 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2">
-                  <Globe className="w-4 h-4 text-indigo-400" />
+                  <Globe className="w-4 h-4 text-gray-400" />
                   <span className="text-slate-200 font-medium text-sm">
                     {userProfile.countryOrigin}
                   </span>
@@ -85,15 +83,17 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
               )}
               {userProfile.age && (
                 <div className="flex items-center gap-2 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2">
-                  <Calendar className="w-4 h-4 text-indigo-400" />
+                  <Calendar className="w-4 h-4 text-gray-400" />
                   <span className="text-slate-200 font-medium text-sm">
                     {userProfile.age} years
                   </span>
                 </div>
               )}
-              <div className="flex items-center gap-2 bg-indigo-600 border border-indigo-500 rounded-lg px-4 py-2">
-                <span className="text-white font-medium text-sm">Available for hire</span>
-              </div>
+              {userProfile.profession && (
+                <div className="flex items-center gap-2 bg-gray-600 border border-gray-500 rounded-lg px-4 py-2">
+                  <span className="text-white font-medium text-sm">{userProfile.profession}</span>
+                </div>
+              )}
             </motion.div>
           </div>
         </div>
@@ -103,11 +103,11 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
       <div className="bg-slate-750 px-8 py-4 border-b border-slate-600">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6 text-sm text-slate-400 font-medium uppercase tracking-wider">
-            <span className="text-indigo-400">Professional Portfolio</span>
+            <span className="text-gray-400">Professional Portfolio</span>
             <span>•</span>
-            <span>Software Developer</span>
+            <span>{userProfile.profession || 'Developer'}</span>
             <span>•</span>
-            <span>Creative Professional</span>
+            <span>{userProfile.countryOrigin || 'Global'}</span>
           </div>
           <div className="text-slate-500 text-sm">
             Last updated: {new Date().toLocaleDateString()}
