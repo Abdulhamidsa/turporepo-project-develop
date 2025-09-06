@@ -24,8 +24,8 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "eslint": "catalog:eslint",
     "prettier": "catalog:prettier",
-    "prettier-plugin-tailwindcss": "^0.6.11",
-    "turbo": "^2.5.0",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "turbo": "^2.5.6",
     "typescript": "catalog:typescript"
   },
   "packageManager": "pnpm@9.12.0"
