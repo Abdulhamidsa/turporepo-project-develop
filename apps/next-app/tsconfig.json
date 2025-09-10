@@ -18,7 +18,6 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "ignoreDeprecations": "6.0",
     "strictNullChecks": true
   },
   "include": [
