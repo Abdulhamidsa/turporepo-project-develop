@@ -4,12 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avat
 import { Button } from '@repo/ui/components/ui/button';
 import { Card } from '@repo/ui/components/ui/card';
 import { Input } from '@repo/ui/components/ui/input';
-import { ArrowLeft, ArrowRight, Briefcase, MapPin, Search } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Search, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import { Skeleton } from '../components/ui/skeleton';
 import { getCountryFlagIcon } from '../utils/generateCountryFlag';
+import { DarkModeToggle } from '../layout/DarkModeToggle';
 // import { useAuth } from '../features/user/hooks/use.auth';
-import UserProfileModal from './UserProfileModal';
 
 // Using the existing User type from useUserALL hook
 interface User {
@@ -29,6 +30,84 @@ interface UsersGalleryProps {
   pageSize?: number;
 }
 
+// Public Navbar Component
+function PublicNavbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  return (
+    <nav className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link to="/" className="text-2xl font-bold text-primary">
+              ProFolio
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+              Home
+            </Link>
+            <DarkModeToggle />
+            <Link to="/auth">
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/auth">
+              <Button size="sm" className="bg-primary hover:bg-primary/90">
+                Get Started
+              </Button>
+            </Link>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <DarkModeToggle />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="ml-2"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-border bg-background">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link
+                to="/"
+                className="block px-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-muted-foreground hover:text-foreground"
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                <Button className="w-full bg-primary hover:bg-primary/90 mt-2">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}
+
 export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGalleryProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,8 +115,6 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
   const [page, setPage] = useState(initialPage);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // const { isAuthenticated } = useAuth(); // Removed for now
 
@@ -120,8 +197,7 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
   };
 
   const handleUserClick = (user: User) => {
-    setSelectedUser(user);
-    setIsModalOpen(true);
+    window.location.href = `/explore/professionals/${user.friendlyId}`;
   };
 
   const goToPreviousPage = () => {
@@ -138,25 +214,19 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation Header */}
-      <div className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" onClick={() => (window.location.href = '/')}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Home
-              </Button>
-              <h1 className="text-xl font-semibold">Discover Professionals</h1>
-            </div>
-            <Button variant="default" onClick={() => (window.location.href = '/auth')}>
-              Sign In
-            </Button>
-          </div>
-        </div>
-      </div>
+      {/* Public Navigation */}
+      <PublicNavbar />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Page Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            Discover Professionals
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Connect with talented professionals from around the world sharing their work and expertise
+          </p>
+        </div>
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="mb-8 max-w-md mx-auto">
           <div className="relative">
@@ -208,55 +278,46 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
               </div>
             ) : (
               <>
-                {/* Users Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {/* Users Grid - Consistent Cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                   {users.map((user) => {
                     return (
                       <div
                         key={user.id}
-                        className="group relative cursor-pointer"
+                        className="group cursor-pointer"
                         onClick={() => handleUserClick(user)}
                       >
-                        {/* Clean Card */}
-                        <div className="relative overflow-hidden rounded-xl bg-card border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-md">
-                          {/* Subtle hover effect */}
-                          <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        {/* Consistent Card Size */}
+                        <div className="bg-card border border-border rounded-lg p-4 hover:border-primary/40 hover:shadow-md transition-all duration-200 h-full flex flex-col">
+                          {/* Profile Picture - Fixed Size */}
+                          <div className="flex justify-center mb-3">
+                            <Avatar className="h-16 w-16 border border-border">
+                              <AvatarImage
+                                src={user.profilePicture || ''}
+                                alt={user.username || 'User'}
+                                className="object-cover"
+                              />
+                              <AvatarFallback className="bg-primary/10 text-primary font-bold text-lg">
+                                {user.username ? user.username.charAt(0).toUpperCase() : '?'}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
 
-                          {/* Content */}
-                          <div className="relative p-6 flex flex-col items-center text-center">
-                            {/* Profile Picture */}
-                            <div className="relative mb-4">
-                              <Avatar className="h-16 w-16 border-2 border-border group-hover:border-primary/30 transition-colors duration-300">
-                                <AvatarImage
-                                  src={user.profilePicture || ''}
-                                  alt={user.username || 'User'}
-                                  className="object-cover"
-                                />
-                                <AvatarFallback className="bg-muted text-muted-foreground font-bold text-lg">
-                                  {user.username ? user.username.slice(0, 2).toUpperCase() : '✨'}
-                                </AvatarFallback>
-                              </Avatar>
-                              {/* Status indicator */}
-                              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-primary border-2 border-background rounded-full" />
-                            </div>
-
-                            {/* Name */}
-                            <h3 className="font-semibold text-lg text-card-foreground mb-2 line-clamp-1 group-hover:text-primary transition-colors duration-300">
-                              {user.username}
+                          {/* User Info - Fixed Height */}
+                          <div className="text-center flex-1 flex flex-col">
+                            {/* Name - Truncated */}
+                            <h3 className="font-semibold text-card-foreground mb-1 text-sm line-clamp-1 group-hover:text-primary transition-colors">
+                              {user.username || 'Anonymous'}
                             </h3>
 
-                            {/* Profession */}
-                            {user.profession && (
-                              <div className="flex items-center gap-1.5 mb-3 text-sm text-muted-foreground">
-                                <Briefcase className="w-4 h-4" />
-                                <span>{user.profession}</span>
-                              </div>
-                            )}
+                            {/* Profession - Truncated */}
+                            <p className="text-xs text-muted-foreground mb-2 line-clamp-1 flex-1">
+                              {user.profession || 'Professional'}
+                            </p>
 
-                            {/* Location */}
-                            {user.countryOrigin && (
-                              <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mb-2">
-                                <MapPin className="w-3.5 h-3.5" />
+                            {/* Location - Only Flag */}
+                            <div className="flex items-center justify-center">
+                              {user.countryOrigin && (
                                 <img
                                   src={`https://flagcdn.com/w20/${getCountryFlagIcon(user.countryOrigin)}.png`}
                                   alt={user.countryOrigin}
@@ -265,17 +326,7 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
                                     (e.target as HTMLImageElement).style.display = 'none';
                                   }}
                                 />
-                                <span>{user.countryOrigin}</span>
-                              </div>
-                            )}
-
-                            {/* Stats */}
-                            <div className="text-xs text-muted-foreground text-center pt-2 border-t border-border">
-                              Member since{' '}
-                              {new Date(user.createdAt).toLocaleDateString(undefined, {
-                                month: 'short',
-                                year: 'numeric',
-                              })}
+                              )}
                             </div>
                           </div>
                         </div>
@@ -311,8 +362,7 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
           </>
         )}
 
-        {/* User Profile Modal */}
-        <UserProfileModal user={selectedUser} isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
+
       </div>
     </div>
   );

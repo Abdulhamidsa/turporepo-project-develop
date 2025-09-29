@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getEndpoints } from '@repo/api/endpoints';
 import { defaultUserProfile, userProfileSchema } from '@repo/zod/validation/user';
-import { AlertCircle, Briefcase, Eye, Lock } from 'lucide-react';
+import { AlertCircle, Briefcase, Lock } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -153,292 +153,131 @@ export default function DirectProfessionalProfile() {
           </button>
         </div>
 
-        {/* Clean Profile Card */}
+        {/* Clean Minimal Profile Card */}
         <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-          {/* Clean Header */}
-          <div className="bg-gradient-to-r from-primary/5 to-secondary/5 p-8 border-b border-border">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-6">
-                {/* Profile Picture */}
-                <div className="relative">
-                  <div className="w-24 h-24 rounded-full border-2 border-border overflow-hidden bg-muted">
-                    {userProfile.profilePicture ? (
-                      <img
-                        src={userProfile.profilePicture}
-                        alt={userProfile.username || 'User'}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
-                        <AlertCircle className="w-12 h-12" />
-                      </div>
-                    )}
+          {/* Simple Header */}
+          <div className="p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              {/* Profile Picture */}
+              <div className="w-20 h-20 rounded-full border border-border overflow-hidden bg-muted flex-shrink-0">
+                {userProfile.profilePicture ? (
+                  <img
+                    src={userProfile.profilePicture}
+                    alt={userProfile.username || 'User'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+                    <span className="text-2xl font-bold">
+                      {userProfile.username?.charAt(0).toUpperCase() || '?'}
+                    </span>
                   </div>
-                  {/* Status Badge */}
-                  <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground p-1.5 rounded-full border-2 border-background">
-                    <AlertCircle className="w-3 h-3" />
-                  </div>
-                </div>
-
-                {/* User Info */}
-                <div>
-                  <h1 className="text-2xl font-bold text-card-foreground mb-1">
-                    {userProfile.username || 'Anonymous User'}
-                  </h1>
-                  <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>{userProfile.profession || 'Professional'}</span>
-                  </div>
-                  {userProfile.countryOrigin && (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <AlertCircle className="w-4 h-4" />
-                      <span>{userProfile.countryOrigin}</span>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
 
-              {/* Action Button */}
-              <button
-                onClick={() => (window.location.href = '/auth')}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg transition-colors flex items-center gap-2"
-              >
-                <Lock className="h-4 w-4" />
-                Sign In to View More
-              </button>
+              {/* User Info */}
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-card-foreground mb-2">
+                  {userProfile.username || 'Anonymous User'}
+                </h1>
+                <div className="flex items-center gap-2 text-lg text-muted-foreground mb-3">
+                  <Briefcase className="w-5 h-5" />
+                  <span>{userProfile.profession || 'Professional'}</span>
+                </div>
+                {userProfile.countryOrigin && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>{userProfile.countryOrigin}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bio Section */}
+            {userProfile.bio && (
+              <div className="mt-6 pt-6 border-t border-border">
+                <p className="text-muted-foreground leading-relaxed text-lg">{userProfile.bio}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Simple Stats */}
+          <div className="px-8 pb-4">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>Member since {new Date().getFullYear()}</span>
+              {userProfile.age && <span>{userProfile.age} years old</span>}
             </div>
           </div>
 
-          {/* Content Section */}
-          <div className="p-8 space-y-8">
-            {/* Bio */}
-            {userProfile.bio && (
-              <div>
-                <h2 className="text-lg font-semibold text-card-foreground mb-3">About</h2>
-                <p className="text-muted-foreground leading-relaxed bg-muted/30 p-4 rounded-lg">
-                  {userProfile.bio}
-                </p>
-              </div>
-            )}
+          {/* Projects Section - Clean and Blurred */}
+          <div className="border-t border-border">
+            <div className="p-8">
+              <h2 className="text-xl font-semibold text-card-foreground mb-6 flex items-center gap-2">
+                <Briefcase className="h-5 w-5 text-primary" />
+                Projects
+              </h2>
 
-            {/* Quick Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {userProfile.age && (
-                <div className="bg-muted/30 rounded-lg p-4 text-center">
-                  <AlertCircle className="h-5 w-5 text-primary mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Age</p>
-                  <p className="font-medium text-card-foreground">{userProfile.age} years</p>
-                </div>
-              )}
-
-              {userProfile.countryOrigin && (
-                <div className="bg-muted/30 rounded-lg p-4 text-center">
-                  <AlertCircle className="h-5 w-5 text-primary mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Location</p>
-                  <p className="font-medium text-card-foreground">{userProfile.countryOrigin}</p>
-                </div>
-              )}
-
-              <div className="bg-muted/30 rounded-lg p-4 text-center">
-                <AlertCircle className="h-5 w-5 text-primary mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">Member since</p>
-                <p className="font-medium text-card-foreground">{new Date().getFullYear()}</p>
-              </div>
-            </div>
-
-            {/* Projects Section (Blurred) */}
-            <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
-                  <Briefcase className="h-5 w-5 text-primary" />
-                  Projects
-                </h2>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
-                  <Lock className="h-3 w-3" />
-                  Sign in to view
-                </div>
-              </div>
-
-              {/* Blurred Projects Content */}
+              {/* Blurred Projects Grid */}
               <div className="relative">
-                <div className="blur-sm pointer-events-none select-none">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Mock Project 1 */}
-                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
-                      <div className="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg mb-3 flex items-center justify-center">
-                        <Eye className="h-8 w-8 text-muted-foreground" />
+                <div className="blur-md pointer-events-none select-none">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Mock Project Cards */}
+                    {[1, 2, 3, 4].map((i) => (
+                      <div
+                        key={i}
+                        className="bg-muted/40 rounded-lg overflow-hidden border border-border"
+                      >
+                        <div className="aspect-video bg-gradient-to-br from-primary/30 to-secondary/20" />
+                        <div className="p-4">
+                          <div className="h-4 bg-muted rounded mb-2" />
+                          <div className="h-3 bg-muted rounded mb-3 w-3/4" />
+                          <div className="flex gap-2">
+                            <div className="h-5 w-12 bg-primary/20 rounded-full" />
+                            <div className="h-5 w-16 bg-primary/20 rounded-full" />
+                          </div>
+                        </div>
                       </div>
-                      <h3 className="font-semibold text-card-foreground mb-2">Featured Project</h3>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        A comprehensive description of this amazing project that showcases skills
-                        and expertise...
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                          React
-                        </span>
-                        <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                          TypeScript
-                        </span>
-                        <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                          Design
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Mock Project 2 */}
-                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
-                      <div className="aspect-video bg-gradient-to-br from-secondary/20 to-primary/20 rounded-lg mb-3 flex items-center justify-center">
-                        <Eye className="h-8 w-8 text-muted-foreground" />
-                      </div>
-                      <h3 className="font-semibold text-card-foreground mb-2">
-                        Another Great Work
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Another impressive project demonstrating professional capabilities and
-                        creative solutions...
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                          Node.js
-                        </span>
-                        <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                          MongoDB
-                        </span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
-
-                {/* Unlock Message */}
+                {/* Subtle Overlay Message */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-card/95 backdrop-blur-sm border border-border rounded-lg p-6 text-center shadow-lg">
-                    <Lock className="h-8 w-8 text-primary mx-auto mb-3" />
-                    <h3 className="font-semibold text-card-foreground mb-2">Projects Locked</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Sign in to view detailed project information
-                    </p>
+                  <div className="bg-background/90 backdrop-blur-sm rounded-lg p-6 text-center border border-border shadow-lg">
+                    <Lock className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground mb-4">Sign in to view projects</p>
                     <button
                       onClick={() => (window.location.href = '/auth')}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 text-sm rounded-lg transition-colors"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg transition-colors"
                     >
-                      Sign In to View
+                      Sign In
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Status Section (Blurred) */}
-            <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
-                  <AlertCircle className="h-5 w-5 text-primary" />
-                  Professional Status
-                </h2>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
-                  <Lock className="h-3 w-3" />
-                  Sign in to view
-                </div>
-              </div>
-
-              {/* Blurred Status Content */}
-              <div className="relative">
-                <div className="blur-sm pointer-events-none select-none">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Availability Status */}
-                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-3 h-3 bg-green-500 rounded-full" />
-                        <h3 className="font-semibold text-card-foreground">Available</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Open to new opportunities and collaborations
-                      </p>
-                    </div>
-
-                    {/* Current Focus */}
-                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-3 h-3 bg-blue-500 rounded-full" />
-                        <h3 className="font-semibold text-card-foreground">Current Focus</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Working on innovative web solutions
-                      </p>
-                    </div>
-
-                    {/* Experience Level */}
-                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-3 h-3 bg-primary rounded-full" />
-                        <h3 className="font-semibold text-card-foreground">Experience</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        5+ years in professional development
-                      </p>
-                    </div>
-
-                    {/* Skills */}
-                    <div className="bg-muted/30 rounded-lg p-4 border border-border">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-3 h-3 bg-purple-500 rounded-full" />
-                        <h3 className="font-semibold text-card-foreground">Specialties</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        React, TypeScript, UI/UX Design
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
-
-                {/* Unlock Message */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-card/95 backdrop-blur-sm border border-border rounded-lg p-6 text-center shadow-lg">
-                    <Lock className="h-8 w-8 text-primary mx-auto mb-3" />
-                    <h3 className="font-semibold text-card-foreground mb-2">
-                      Status Information Locked
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Sign in to view professional status and availability
-                    </p>
-                    <button
-                      onClick={() => (window.location.href = '/auth')}
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 text-sm rounded-lg transition-colors"
-                    >
-                      Sign In to View
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Clean Call-to-Action */}
-            <div className="bg-primary/5 rounded-lg p-6 text-center border border-primary/20">
-              <h3 className="text-lg font-semibold text-card-foreground mb-2">View Full Profile</h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                Sign in to view projects, professional status, and detailed information
-              </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-3">
-                <button
-                  onClick={() => (window.location.href = '/auth')}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg transition-colors"
-                >
-                  Sign In
-                </button>
-                <button
-                  onClick={() => (window.location.href = '/auth?signup=true')}
-                  className="border border-border hover:bg-muted/50 text-card-foreground px-6 py-2 rounded-lg transition-colors"
-                >
-                  Create Account
-                </button>
-              </div>
+          </div>
+          {/* Simple Footer */}
+          <div className="border-t border-border bg-muted/30 p-6">
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <button
+                onClick={() => (window.location.href = '/auth')}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg transition-colors font-medium"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => (window.location.href = '/auth')}
+                className="border border-border hover:bg-muted text-card-foreground px-8 py-3 rounded-lg transition-colors font-medium"
+              >
+                Create Account
+              </button>
             </div>
           </div>
         </div>

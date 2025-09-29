@@ -16,6 +16,7 @@ import Projects from '../src/pages/projects';
 import SimplePublicProfile from '../src/pages/public-profile/[friendlyId]';
 import Settings from '../src/pages/settings';
 import { ProtectedRoute } from './protectedRoutes';
+import { PublicRoute } from '../src/routes/PublicRoute';
 import { routesConfig } from './routesConfig';
 
 export const appRoutes: RouteObject[] = [
@@ -71,7 +72,11 @@ export const appRoutes: RouteObject[] = [
   },
   {
     path: routesConfig.users,
-    element: <UsersPage />,
+    element: (
+      <PublicRoute redirectTo={routesConfig.professionals}>
+        <UsersPage />
+      </PublicRoute>
+    ),
   },
   {
     path: '/explore/professionals/:friendlyId',
