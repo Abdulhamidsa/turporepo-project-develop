@@ -1,5 +1,10 @@
-import { ProjectsAll } from '../features/projects/components/ProjectAll';
+import { AuthProvider } from '../../context/AuthContext';
+import ProjectsGallery from '../components/ProjectsGallery';
 
 export default function Projects() {
-  return <ProjectsAll />;
+  return (
+    <AuthProvider>
+      <ProjectsGallery />
+    </AuthProvider>
+  );
 }

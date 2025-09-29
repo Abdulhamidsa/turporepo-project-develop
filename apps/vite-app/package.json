@@ -34,7 +34,8 @@
     "react-select": "catalog:react18",
     "react-world-flags": "^1.6.0",
     "swiper": "^11.2.6",
-    "swr": "^2.3.3"
+    "swr": "^2.3.3",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",

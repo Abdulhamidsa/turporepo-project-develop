@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { getEndpoints } from '@repo/api/endpoints';
-import { defaultUserProfile, userProfileSchema } from '@repo/zod/validation/user';
+import { defaultUserProfile, userProfileSchema, UserProfile } from '@repo/zod/validation/user';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -48,8 +48,21 @@ export default function ProfilePage() {
     },
   );
 
-  // Determine which data to use
-  const userProfile = isOwnProfile ? ownProfile : otherUserProfile || defaultUserProfile;
+  // Determine which data to use and normalize undefined to null
+  const userProfile: UserProfile = useMemo(() => {
+    const rawProfile = isOwnProfile ? ownProfile : otherUserProfile || defaultUserProfile;
+    return {
+      bio: rawProfile.bio ?? null,
+      username: rawProfile.username ?? null,
+      age: rawProfile.age ?? null,
+      countryOrigin: rawProfile.countryOrigin ?? null,
+      profession: rawProfile.profession ?? null,
+      friendlyId: rawProfile.friendlyId ?? '',
+      profilePicture: rawProfile.profilePicture ?? null,
+      coverImage: rawProfile.coverImage ?? null,
+      completedProfile: rawProfile.completedProfile ?? false,
+    };
+  }, [isOwnProfile, ownProfile, otherUserProfile]);
   const projects = useMemo(() => {
     return isOwnProfile ? ownProjects : otherUserProjects || [];
   }, [isOwnProfile, ownProjects, otherUserProjects]);
@@ -85,17 +98,7 @@ export default function ProfilePage() {
           <ProfileDetails userProfile={userProfile} />
           <div ref={tabsContentRef}>
             <ProfileTabs
-              userProfile={{
-                ...userProfile,
-                bio: userProfile.bio ?? null,
-                username: userProfile.username ?? null,
-                countryOrigin: userProfile.countryOrigin ?? null,
-                profession: userProfile.profession ?? null,
-                friendlyId: userProfile.friendlyId ?? '',
-                profilePicture: userProfile.profilePicture ?? null,
-                coverImage: userProfile.coverImage ?? null,
-                completedProfile: userProfile.completedProfile ?? false,
-              }}
+              userProfile={userProfile}
               projects={projects}
               viewOnly={!isOwnProfile}
             />

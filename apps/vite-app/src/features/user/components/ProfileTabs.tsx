@@ -18,9 +18,10 @@ interface ProfileTabsProps {
   userProfile: UserProfile;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   projects: any[];
+  viewOnly?: boolean;
 }
 
-const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
+const ProfileTabs = ({ userProfile, projects, viewOnly = false }: ProfileTabsProps) => {
   const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const { chatStep, chatMessages, data, loading, startChat, selectProject, sendMessage, goBack } =
@@ -49,18 +50,20 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
             <UserPosts friendlyId={userProfile.friendlyId ?? ''} />
           </TabsContent>
           <TabsContent value="projects" className="mt-6">
-            <TooltipProvider>
-              <Tooltip content="AI Chat">
-                <TooltipTrigger asChild>
-                  <button
-                    className="bg-primary fixed bottom-16 right-3 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110"
-                    onClick={() => setChatOpen(true)}
-                  >
-                    <Bot className="h-6 w-6 text-white" />
-                  </button>
-                </TooltipTrigger>
-              </Tooltip>
-            </TooltipProvider>
+            {!viewOnly && (
+              <TooltipProvider>
+                <Tooltip content="AI Chat">
+                  <TooltipTrigger asChild>
+                    <button
+                      className="bg-primary fixed bottom-16 right-3 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110"
+                      onClick={() => setChatOpen(true)}
+                    >
+                      <Bot className="h-6 w-6 text-white" />
+                    </button>
+                  </TooltipTrigger>
+                </Tooltip>
+              </TooltipProvider>
+            )}
             {/* AI Chat Drawer */}
             <AnimatePresence>
               {chatOpen && (
@@ -78,6 +81,8 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
                       data,
                       loading,
                       projects,
+                      userProfilePicture: userProfile.profilePicture || undefined,
+                      userName: userProfile.username || undefined,
                       startChat,
                       selectProject,
                       sendMessage,
@@ -89,15 +94,17 @@ const ProfileTabs = ({ userProfile, projects }: ProfileTabsProps) => {
               )}
             </AnimatePresence>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div
-                className="bg-card hover:bg-primary-foreground group relative flex h-full w-full items-center justify-center rounded-lg border p-4 transition duration-300 ease-in-out hover:cursor-pointer"
-                onClick={() => setIsProjectDialogOpen(true)}
-              >
-                <Plus className="text-primary-foreground h-52 w-12 opacity-100 transition-all duration-300 ease-in-out group-hover:opacity-0" />
-                <span className="text-card absolute text-lg font-semibold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
-                  Add Project
-                </span>
-              </div>
+              {!viewOnly && (
+                <div
+                  className="bg-card hover:bg-primary-foreground group relative flex h-full w-full items-center justify-center rounded-lg border p-4 transition duration-300 ease-in-out hover:cursor-pointer"
+                  onClick={() => setIsProjectDialogOpen(true)}
+                >
+                  <Plus className="text-primary-foreground h-52 w-12 opacity-100 transition-all duration-300 ease-in-out group-hover:opacity-0" />
+                  <span className="text-card absolute text-lg font-semibold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+                    Add Project
+                  </span>
+                </div>
+              )}
 
               {projects.map((project) => (
                 <ProjectCard
