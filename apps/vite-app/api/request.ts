@@ -23,6 +23,7 @@ export async function request<T>(
       data,
     });
 
+    console.log(`API request to ${url}:`, { method, data });
     const { success, data: responseData, message } = response.data;
     console.log('API response:', response.data);
     if (!success) {
