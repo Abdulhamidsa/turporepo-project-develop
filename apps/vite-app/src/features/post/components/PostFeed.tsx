@@ -7,7 +7,7 @@ import { showToast } from '@repo/ui/components/ui/toaster';
 import { timeAgo } from '@repo/utils/timeCalculation';
 import { CommentType } from '@repo/zod/validation/post';
 import { Heart, Loader2, MessageCircle, Trash2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { ProfessionBadge } from '../../../../../../packages/ui/src/components/ProfessionBadge';
 import { routesConfig } from '../../../../routes/routesConfig';
@@ -47,8 +47,8 @@ export function PostFeed({ post, user }: PostProps) {
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
-
   const [isToggling, setIsToggling] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleDeleteComment = async (commentId: string) => {
     const isDeleted = await deleteComment(commentId);
@@ -89,9 +89,15 @@ export function PostFeed({ post, user }: PostProps) {
   };
 
   const handleAvatarClick = () => {
-    const targetUrl = routesConfig.userPortfolio(user.friendlyId);
-    if (loggedUser?.friendlyId === user.friendlyId) {
-      navigate(targetUrl);
+    if (!loggedUser) {
+      // Non-logged-in users go to public route with blurred content
+      navigate(`/explore/professionals/${user.friendlyId}`);
+    } else if (loggedUser.friendlyId === user.friendlyId) {
+      // Navigate to manage mode for own profile
+      navigate(routesConfig.userPortfolio(user.friendlyId));
+    } else {
+      // Logged-in users viewing others go to user route
+      navigate(routesConfig.userPortfolioView(user.friendlyId));
     }
   };
 
@@ -109,148 +115,213 @@ export function PostFeed({ post, user }: PostProps) {
   };
 
   return (
-    <Card className="bg-card text-card-foreground m-auto w-full max-w-md space-y-2 rounded-md shadow-md">
+    <Card
+      className="bg-card/95 backdrop-blur-sm border-border/50 text-card-foreground mx-auto w-full max-w-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 rounded-xl border group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {/* Post Header */}
-      <CardHeader className="flex flex-row items-start space-x-2">
-        {loggedUser?.friendlyId === user.friendlyId ? (
-          <div onClick={handleAvatarClick} className="cursor-pointer">
-            <Avatar className="h-12 w-12 flex-shrink-0">
-              <AvatarImage src={user.profilePicture || '/placeholder.png'} />
-              <AvatarFallback className="text-2xl">
+      <CardHeader className="pb-4">
+        <div className="flex items-start space-x-4">
+          <div onClick={handleAvatarClick} className="cursor-pointer transition-all duration-200">
+            <Avatar className="h-14 w-14 ring-2 ring-primary/20 transition-all duration-200 hover:ring-primary/40">
+              <AvatarImage
+                src={user.profilePicture || '/placeholder.png'}
+                className="object-cover transition-all duration-200 hover:brightness-110"
+              />
+              <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-lg font-semibold text-primary">
                 {user.username.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>
-        ) : (
-          <Link to={routesConfig.userPortfolioView(user.friendlyId)}>
-            <Avatar className="h-12 w-12 flex-shrink-0">
-              <AvatarImage src={user.profilePicture || '/placeholder.png'} />
-              <AvatarFallback className="text-2xl">
-                {user.username.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </Link>
-        )}
 
-        <div className="flex-grow leading-tight">
-          <div className="flex flex-col items-start space-y-1 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0">
-            <h4 className="text-foreground text-lg font-bold">{user.username}</h4>
-            <ProfessionBadge profession={user.profession} />
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <h4
+                onClick={handleAvatarClick}
+                className="text-foreground text-lg font-semibold cursor-pointer hover:text-primary transition-colors duration-200 truncate"
+              >
+                {user.username}
+              </h4>
+              <div className="transition-colors duration-200">
+                <ProfessionBadge profession={user.profession} />
+              </div>
+            </div>
+            <p className="text-muted-foreground text-sm font-medium">{timeAgo(post.createdAt)}</p>
           </div>
-          <p className="text-muted-foreground text-xs">{timeAgo(post.createdAt)}</p>
         </div>
       </CardHeader>
 
       {/* Post Content */}
-      <CardContent className="border-muted space-y-2 border-b pb-2">
-        <p className="text-foreground text-sm">{post.content}</p>
-        {post.image && (
-          <div className="overflow-hidden rounded-md">
-            <img src={post.image} alt="Post" className="h-auto w-full object-contain" />
-          </div>
-        )}
+      <CardContent className="px-6 pb-6">
+        <div className="space-y-4">
+          <p className="text-foreground text-base leading-relaxed font-medium">{post.content}</p>
+          {post.image && (
+            <div className="overflow-hidden rounded-2xl bg-muted/30 transition-all duration-300 cursor-zoom-in">
+              <img
+                src={post.image}
+                alt="Post content"
+                className="h-auto w-full object-cover transition-all duration-500 hover:brightness-105"
+              />
+            </div>
+          )}
+        </div>
       </CardContent>
 
-      {/* Like and Comment Icon Section */}
-      <CardFooter className="flex items-center justify-between space-x-2 pt-4">
-        <div
-          className={`flex gap-2 cursor-pointer items-center transition-transform duration-300
-          } ${isToggling ? 'pointer-events-none opacity-60' : ''}`}
-          onClick={handleLikeClick}
-        >
-          {isToggling ? (
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-          ) : (
-            <Heart
-              className={`h-6 w-6 ${
-                likedByUser ? 'fill-primary text-gray-100/70' : 'text-muted-foreground'
+      {/* Like and Comment Actions */}
+      <CardFooter className="px-6 pt-0 pb-6">
+        <div className="flex items-center justify-between w-full">
+          <div
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-full cursor-pointer transition-all duration-300 hover:bg-primary/5 ${
+              isToggling ? 'pointer-events-none opacity-60' : ''
+            } ${likedByUser ? 'bg-primary/10' : 'bg-muted/40'}`}
+            onClick={handleLikeClick}
+          >
+            {isToggling ? (
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            ) : (
+              <Heart
+                className={`h-5 w-5 transition-all duration-200 ${
+                  likedByUser
+                    ? 'fill-primary text-primary scale-110'
+                    : 'text-muted-foreground hover:text-primary'
+                }`}
+              />
+            )}
+            <span
+              className={`text-sm font-semibold transition-colors duration-200 ${
+                likedByUser ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              {likesCount}
+            </span>
+          </div>
+
+          <div
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-full cursor-pointer transition-all duration-300 hover:bg-primary/5 ${
+              showComments ? 'bg-primary/10' : 'bg-muted/40'
+            }`}
+            onClick={() => setShowComments(!showComments)}
+          >
+            <MessageCircle
+              className={`h-5 w-5 transition-all duration-200 ${
+                showComments ? 'text-primary' : 'text-muted-foreground hover:text-primary'
               }`}
             />
-          )}
-          <span className="text-sm font-medium">{likesCount}</span>
-        </div>
-        <div
-          className="text-muted-foreground hover:text-primary flex cursor-pointer items-center space-x-1"
-          onClick={() => setShowComments(!showComments)}
-        >
-          <MessageCircle className="h-5 w-5" />
-          <span className="text-sm font-medium">{comments.length}</span>
+            <span
+              className={`text-sm font-semibold transition-colors duration-200 ${
+                showComments ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              {comments.length}
+            </span>
+          </div>
         </div>
       </CardFooter>
 
-      {/* Comments Section with Animation */}
+      {/* Comments Section with Elegant Animation */}
       <div
-        className={`overflow-hidden transition-all duration-500 ${
-          showComments ? 'mt-2 max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
+        className={`overflow-hidden transition-all duration-700 ease-out border-t border-border/30 ${
+          showComments
+            ? 'max-h-[400px] opacity-100 translate-y-0'
+            : 'max-h-0 opacity-0 -translate-y-2'
         }`}
       >
         {/* Add Comment Input */}
-        <CommentBox postId={post._id} onCommentAdded={handleCommentAdded} />
+        <div className="px-6 pt-4">
+          <CommentBox postId={post._id} onCommentAdded={handleCommentAdded} />
+        </div>
 
         {/* Comments Container */}
-        <div className="scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted mt-2 max-h-40 space-y-2 overflow-y-auto rounded-md p-2">
-          {comments.length > 0 ? (
-            comments.map((cmt) => (
-              <div
-                key={cmt._id}
-                ref={cmt._id === highlightedCommentId ? lastCommentRef : null}
-                className={`bg-card rounded-md border p-2 ${
-                  cmt._id === highlightedCommentId ? 'border-primary' : ''
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="mb-1 flex items-center space-x-2">
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src={cmt.userId.profilePicture || '/placeholder.png'} />
-                      <AvatarFallback>{cmt.userId.username.charAt(0).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <strong className="text-xs">{cmt.userId.username ?? 'Anonymous'}</strong>
-                      <span className="text-muted-foreground text-xs">
-                        {timeAgo(cmt.createdAt ?? '')}
-                      </span>
+        <div className="px-6 pb-4 mt-4">
+          <div className="max-h-48 space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent hover:scrollbar-thumb-primary/40">
+            {comments.length > 0 ? (
+              comments.map((cmt, index) => (
+                <div
+                  key={cmt._id}
+                  ref={cmt._id === highlightedCommentId ? lastCommentRef : null}
+                  className={`group p-4 rounded-xl transition-all duration-300 hover:bg-muted/30 ${
+                    cmt._id === highlightedCommentId
+                      ? 'bg-primary/5 border-2 border-primary/20 shadow-lg'
+                      : 'bg-muted/20 border border-border/30'
+                  }`}
+                  style={{
+                    animationDelay: `${index * 50}ms`,
+                    animation: showComments ? 'fadeInUp 0.4s ease-out forwards' : 'none',
+                  }}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3 flex-1">
+                      <Avatar className="h-8 w-8 ring-1 ring-primary/20">
+                        <AvatarImage
+                          src={cmt.userId.profilePicture || '/placeholder.png'}
+                          className="object-cover"
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-xs font-semibold text-primary">
+                          {cmt.userId.username.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <strong className="text-sm font-semibold text-foreground truncate">
+                            {cmt.userId.username ?? 'Anonymous'}
+                          </strong>
+                          <span className="text-muted-foreground text-xs">
+                            {timeAgo(cmt.createdAt ?? '')}
+                          </span>
+                        </div>
+                        <p className="text-sm text-foreground leading-relaxed">{cmt.text}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  {loggedUser?.username === cmt.userId.username && (
-                    <button
-                      onClick={() => openDeleteModal(cmt._id)}
-                      disabled={deletingComment}
-                      className="text-destructive transition hover:text-red-500"
-                    >
-                      {deletingComment ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4" />
-                      )}
-                    </button>
-                  )}
+                    {loggedUser?.username === cmt.userId.username && (
+                      <button
+                        onClick={() => openDeleteModal(cmt._id)}
+                        disabled={deletingComment}
+                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
+                      >
+                        {deletingComment ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs">{cmt.text}</p>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <MessageCircle className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
+                <p className="text-muted-foreground text-sm font-medium">
+                  No comments yet. Be the first to start the conversation!
+                </p>
               </div>
-            ))
-          ) : (
-            <p className="text-muted-foreground text-xs italic">
-              No comments yet. Be the first to comment!
-            </p>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Elegant Confirmation Modal */}
       <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="sm">
-        <div className="text-center">
-          <h2 className="mb-4 text-lg font-bold">Are you sure you want to delete this comment?</h2>
-          <div className="flex justify-center space-x-4">
+        <div className="text-center p-6">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-destructive/10 mb-4">
+            <Trash2 className="h-6 w-6 text-destructive" />
+          </div>
+          <h2 className="mb-2 text-xl font-semibold text-foreground">Delete Comment</h2>
+          <p className="mb-6 text-muted-foreground text-sm">
+            Are you sure you want to delete this comment? This action cannot be undone.
+          </p>
+          <div className="flex justify-center space-x-3">
             <button
               onClick={confirmDeleteComment}
-              className="bg-destructive rounded-md px-4 py-2 text-white"
+              className="bg-destructive hover:bg-destructive/90 text-white rounded-lg px-6 py-2.5 font-medium transition-all duration-200"
             >
-              Yes, Delete
+              Delete
             </button>
             <button
               onClick={() => setIsModalOpen(false)}
-              className="bg-muted text-foreground hover:bg-muted-dark rounded-md px-4 py-2"
+              className="bg-muted hover:bg-muted/80 text-foreground rounded-lg px-6 py-2.5 font-medium transition-all duration-200"
             >
               Cancel
             </button>

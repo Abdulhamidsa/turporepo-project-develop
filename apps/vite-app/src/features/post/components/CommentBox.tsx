@@ -29,23 +29,39 @@ export const CommentBox: React.FC<CommentBoxProps> = ({ postId, onCommentAdded }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-full p-2">
-      <input
-        type="text"
-        placeholder="Add a comment..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        disabled={isLoading}
-        className="bg-background text-foreground focus:ring-primary w-full rounded-md border py-2 pl-4 pr-10 transition focus:outline-none focus:ring-2"
-      />
-      <button
-        type="submit"
-        disabled={isLoading || !text.trim()}
-        className="text-primary hover:text-accent disabled:text-muted-foreground absolute right-6 top-1/2 -translate-y-1/2 transform"
-      >
-        {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
-      </button>
-      {error && <p className="text-destructive mt-2 text-sm">{error}</p>}
-    </form>
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="relative">
+        <div className="relative overflow-hidden rounded-2xl bg-muted/40 border border-border/30 transition-all duration-300 focus-within:border-primary/50 focus-within:bg-muted/60 focus-within:shadow-lg focus-within:shadow-primary/10">
+          <input
+            type="text"
+            placeholder="Share your thoughts..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            disabled={isLoading}
+            className="w-full bg-transparent text-foreground placeholder-muted-foreground py-3.5 pl-5 pr-14 text-sm font-medium transition-all duration-200 focus:outline-none disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !text.trim()}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl transition-all duration-200 ${
+              text.trim() && !isLoading
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md'
+                : 'text-muted-foreground cursor-not-allowed'
+            }`}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className={`h-4 w-4 ${text.trim() ? 'animate-pulse' : ''}`} />
+            )}
+          </button>
+        </div>
+      </form>
+      {error && (
+        <div className="mt-2 p-2 rounded-lg bg-destructive/10 border border-destructive/20">
+          <p className="text-destructive text-xs font-medium">{error}</p>
+        </div>
+      )}
+    </div>
   );
 };

@@ -59,23 +59,23 @@ export const useAIChat = () => {
   const startChat = () => {
     setChatOpen(true);
     setChatStep('list-projects');
-    setChatMessages([
-      { role: 'ai', text: 'Here are your projects. Select one to discuss further:' },
-    ]);
+    setChatMessages([]);
   };
 
   const selectProject = (project: string) => {
     setSelectedProject(project);
-    setChatStep('choose-action');
     setChatMessages((prev) => [
       ...prev,
       { role: 'user', text: `I want to discuss: ${project}` },
       { role: 'ai', text: `What would you like to do with **${project}**?` },
     ]);
+    setChatStep('choose-action');
   };
 
   const goBack = () => {
     setChatStep('list-projects');
+    setSelectedProject(null);
+    setChatMessages([]);
     setData([]);
   };
 
@@ -109,23 +109,20 @@ export const useAIChat = () => {
 
       const resData = await request<ResultItem[]>('POST', ENDPOINTS.projects.projectAi, payload);
 
-      setChatStep('finished');
-      setData(resData);
-
       if (resData.length) {
         setChatMessages((prev) => [
           ...prev,
           { role: 'ai', text: `Here is what I found for **${selectedProject}**:` },
-          {
-            role: 'ai',
-            text: `Would you like to do more with **${selectedProject}**?\nChoose one:\n- ideas\n- improve\n- similar\n- weaknesses\n- expansion\n- monetize\n- audience\n- rewrite`,
-          },
         ]);
+        setData(resData);
+        setChatStep('choose-action'); // Set to choose-action to show the interactive buttons
       } else {
         setChatMessages((prev) => [
           ...prev,
           { role: 'ai', text: `No new results for **${selectedProject}**.` },
         ]);
+        setChatStep('finished');
+        setData([]);
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
