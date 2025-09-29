@@ -16,8 +16,8 @@ interface AIChatProps {
   data?: ResultItem[];
   loading: boolean;
   projects: { title: string }[];
-  userProfilePicture?: string;
-  userName?: string;
+  userProfilePicture?: string | undefined;
+  userName?: string | undefined;
   startChat: () => void;
   selectProject: (project: string) => void;
   sendMessage: (message: string) => void;
@@ -306,8 +306,8 @@ function ChatMessages({
   userName,
 }: {
   messages: { role: 'user' | 'ai'; text: string }[];
-  userProfilePicture?: string;
-  userName?: string;
+  userProfilePicture?: string | undefined;
+  userName?: string | undefined;
 }) {
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
