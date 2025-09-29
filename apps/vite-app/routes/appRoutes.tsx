@@ -5,10 +5,15 @@ import { AuthOrRedirect } from '../src/features/auth/components/AuthRedirect';
 import DashboardLayout from '../src/layout/DashboardLayout';
 import ProfilePage from '../src/pages/[username]/manage';
 import ProfileView from '../src/pages/[username]/view';
+import DirectProfessionalProfile from '../src/pages/direct-professional';
+import UsersPage from '../src/pages/discover/professionals';
 import Feed from '../src/pages/feed';
 import Posts from '../src/pages/posts';
+import ProfessionalsPage from '../src/pages/professionals';
+import PublicProfileView from '../src/pages/profile/view';
 import ProfileInfo from '../src/pages/profileInfo';
 import Projects from '../src/pages/projects';
+import SimplePublicProfile from '../src/pages/public-profile/[friendlyId]';
 import Settings from '../src/pages/settings';
 import { ProtectedRoute } from './protectedRoutes';
 import { routesConfig } from './routesConfig';
@@ -38,6 +43,10 @@ export const appRoutes: RouteObject[] = [
         element: <Projects />,
       },
       {
+        path: routesConfig.professionals,
+        element: <ProfessionalsPage />,
+      },
+      {
         path: routesConfig.userPortfolio(':friendlyId'),
         element: <ProfilePage />,
       },
@@ -54,6 +63,24 @@ export const appRoutes: RouteObject[] = [
         element: <Settings />,
       },
     ],
+  },
+  // Public Profile Routes - Not Protected
+  {
+    path: `/profile/:id`,
+    element: <PublicProfileView />,
+  },
+  {
+    path: routesConfig.users,
+    element: <UsersPage />,
+  },
+  {
+    path: '/explore/professionals/:friendlyId',
+    element: <DirectProfessionalProfile />,
+  },
+
+  {
+    path: '/public-profile/:friendlyId',
+    element: <SimplePublicProfile />,
   },
   {
     path: '*',
