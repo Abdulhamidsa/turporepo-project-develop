@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { getEndpoints } from '@repo/api/endpoints';
-import { defaultUserProfile, userProfileSchema, UserProfile } from '@repo/zod/validation/user';
+import { UserProfile, defaultUserProfile, userProfileSchema } from '@repo/zod/validation/user';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -97,11 +97,7 @@ export default function ProfilePage() {
         <div className="container mx-auto -mt-32 px-2 sm:-mt-40 sm:px-6 lg:px-8">
           <ProfileDetails userProfile={userProfile} />
           <div ref={tabsContentRef}>
-            <ProfileTabs
-              userProfile={userProfile}
-              projects={projects}
-              viewOnly={!isOwnProfile}
-            />
+            <ProfileTabs userProfile={userProfile} projects={projects} viewOnly={!isOwnProfile} />
           </div>
         </div>
       </div>
