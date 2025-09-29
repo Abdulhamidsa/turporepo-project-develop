@@ -41,10 +41,13 @@ export const useProjects = (initialLimit = 5) => {
     swrFetcher,
     {
       persistSize: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
     },
   );
 
-  const projects = data ? data.flatMap((page) => page.projects) : [];
+  const projects = data ? data.flatMap((page) => page?.projects || []) : [];
 
   const totalPages = data?.[0]?.pagination.total ? Math.ceil(data[0].pagination.total / limit) : 0;
 

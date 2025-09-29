@@ -1,17 +1,59 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { getEndpoints } from '@repo/api/endpoints';
+import { defaultUserProfile, userProfileSchema } from '@repo/zod/validation/user';
+import { useParams } from 'react-router-dom';
+import useSWR from 'swr';
 
 import AddProjectModal from '../../features/projects/components/addProjectModal';
 import CoverSection from '../../features/user/components/CoverSection';
 import ProfileDetails from '../../features/user/components/ProfileDetails';
 import ProfileTabs from '../../features/user/components/ProfileTabs';
+import { useAuth } from '../../features/user/hooks/use.auth';
 import { useUserProfile } from '../../features/user/hooks/use.user.profile';
 import { useUserProjects } from '../../features/user/hooks/useUserProjects';
 import PageTransition from '../../layout/animation/PageTransition';
 
+const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
+
 export default function ProfilePage() {
-  const { userProfile } = useUserProfile();
-  const { projects, error } = useUserProjects();
+  const { friendlyId } = useParams<{ friendlyId: string }>();
+  const { loggedUser } = useAuth();
+  const { userProfile: ownProfile } = useUserProfile();
+  const { projects: ownProjects, error: ownProjectsError } = useUserProjects();
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
+
+  // Check if viewing own profile or someone else's
+  const isOwnProfile = !friendlyId || loggedUser?.friendlyId === friendlyId;
+
+  // Fetch other user's profile data when viewing someone else's profile
+  const { data: otherUserProfile, error: otherUserError } = useSWR(
+    !isOwnProfile && friendlyId ? ENDPOINTS.users.fetchUserPublicProfile(friendlyId) : null,
+    async (endpoint) => {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${endpoint}`);
+      if (!response.ok) throw new Error('Failed to fetch profile');
+      const data = await response.json();
+      return userProfileSchema.parse(data);
+    },
+  );
+
+  // Fetch other user's projects when viewing someone else's profile
+  const { data: otherUserProjects } = useSWR(
+    !isOwnProfile && friendlyId ? ENDPOINTS.projects.fetchByFriendlyId(friendlyId) : null,
+    async (endpoint) => {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${endpoint}`);
+      if (!response.ok) return [];
+      const data = await response.json();
+      return Array.isArray(data) ? data : data.projects || [];
+    },
+  );
+
+  // Determine which data to use
+  const userProfile = isOwnProfile ? ownProfile : otherUserProfile || defaultUserProfile;
+  const projects = useMemo(() => {
+    return isOwnProfile ? ownProjects : otherUserProjects || [];
+  }, [isOwnProfile, ownProjects, otherUserProjects]);
+  const error = isOwnProfile ? ownProjectsError : otherUserError;
 
   const tabsContentRef = useRef<HTMLDivElement>(null);
 
@@ -55,12 +97,18 @@ export default function ProfilePage() {
                 completedProfile: userProfile.completedProfile ?? false,
               }}
               projects={projects}
+              viewOnly={!isOwnProfile}
             />
           </div>
         </div>
       </div>
 
-      <AddProjectModal isOpen={isProjectDialogOpen} onClose={() => setIsProjectDialogOpen(false)} />
+      {isOwnProfile && (
+        <AddProjectModal
+          isOpen={isProjectDialogOpen}
+          onClose={() => setIsProjectDialogOpen(false)}
+        />
+      )}
     </PageTransition>
   );
 }

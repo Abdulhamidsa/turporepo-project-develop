@@ -48,7 +48,7 @@ export function PostFeed({ post, user }: PostProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
   const [isToggling, setIsToggling] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [, setIsHovered] = useState(false);
 
   const handleDeleteComment = async (commentId: string) => {
     const isDeleted = await deleteComment(commentId);

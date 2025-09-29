@@ -5,13 +5,13 @@ import { FetchedProjectType } from '@repo/zod/validation';
 import { AlertCircle } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
-import ProfileCardView from '../../components/ProfileCardView';
-import UserPosts from '../../features/post/components/UserPosts';
-import ProjectCard from '../../features/projects/components/ProjectCard';
-import ProjectModal from '../../features/projects/components/ProjectModal';
-import { useUserProfileView } from '../../features/user/hooks/useUserProfileView';
-import { useUserProjectsView } from '../../hooks/useUserProjectsView';
-import PageTransition from '../../layout/animation/PageTransition';
+import ProfileCardView from '../../../components/ProfileCardView';
+import UserPosts from '../../../features/post/components/UserPosts';
+import ProjectCard from '../../../features/projects/components/ProjectCard';
+import ProjectModal from '../../../features/projects/components/ProjectModal';
+import { useUserProfileView } from '../../../features/user/hooks/useUserProfileView';
+import { useUserProjectsView } from '../../../hooks/useUserProjectsView';
+import PageTransition from '../../../layout/animation/PageTransition';
 
 function GetCorrectHeight() {
   const { userProfile } = useUserProfileView();
@@ -32,7 +32,7 @@ function GetCorrectHeight() {
   }, [userProfile, projects]);
 }
 
-export default function ProfileViewPage() {
+export default function ProfessionalProfileView() {
   const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
   const [redirecting, setRedirecting] = useState(false);
   const { userProfile, error: profileError, isLoading: profileLoading } = useUserProfileView();
@@ -43,10 +43,20 @@ export default function ProfileViewPage() {
 
   // Handle user not found - redirect to main page
   useEffect(() => {
+    // Log debug info to help troubleshoot
+    console.log('Profile debug:', {
+      friendlyId,
+      profileLoading,
+      profileError,
+      hasUsername: !!userProfile?.username,
+      userProfile,
+    });
+
     // Check if profile load is complete and profile doesn't have required data
     if (!profileLoading && !profileError && !userProfile?.username && friendlyId) {
       // Store the attempted ID
       localStorage.setItem('lastAttemptedProfile', friendlyId);
+      console.log('Redirecting due to missing profile data for:', friendlyId);
       setRedirecting(true);
 
       // Set a timeout for redirection

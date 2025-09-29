@@ -7,6 +7,7 @@ export function AuthOrRedirect() {
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
+    console.log('User is authenticated, redirecting to / from AuthOrRedirect');
     return <Navigate to="/" replace />;
   }
   return <Auth />;

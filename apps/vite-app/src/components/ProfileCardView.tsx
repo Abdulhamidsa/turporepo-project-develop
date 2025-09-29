@@ -1,10 +1,15 @@
 import { Briefcase, CakeIcon, LucideHome } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 
 import { getCountryFlagIcon } from '../../utils/generateCountryFlag';
 import { useUserProfileView } from '../features/user/hooks/useUserProfileView';
 
 function ProfileCardView() {
   const { userProfile } = useUserProfileView();
+  const params = useParams();
+
+  // Debug info to help identify issues
+  console.log('ProfileCardView params:', params, 'userProfile:', userProfile);
 
   return (
     <>
