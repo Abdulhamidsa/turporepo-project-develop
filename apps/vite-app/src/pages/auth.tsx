@@ -298,7 +298,7 @@ export default function Auth() {
                     )}
 
                     {/* Action Button */}
-                    <Button
+                    {/* <Button
                       variant="outline"
                       size="sm"
                       className="w-full"
@@ -310,7 +310,7 @@ export default function Auth() {
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Profile
-                    </Button>
+                    </Button> */}
                   </div>
                 ))
               ) : (
