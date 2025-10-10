@@ -35,10 +35,17 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
             <p className="text-muted-foreground flex items-center justify-center sm:justify-start">
               <LucideHome className="mr-2 h-5 w-5" />
               {userProfile.countryOrigin ? (
-                <span
-                  className={`flag-icon flag-icon-${getCountryFlagIcon(userProfile.countryOrigin)}`}
-                  style={{ fontSize: '20px' }}
-                ></span>
+                <div className="flex items-center gap-2">
+                  <img
+                    src={`https://flagcdn.com/w20/${getCountryFlagIcon(userProfile.countryOrigin)}.png`}
+                    alt={userProfile.countryOrigin}
+                    className="h-4 w-6 rounded-sm object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                  <span>{userProfile.countryOrigin}</span>
+                </div>
               ) : (
                 <span>No country listed</span>
               )}

@@ -67,110 +67,151 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
   }
 
   return (
-    <CustomModal size="2xl" isOpen={isOpen} onClose={onClose}>
-      <div className="relative h-72 overflow-hidden rounded-t-lg shadow-md">
-        <img
-          src={project.media[currentImageIndex].url}
-          alt={`Project image ${currentImageIndex + 1}`}
-          className="h-full w-full object-cover"
-        />
-        {project.media.length > 1 && (
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-2 top-1/2 -translate-y-1/2 transform bg-black bg-opacity-50 text-white hover:bg-opacity-75"
-              onClick={prevImage}
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-2 top-1/2 -translate-y-1/2 transform bg-black bg-opacity-50 text-white hover:bg-opacity-75"
-              onClick={nextImage}
-            >
-              <ChevronRight className="h-6 w-6" />
-            </Button>
-          </>
-        )}
-      </div>
-      {/* Content Section */}
-      <div className="bg-card rounded-b-lg p-6">
-        <div className="mb-4">
-          {/* Project Title */}
-          <h2 className="text-primary text-2xl font-bold leading-tight">{project.title}</h2>
-          <div className="mt-2 flex items-center space-x-2">
-            <Avatar className="border-border h-10 w-10 border">
-              <AvatarImage src={user.profilePicture} alt={user.username} />
-              <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <span className="text-muted-foreground text-sm font-medium">{user.username}</span>
+    <CustomModal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+        {/* Image Section */}
+        <div className="w-full md:w-1/2">
+          <div className="relative aspect-video md:aspect-square overflow-hidden rounded-lg bg-muted">
+            <img
+              src={project.media[currentImageIndex].url}
+              alt={`Project image ${currentImageIndex + 1}`}
+              className="h-full w-full object-cover"
+            />
+            {project.media.length > 1 && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground border border-border shadow-md"
+                  onClick={prevImage}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground border border-border shadow-md"
+                  onClick={nextImage}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                {/* Image indicator dots */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
+                  {project.media.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        index === currentImageIndex ? 'bg-primary' : 'bg-muted-foreground/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
-        {/* Project Description */}
-        <p className="text-muted-foreground mb-4 text-sm leading-relaxed">{project.description}</p>
+        {/* Content Section */}
+        <div className="w-full md:w-1/2 flex flex-col">
+          <div className="flex-1 space-y-4">
+            {/* Header */}
+            <div className="space-y-3">
+              <h2 className="text-foreground text-lg md:text-xl font-bold leading-tight">
+                {project.title}
+              </h2>
+              <div className="flex items-center gap-3">
+                <Avatar className="h-8 w-8 md:h-10 md:w-10 border border-border">
+                  <AvatarImage src={user.profilePicture} alt={user.username} />
+                  <AvatarFallback className="bg-muted text-muted-foreground text-sm">
+                    {user.username.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-muted-foreground text-sm font-medium">{user.username}</span>
+              </div>
+            </div>
 
-        {/* Tags Section */}
-        <div className="mb-6 flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
-            <Badge
-              key={tag.id}
-              variant="secondary"
-              className="bg-accent text-accent-foreground rounded-full px-3 py-1 shadow-sm"
-            >
-              {tag.name}
-            </Badge>
-          ))}
-        </div>
+            {/* Description */}
+            <div className="space-y-2">
+              <h3 className="text-foreground font-medium text-sm">Description</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">{project.description}</p>
+            </div>
 
-        {/* Visit Project Button */}
-        <Button
-          asChild
-          className="bg-primary hover:bg-accent text-primary-foreground w-full rounded-lg py-3 font-semibold transition"
-        >
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center"
-          >
-            <ExternalLink className="mr-2 h-5 w-5" /> Visit Project
-          </a>
-        </Button>
-
-        {/* Delete Button moved to the end */}
-        {loggedUser?.friendlyId === user.friendlyId && (
-          <div className="mt-4 flex justify-end">
-            <Button
-              variant="destructive"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsModalOpen(true);
-              }}
-              className="flex items-center space-x-2 rounded bg-red-600 p-3.5 text-white transition-all duration-300 hover:bg-red-700"
-            >
-              <Trash2 className="h-5 w-5" />
-            </Button>
+            {/* Tags */}
+            {project.tags.length > 0 && (
+              <div className="space-y-2">
+                <h3 className="text-foreground font-medium text-sm">Technologies</h3>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <Badge
+                      key={tag.id}
+                      variant="secondary"
+                      className="bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground text-xs"
+                    >
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Actions */}
+          <div className="mt-6 space-y-3 pt-4 border-t border-border">
+            <Button
+              asChild
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Visit Project
+              </a>
+            </Button>
+
+            {loggedUser?.friendlyId === user.friendlyId && (
+              <Button
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsModalOpen(true);
+                }}
+                className="w-full text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Project
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
-      {/* Custom Delete Confirmation Modal */}
+
+      {/* Delete Confirmation Modal */}
       <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="md">
-        <h2 className="mb-4 text-center text-xl font-semibold">Delete Project</h2>
-        <p className="text-muted-foreground mb-6 text-center">
-          Are you sure you want to delete the project{' '}
-          <span className="text-destructive font-bold">{project.title}</span>? This action cannot be
-          undone.
-        </p>
-        <div className="flex justify-end space-x-4">
-          <Button variant="outline" onClick={() => setIsModalOpen(false)} disabled={isDeleting}>
-            Cancel
-          </Button>
-          <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? <Loader className="h-5 w-5 animate-spin" /> : 'Delete'}
-          </Button>
+        <div className="text-center space-y-4">
+          <h2 className="text-foreground text-xl font-semibold">Delete Project</h2>
+          <p className="text-muted-foreground">
+            Are you sure you want to delete{' '}
+            <span className="text-destructive font-medium">{project.title}</span>? This action
+            cannot be undone.
+          </p>
+          <div className="flex gap-3 justify-end pt-2">
+            <Button variant="outline" onClick={() => setIsModalOpen(false)} disabled={isDeleting}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? (
+                <Loader className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <Trash2 className="h-4 w-4 mr-2" />
+              )}
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </div>
         </div>
       </CustomModal>
     </CustomModal>

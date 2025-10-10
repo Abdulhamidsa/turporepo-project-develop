@@ -24,8 +24,17 @@ interface ProfileTabsProps {
 const ProfileTabs = ({ userProfile, projects, viewOnly = false }: ProfileTabsProps) => {
   const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
-  const { chatStep, chatMessages, data, loading, startChat, selectProject, sendMessage, goBack } =
-    useAIChat();
+  const {
+    chatStep,
+    chatMessages,
+    data,
+    loading,
+    startChat,
+    selectProject,
+    sendMessage,
+    goBack,
+    handleConsentGiven,
+  } = useAIChat();
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
@@ -55,10 +64,10 @@ const ProfileTabs = ({ userProfile, projects, viewOnly = false }: ProfileTabsPro
                 <Tooltip content="AI Chat">
                   <TooltipTrigger asChild>
                     <button
-                      className="bg-primary fixed bottom-16 right-3 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110"
+                      className="bg-primary hover:bg-primary/90 fixed bottom-12 right-4 sm:bottom-16 sm:right-6 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-110"
                       onClick={() => setChatOpen(true)}
                     >
-                      <Bot className="h-6 w-6 text-white" />
+                      <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
                     </button>
                   </TooltipTrigger>
                 </Tooltip>
@@ -68,10 +77,10 @@ const ProfileTabs = ({ userProfile, projects, viewOnly = false }: ProfileTabsPro
             <AnimatePresence>
               {chatOpen && (
                 <motion.div
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 50 }}
-                  className="fixed bottom-16 right-4 z-50 w-[350px] overflow-hidden rounded-lg bg-white shadow-lg"
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  className="fixed inset-4 z-50 flex items-center justify-center sm:inset-auto sm:bottom-20 sm:right-4 sm:top-auto sm:left-auto"
                 >
                   <AIChat
                     {...{
@@ -88,6 +97,7 @@ const ProfileTabs = ({ userProfile, projects, viewOnly = false }: ProfileTabsPro
                       sendMessage,
                       setChatOpen,
                       goBack,
+                      onConsentGiven: handleConsentGiven,
                     }}
                   />
                 </motion.div>

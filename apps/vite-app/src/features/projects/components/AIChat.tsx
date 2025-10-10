@@ -5,13 +5,117 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@repo/ui/c
 import { Input } from '@repo/ui/components/ui/input';
 import { SimpleScrollArea } from '@repo/ui/components/ui/scroll-area';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Bot, Loader2, MessageSquare, Send, X } from 'lucide-react';
+import {
+  ArrowLeft,
+  Bot,
+  CheckCircle,
+  FileText,
+  Loader2,
+  MessageSquare,
+  Send,
+  Shield,
+  X,
+} from 'lucide-react';
 
 import { ChatMessage, ResultItem } from '../../../hooks/useAIChat';
 
+// Consent Screen Component
+function ConsentScreen({
+  onAccept,
+  onDecline,
+  userName,
+}: {
+  onAccept: () => void;
+  onDecline: () => void;
+  userName?: string | undefined;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex-1 flex flex-col h-full"
+    >
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6">
+        {/* Header */}
+        <div className="text-center space-y-3 mb-6">
+          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+            <Shield className="h-8 w-8 text-primary" />
+          </div>
+          <h3 className="text-xl font-semibold text-foreground">AI Analysis Consent</h3>
+          <p className="text-sm text-muted-foreground">
+            Hello {userName ? userName : 'there'}! Before we begin, please review our terms.
+          </p>
+        </div>
+
+        {/* Terms Content */}
+        <div className="bg-muted/30 rounded-xl p-3 sm:p-4 space-y-3 sm:space-y-4">
+          <div className="flex items-start gap-3">
+            <FileText className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">What Our AI Assistant Does:</h4>
+              <ul className="text-sm text-muted-foreground space-y-1 pl-4">
+                <li>• Analyzes your project data (titles, descriptions, and tags)</li>
+                <li>• Provides improvement suggestions and optimization ideas</li>
+                <li>• Offers monetization and audience analysis insights</li>
+                <li>• Suggests similar projects and expansion opportunities</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Shield className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">Data Privacy & Security:</h4>
+              <ul className="text-sm text-muted-foreground space-y-1 pl-4">
+                <li>• Your project data is processed temporarily for analysis only</li>
+                <li>• No data is stored permanently or shared with third parties</li>
+                <li>• Analysis is performed securely on our servers</li>
+                <li>• You can stop the analysis at any time</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">Your Consent:</h4>
+              <p className="text-sm text-muted-foreground pl-4">
+                By proceeding, you consent to the temporary analysis of your project data to provide
+                personalized insights and recommendations. This consent can be withdrawn at any
+                time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky Action Buttons */}
+      <div className="flex-shrink-0 p-4 sm:p-6 border-t border-border/50 bg-muted/10">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            variant="outline"
+            className="flex-1 border-border hover:bg-muted/50 text-sm"
+            onClick={onDecline}
+          >
+            <X className="h-4 w-4 mr-2" />
+            Decline
+          </Button>
+          <Button
+            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground text-sm"
+            onClick={onAccept}
+          >
+            <CheckCircle className="h-4 w-4 mr-2" />I Accept & Continue
+          </Button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 interface AIChatProps {
   chatOpen: boolean;
-  chatStep: 'list-projects' | 'select-project' | 'choose-action' | 'finished';
+  chatStep: 'list-projects' | 'select-project' | 'choose-action' | 'finished' | 'consent';
   chatMessages: ChatMessage[];
   data?: ResultItem[];
   loading: boolean;
@@ -23,6 +127,7 @@ interface AIChatProps {
   sendMessage: (message: string) => void;
   setChatOpen: (open: boolean) => void;
   goBack: () => void;
+  onConsentGiven?: () => void;
 }
 
 export default function AIChat({
@@ -39,8 +144,10 @@ export default function AIChat({
   sendMessage,
   setChatOpen,
   goBack,
+  onConsentGiven,
 }: AIChatProps) {
   const [userInput, setUserInput] = React.useState('');
+  const [consentGiven, setConsentGiven] = React.useState(false);
   const chatContainerRef = React.useRef<HTMLDivElement>(null);
   const resultRef = React.useRef<HTMLDivElement>(null);
 
@@ -55,6 +162,16 @@ export default function AIChat({
     if (e.key === 'Enter') {
       handleSend();
     }
+  };
+
+  const handleConsentAccept = () => {
+    setConsentGiven(true);
+    onConsentGiven?.();
+  };
+
+  const handleConsentDecline = () => {
+    setChatOpen(false);
+    setConsentGiven(false);
   };
 
   React.useEffect(() => {
@@ -112,8 +229,8 @@ export default function AIChat({
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ type: 'spring', duration: 0.4 }}
             >
-              <Card className="w-[90vw] max-w-[400px] h-[70vh] max-h-[600px] min-h-[500px] shadow-2xl bg-card/95 backdrop-blur-lg border-border/50 rounded-2xl overflow-hidden flex flex-col">
-                <CardHeader className="flex-shrink-0 flex flex-row items-center justify-between space-y-0 p-4 border-b border-border/50 bg-muted/30">
+              <Card className="w-full max-w-sm sm:max-w-md h-[85vh] sm:h-[75vh] max-h-[600px] min-h-[400px] shadow-2xl bg-card backdrop-blur-lg border-border/50 rounded-2xl overflow-hidden flex flex-col mx-auto">
+                <CardHeader className="flex-shrink-0 flex flex-row items-center justify-between space-y-0 p-3 sm:p-4 border-b border-border/50 bg-muted/10">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
                       <Bot className="h-4 w-4 text-primary" />
@@ -122,99 +239,117 @@ export default function AIChat({
                       <CardTitle className="text-base font-semibold text-foreground">
                         AI Assistant
                       </CardTitle>
-                      <p className="text-xs text-muted-foreground">Online</p>
+                      <p className="text-xs text-muted-foreground">
+                        {!consentGiven ? 'Awaiting consent' : 'Online'}
+                      </p>
                     </div>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setChatOpen(false)}
-                    className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors"
+                    className="h-8 w-8 rounded-full hover:bg-muted/50 hover:text-foreground transition-colors"
                   >
                     <X className="h-4 w-4" />
                   </Button>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col overflow-hidden p-0">
-                  <SimpleScrollArea className="flex-1 p-4 space-y-4" ref={chatContainerRef}>
-                    {chatStep === 'list-projects' && (
-                      <div className="space-y-4">
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="flex items-start gap-3 mb-4"
-                        >
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                            <Bot className="h-5 w-5 text-white" />
-                          </div>
-                          <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-md px-4 py-3 max-w-[280px] shadow-sm">
-                            <span className="text-sm text-gray-700 leading-relaxed">
-                              Hi! I'm your AI assistant. I analyze your projects to suggest
-                              improvements and optimization ideas. Let's get started!
-                            </span>
-                          </div>
-                        </motion.div>
-                        <ProjectList projects={projects} selectProject={selectProject} />
-                      </div>
-                    )}
-
-                    <div className="space-y-4">
-                      <ChatMessages
-                        messages={chatMessages}
-                        userProfilePicture={userProfilePicture}
+                  {!consentGiven ? (
+                    <div className="flex-1 flex flex-col overflow-hidden">
+                      <ConsentScreen
+                        onAccept={handleConsentAccept}
+                        onDecline={handleConsentDecline}
                         userName={userName}
                       />
-
-                      {/* Show loading after messages */}
-                      {loading && (
-                        <div className="flex items-start gap-3 mb-4">
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                            <Bot className="h-5 w-5 text-white" />
-                          </div>
-                          <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-md px-4 py-3 flex items-center gap-2 shadow-sm">
-                            <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-                            <span className="text-sm text-gray-600 font-medium">Thinking...</span>
-                          </div>
+                    </div>
+                  ) : (
+                    <SimpleScrollArea
+                      className="flex-1 p-3 sm:p-4 space-y-3 sm:space-y-4"
+                      ref={chatContainerRef}
+                    >
+                      {chatStep === 'list-projects' && (
+                        <div className="space-y-4">
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-start gap-3 mb-4"
+                          >
+                            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 shadow-md">
+                              <Bot className="h-5 w-5 text-primary" />
+                            </div>
+                            <div className="bg-muted/30 border border-border rounded-2xl rounded-tl-md px-4 py-3 max-w-[280px] shadow-sm">
+                              <span className="text-sm text-foreground leading-relaxed">
+                                Hi! I'm your AI assistant. I analyze your projects to suggest
+                                improvements and optimization ideas. Let's get started!
+                              </span>
+                            </div>
+                          </motion.div>
+                          <ProjectList projects={projects} selectProject={selectProject} />
                         </div>
                       )}
 
-                      {/* Show results after AI response */}
-                      {(chatStep === 'choose-action' || chatStep === 'finished') &&
-                        data.length > 0 &&
-                        !loading && <ResponseSection title="Results" data={data} ref={resultRef} />}
-
-                      {/* Show action selector when in choose-action step */}
-                      {chatStep === 'choose-action' && !loading && (
-                        <ActionSelector sendMessage={sendMessage} goBack={goBack} />
-                      )}
-                    </div>
-                  </SimpleScrollArea>
+                      <div className="space-y-4">
+                        <ChatMessages
+                          messages={chatMessages}
+                          userProfilePicture={userProfilePicture}
+                          userName={userName}
+                        />
+                        {/* Show loading after messages */}
+                        {loading && (
+                          <div className="flex items-start gap-3 mb-4">
+                            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 shadow-md">
+                              <Bot className="h-5 w-5 text-primary" />
+                            </div>
+                            <div className="bg-muted/30 border border-border rounded-2xl rounded-tl-md px-4 py-3 flex items-center gap-2 shadow-sm">
+                              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                              <span className="text-sm text-foreground font-medium">
+                                Thinking...
+                              </span>
+                            </div>
+                          </div>
+                        )}{' '}
+                        {/* Show results after AI response */}
+                        {(chatStep === 'choose-action' || chatStep === 'finished') &&
+                          data.length > 0 &&
+                          !loading && (
+                            <ResponseSection title="Results" data={data} ref={resultRef} />
+                          )}
+                        {/* Show action selector when in choose-action step */}
+                        {chatStep === 'choose-action' && !loading && (
+                          <ActionSelector sendMessage={sendMessage} goBack={goBack} />
+                        )}
+                      </div>
+                    </SimpleScrollArea>
+                  )}
                 </CardContent>
-                <CardFooter className="flex-shrink-0 p-4 border-t border-border/50 bg-muted/20">
-                  <div className="flex w-full items-end gap-2">
-                    <div className="flex-1 relative">
-                      <Input
-                        value={userInput}
-                        onChange={(e) => setUserInput(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Type your message..."
-                        disabled={loading}
-                        className="pr-12 py-3 rounded-2xl border-border/50 bg-background/50 focus:ring-primary/50 focus:border-primary/50 resize-none min-h-[44px]"
-                      />
+                {consentGiven && (
+                  <CardFooter className="flex-shrink-0 p-3 sm:p-4 border-t border-border/50 bg-muted/10">
+                    <div className="flex w-full items-end gap-2">
+                      <div className="flex-1 relative">
+                        <Input
+                          value={userInput}
+                          onChange={(e) => setUserInput(e.target.value)}
+                          onKeyDown={handleKeyDown}
+                          placeholder="Type your message..."
+                          disabled={loading}
+                          className="pr-12 py-2 sm:py-3 rounded-2xl border-border/50 bg-background focus:ring-primary/50 focus:border-primary/50 resize-none min-h-[40px] sm:min-h-[44px] text-sm"
+                        />
+                      </div>
+                      <Button
+                        size="icon"
+                        onClick={handleSend}
+                        disabled={loading || !userInput.trim()}
+                        className="h-10 w-10 sm:h-11 sm:w-11 rounded-2xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                      >
+                        {loading ? (
+                          <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                        ) : (
+                          <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                        )}
+                      </Button>
                     </div>
-                    <Button
-                      size="icon"
-                      onClick={handleSend}
-                      disabled={loading || !userInput.trim()}
-                      className="h-11 w-11 rounded-2xl bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                    >
-                      {loading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Send className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                </CardFooter>
+                  </CardFooter>
+                )}
               </Card>
             </motion.div>
           )}
@@ -239,7 +374,7 @@ function ProjectList({
           <Button
             key={idx}
             variant="outline"
-            className="w-full justify-start text-left h-auto p-3 rounded-xl border-border/50 hover:bg-muted/60 hover:border-primary/50 transition-all duration-200"
+            className="w-full justify-start text-left h-auto p-2 sm:p-3 rounded-xl border-border/50 hover:bg-muted/60 hover:border-primary/50 transition-all duration-200"
             onClick={() => selectProject(proj.title)}
           >
             <div className="flex items-center gap-3">
@@ -279,7 +414,7 @@ function ActionSelector({
           <Button
             key={idx}
             variant="outline"
-            className="w-full justify-start text-left h-auto p-3 rounded-xl border-border/50 hover:bg-primary/5 hover:border-primary/50 transition-all duration-200"
+            className="w-full justify-start text-left h-auto p-2 sm:p-3 rounded-xl border-border/50 hover:bg-primary/5 hover:border-primary/50 transition-all duration-200"
             onClick={() => sendMessage(action)}
           >
             <span className="text-sm font-medium">{action}</span>
@@ -326,27 +461,27 @@ function ChatMessages({
           className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} items-start gap-3 mb-4`}
         >
           {msg.role === 'ai' && (
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md">
-              <Bot className="h-5 w-5 text-white" />
+            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 shadow-md">
+              <Bot className="h-5 w-5 text-primary" />
             </div>
           )}
           <div
-            className={`max-w-[260px] px-4 py-3 rounded-2xl shadow-sm ${
+            className={`max-w-[75%] sm:max-w-[260px] px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-sm ${
               msg.role === 'user'
-                ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-foreground rounded-br-md ml-8'
-                : 'bg-white border border-gray-200 text-gray-800 rounded-tl-md'
+                ? 'bg-primary text-primary-foreground rounded-br-md ml-4 sm:ml-8'
+                : 'bg-muted/30 border border-border text-foreground rounded-tl-md'
             }`}
           >
             <p
               className={`text-sm leading-relaxed whitespace-pre-wrap ${
-                msg.role === 'user' ? 'font-medium' : 'text-gray-700'
+                msg.role === 'user' ? 'font-medium text-primary-foreground' : 'text-foreground'
               }`}
             >
               {msg.text}
             </p>
           </div>
           {msg.role === 'user' && (
-            <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0 shadow-md">
+            <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 shadow-md">
               {userProfilePicture ? (
                 <img
                   src={userProfilePicture}
@@ -354,8 +489,8 @@ function ChatMessages({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-                  <span className="text-white font-semibold text-sm">
+                <div className="w-full h-full bg-primary/80 flex items-center justify-center">
+                  <span className="text-primary-foreground font-semibold text-sm">
                     {userName?.charAt(0)?.toUpperCase() || 'U'}
                   </span>
                 </div>
@@ -376,11 +511,11 @@ const ResponseSection = React.forwardRef(function ResponseSection(
   return (
     <div className="mb-4" ref={ref}>
       <div className="flex items-start gap-3">
-        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-md">
-          <Bot className="h-5 w-5 text-white" />
+        <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 shadow-md">
+          <Bot className="h-5 w-5 text-primary" />
         </div>
-        <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-md px-4 py-4 max-w-[280px] shadow-sm">
-          <h4 className="font-semibold text-gray-800 mb-3 text-sm">{title}</h4>
+        <div className="bg-muted/30 border border-border rounded-2xl rounded-tl-md px-3 sm:px-4 py-3 sm:py-4 max-w-[85%] sm:max-w-[280px] shadow-sm">
+          <h4 className="font-semibold text-foreground mb-3 text-sm">{title}</h4>
           <div className="space-y-3">
             {data.map((item, idx) => (
               <motion.div
@@ -388,10 +523,10 @@ const ResponseSection = React.forwardRef(function ResponseSection(
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="bg-gray-50 rounded-lg p-3 border border-gray-100"
+                className="bg-background rounded-lg p-3 border border-border/50"
               >
-                <h5 className="font-semibold text-gray-800 text-sm mb-1">{item.title}</h5>
-                <p className="text-gray-600 text-xs leading-relaxed">{item.description}</p>
+                <h5 className="font-semibold text-foreground text-sm mb-1">{item.title}</h5>
+                <p className="text-muted-foreground text-xs leading-relaxed">{item.description}</p>
               </motion.div>
             ))}
           </div>
