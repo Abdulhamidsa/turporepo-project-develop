@@ -102,7 +102,6 @@ const PostList: React.FC = () => {
               <span className="text-muted-foreground text-sm font-medium">
                 You're all caught up!
               </span>
-              <span className="text-primary">✨</span>
             </div>
           </div>
         )}

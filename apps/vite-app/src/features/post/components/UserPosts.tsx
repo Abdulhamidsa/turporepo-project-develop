@@ -6,7 +6,7 @@ import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { timeAgo } from '@repo/utils/timeCalculation';
 import { UserPostType } from '@repo/zod/validation/post';
-import { Loader, Plus, Trash2 } from 'lucide-react';
+import { Heart, Loader, MessageCircle, Plus, Trash2 } from 'lucide-react';
 
 import { useDeletePost } from '../../../hooks/useDeletePost';
 import { PostForm } from '../../user/components/PostForm';
@@ -115,85 +115,135 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
       </CustomModal>
 
       {/* Post Modal */}
-      <CustomModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} size="lg">
+      <CustomModal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} size="2xl">
         {selectedPost && (
-          <div className="max-h-[80vh] overflow-y-auto">
-            <h2 className="mb-4 text-xl font-bold">{selectedPost.content || 'No Content'}</h2>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+            {/* Image Section */}
             {selectedPost.image && (
-              <div className="relative flex justify-center">
-                <img
-                  src={selectedPost.image}
-                  alt="Post"
-                  className="max-h-[400px] w-full cursor-pointer rounded-lg object-cover"
-                />
+              <div className="w-full md:w-1/2">
+                <div className="aspect-video md:aspect-square overflow-hidden rounded-lg bg-muted">
+                  <img src={selectedPost.image} alt="Post" className="h-full w-full object-cover" />
+                </div>
               </div>
             )}
-            <p className="text-sm text-gray-500">Likes: {selectedPost.likes?.length || 0}</p>
-            <h3 className="mb-2 mt-4 text-lg font-bold">Comments</h3>
-            <div className="max-h-[300px] overflow-y-auto">
-              {selectedPost.comments.length > 0 ? (
-                <ul className="space-y-3">
-                  {selectedPost.comments.map((comment) => (
-                    <li
-                      key={comment._id}
-                      className="rounded-lg border border-gray-700 p-2 shadow-sm"
-                    >
-                      <div className="mb-1 flex items-center space-x-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={comment.userId.profilePicture || '/placeholder.png'} />
-                          <AvatarFallback>
-                            {comment.userId?.username.charAt(0).toUpperCase() || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col">
-                          <strong className="text-foreground text-xs">
-                            {comment.userId?.username ?? 'Anonymous'}
-                          </strong>
-                          <span className="text-muted-foreground text-xs">
-                            {timeAgo(comment.createdAt ?? '')}
-                          </span>
+
+            {/* Content Section */}
+            <div className={`w-full ${selectedPost.image ? 'md:w-1/2' : ''} flex flex-col`}>
+              <div className="flex-1 space-y-4">
+                {/* Post Header */}
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8 md:h-10 md:w-10 border border-border">
+                    <AvatarImage src={selectedPost.userId.profilePicture || '/placeholder.png'} />
+                    <AvatarFallback className="bg-muted text-muted-foreground text-sm">
+                      {selectedPost.userId?.username.charAt(0).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-foreground font-medium text-sm">
+                      {selectedPost.userId?.username ?? 'Anonymous'}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {timeAgo(selectedPost.createdAt ?? '')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Post Content */}
+                {selectedPost.content && (
+                  <div className="space-y-2">
+                    <p className="text-foreground leading-relaxed text-sm">
+                      {selectedPost.content}
+                    </p>
+                  </div>
+                )}
+
+                {/* Post Stats */}
+                <div className="flex items-center gap-4 text-sm text-muted-foreground border-y border-border py-3">
+                  <span className="flex items-center gap-1">
+                    <Heart className="h-4 w-4" />
+                    {selectedPost.likes?.length || 0} likes
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <MessageCircle className="h-4 w-4" />
+                    {selectedPost.comments?.length || 0} comments
+                  </span>
+                </div>
+
+                {/* Comments Section */}
+                <div className="space-y-3">
+                  <h3 className="text-foreground font-medium text-sm">Comments</h3>
+                  <div className="space-y-3 max-h-48 md:max-h-60 overflow-y-auto">
+                    {selectedPost.comments.length > 0 ? (
+                      selectedPost.comments.map((comment) => (
+                        <div key={comment._id} className="bg-muted/50 rounded-lg p-3 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage
+                                src={comment.userId.profilePicture || '/placeholder.png'}
+                              />
+                              <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                                {comment.userId?.username.charAt(0).toUpperCase() || 'U'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-foreground font-medium text-sm">
+                              {comment.userId?.username ?? 'Anonymous'}
+                            </span>
+                            <span className="text-muted-foreground text-xs">
+                              {timeAgo(comment.createdAt ?? '')}
+                            </span>
+                          </div>
+                          <p className="text-muted-foreground text-sm ml-8">{comment.text}</p>
                         </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-6">
+                        <p className="text-muted-foreground text-sm">No comments yet.</p>
                       </div>
-                      <p className="text-muted-foreground text-xs">{comment.text}</p>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-center text-gray-400">No comments yet.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              {loggedUser?.username === selectedPost?.userId.username && (
+                <div className="mt-4 pt-4 border-t border-border">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsDeleteModalOpen(true)}
+                    className="w-full text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Post
+                  </Button>
+                </div>
               )}
             </div>
-            {loggedUser?.username === selectedPost?.userId.username && (
-              <div className="mt-4 flex justify-end">
-                <Button
-                  variant="destructive"
-                  onClick={() => setIsDeleteModalOpen(true)}
-                  className="flex items-center space-x-2 rounded bg-red-600 p-3.5 text-white transition-all duration-300 hover:bg-red-700"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </Button>
-              </div>
-            )}
           </div>
         )}
       </CustomModal>
 
-      <CustomModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} size="sm">
-        <div className="text-center">
-          <h2 className="mb-4 text-lg  font-bold">Are you sure you want to delete this post?</h2>
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={handleDelete}
-              className="bg-destructive hover:bg-primary-dark rounded-md px-4 py-2 text-white"
+      <CustomModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} size="md">
+        <div className="text-center space-y-4">
+          <h2 className="text-foreground text-xl font-semibold">Delete Post</h2>
+          <p className="text-muted-foreground">
+            Are you sure you want to delete this post? This action cannot be undone.
+          </p>
+          <div className="flex gap-3 justify-end pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteModalOpen(false)}
               disabled={isDeleting}
             >
-              {isDeleting ? <Loader className="h-5 w-5 animate-spin " /> : 'Yes, Delete'}
-            </button>
-            <button
-              onClick={() => setIsDeleteModalOpen(false)}
-              className="bg-muted text-foreground hover:bg-muted-dark rounded-md px-4 py-2"
-            >
               Cancel
-            </button>
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? (
+                <Loader className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <Trash2 className="h-4 w-4 mr-2" />
+              )}
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
           </div>
         </div>
       </CustomModal>
