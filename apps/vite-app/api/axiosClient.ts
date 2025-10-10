@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
   },
 });
 
-const IGNORED_ENDPOINTS = ['/logged-user'];
+const IGNORED_ENDPOINTS = ['/logged-user', '/admin/*', '/admin/dashboard'];
 
 axiosInstance.interceptors.response.use(
   (response) => response,
@@ -21,7 +21,6 @@ axiosInstance.interceptors.response.use(
       );
       if (!isIgnoredEndpoint) {
         console.warn('Unauthorized: Redirecting to authentication.');
-        window.location.href = '/auth';
       }
     }
     return Promise.reject(error);
