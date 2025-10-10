@@ -36,10 +36,14 @@ function ProfileCardView() {
               <p className="flex items-center justify-center sm:justify-start">
                 <LucideHome className="mr-2 h-5 w-5" />
                 {userProfile.countryOrigin ? (
-                  <span
-                    className={`flag-icon flag-icon-${getCountryFlagIcon(userProfile.countryOrigin)}`}
-                    style={{ fontSize: '20px' }}
-                  ></span>
+                  <img
+                    src={`https://flagcdn.com/48x36/${getCountryFlagIcon(userProfile.countryOrigin)}.png`}
+                    alt={`${userProfile.countryOrigin} flag`}
+                    className="h-5 w-7 rounded-sm border border-gray-300 object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
                 ) : (
                   <span>No country listed</span>
                 )}

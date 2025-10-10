@@ -4,12 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avat
 import { Button } from '@repo/ui/components/ui/button';
 import { Card } from '@repo/ui/components/ui/card';
 import { Input } from '@repo/ui/components/ui/input';
-import { ArrowLeft, ArrowRight, Search, Menu, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Menu, Search, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { Skeleton } from '../components/ui/skeleton';
-import { getCountryFlagIcon } from '../utils/generateCountryFlag';
 import { DarkModeToggle } from '../layout/DarkModeToggle';
+import { getCountryFlagIcon } from '../utils/generateCountryFlag';
+
 // import { useAuth } from '../features/user/hooks/use.auth';
 
 // Using the existing User type from useUserALL hook
@@ -96,9 +97,7 @@ function PublicNavbar() {
                 </Button>
               </Link>
               <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                <Button className="w-full bg-primary hover:bg-primary/90 mt-2">
-                  Get Started
-                </Button>
+                <Button className="w-full bg-primary hover:bg-primary/90 mt-2">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -155,20 +154,34 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
         (user: User) => user.completedProfile || user.profession || user.profilePicture,
       );
 
-      setUsers(filteredUsers);
-
       // Handle pagination from the API response
       const paginationData = response_data.success
-        ? response_data.data.pagination
+        ? response_data.data?.pagination
         : response_data.pagination;
-      const totalPages =
-        paginationData?.totalPages ||
-        response_data.meta?.totalPages ||
-        response_data.totalPages ||
-        Math.ceil((paginationData?.total || filteredUsers.length) / pageSize) ||
-        1;
 
-      setTotalPages(totalPages);
+      let calculatedTotalPages = 1;
+
+      if (paginationData?.totalPages) {
+        calculatedTotalPages = paginationData.totalPages;
+      } else if (response_data.meta?.totalPages) {
+        calculatedTotalPages = response_data.meta.totalPages;
+      } else if (response_data.totalPages) {
+        calculatedTotalPages = response_data.totalPages;
+      } else if (paginationData?.total) {
+        calculatedTotalPages = Math.ceil(paginationData.total / pageSize);
+      } else {
+        // Fallback: calculate based on current results
+        calculatedTotalPages = filteredUsers.length === pageSize ? page + 1 : page;
+      }
+
+      // If we get no users and we're on a page > 1, go back to page 1
+      if (filteredUsers.length === 0 && page > 1) {
+        setPage(1);
+        return; // Exit early, useEffect will trigger again with page 1
+      }
+
+      setUsers(filteredUsers);
+      setTotalPages(Math.max(calculatedTotalPages, 1));
     } catch (err) {
       setError('Failed to load users. Please try again later.');
       console.error('Error fetching users:', err);
@@ -193,7 +206,7 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1); // Reset to first page on new search
-    fetchUsers();
+    setError(null); // Clear any previous errors
   };
 
   const handleUserClick = (user: User) => {
@@ -201,16 +214,19 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
   };
 
   const goToPreviousPage = () => {
-    if (page > 1) {
+    if (page > 1 && !loading) {
       setPage(page - 1);
     }
   };
 
   const goToNextPage = () => {
-    if (page < totalPages) {
+    if (page < totalPages && !loading && users.length > 0) {
       setPage(page + 1);
     }
   };
+
+  // Calculate if pagination should be shown
+  const shouldShowPagination = totalPages > 1 && users.length > 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -220,11 +236,10 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Discover Professionals
-          </h1>
+          <h1 className="text-4xl font-bold text-foreground mb-4">Discover Professionals</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Connect with talented professionals from around the world sharing their work and expertise
+            Connect with talented professionals from around the world sharing their work and
+            expertise
           </p>
         </div>
         {/* Search Bar */}
@@ -335,34 +350,34 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
                   })}
                 </div>
 
-                {/* Pagination */}
-                <div className="flex justify-center mt-8 gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={goToPreviousPage}
-                    disabled={page <= 1}
-                    size="sm"
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-1" /> Previous
-                  </Button>
-                  <div className="text-sm text-muted-foreground flex items-center px-3">
-                    Page {page} of {totalPages}
+                {/* Pagination - Only show if there are multiple pages and users */}
+                {shouldShowPagination && (
+                  <div className="flex justify-center mt-8 gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={goToPreviousPage}
+                      disabled={page <= 1 || loading}
+                      size="sm"
+                    >
+                      <ArrowLeft className="h-4 w-4 mr-1" /> Previous
+                    </Button>
+                    <div className="text-sm text-muted-foreground flex items-center px-3">
+                      Page {page} of {totalPages}
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={goToNextPage}
+                      disabled={page >= totalPages || loading || users.length < pageSize}
+                      size="sm"
+                    >
+                      Next <ArrowRight className="h-4 w-4 ml-1" />
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    onClick={goToNextPage}
-                    disabled={page >= totalPages}
-                    size="sm"
-                  >
-                    Next <ArrowRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </div>
+                )}
               </>
             )}
           </>
         )}
-
-
       </div>
     </div>
   );

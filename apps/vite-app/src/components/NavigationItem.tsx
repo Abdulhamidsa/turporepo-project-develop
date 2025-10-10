@@ -19,10 +19,10 @@ const NavigationItem: React.FC<NavigationItemComponentProps> = ({
   onClick,
 }) => {
   const baseClasses =
-    'flex items-center px-5 py-3 text-sm font-medium rounded-lg transition-colors';
+    'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors';
   const activeClasses = isActive
-    ? ' text-accent bg-muted/50'
-    : 'text-muted-foreground hover:bg-muted/50';
+    ? 'bg-primary/10 text-primary'
+    : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground';
 
   const handleClick = () => {
     if (item.action) {
@@ -36,15 +36,19 @@ const NavigationItem: React.FC<NavigationItemComponentProps> = ({
   if (item.link) {
     return (
       <Link to={item.link} className={`${baseClasses} ${activeClasses}`} onClick={handleClick}>
-        <item.icon className={`h-7 w-7 ${isActive ? 'text-accent' : 'text-muted-foreground'}`} />
-        {showText && <span className="text-popover-foreground ml-4">{item.name}</span>}
+        <item.icon className={`h-5 w-5 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+        {showText && <span className="ml-4">{item.name}</span>}
       </Link>
     );
   }
 
   return (
-    <Button onClick={handleClick} variant="ghost" className={`${baseClasses} hover:bg-muted/50`}>
-      <item.icon className="h-6 w-6" />
+    <Button
+      onClick={handleClick}
+      variant="ghost"
+      className={`${baseClasses} ${activeClasses} justify-start`}
+    >
+      <item.icon className="h-5 w-5" />
       {showText && <span className="ml-4">{item.name}</span>}
     </Button>
   );

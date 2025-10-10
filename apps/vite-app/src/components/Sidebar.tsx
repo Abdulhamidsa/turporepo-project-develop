@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div key={item.name} className="relative flex items-center">
         <NavigationItem item={item} isActive={isActive} showText={showText} onClick={onClose} />
         {item.name === 'Profile' && !userProfile.completedProfile && (
-          <AlertCircle className="ml-2 h-5 w-5 cursor-pointer text-red-500" />
+          <AlertCircle className="absolute right-3 h-4 w-4 text-destructive" />
         )}
       </div>
     );
@@ -44,13 +44,15 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`bg-card border-border fixed left-0 top-0 z-50 h-dvh border-r transition-transform duration-300 ${isOpen ? 'w-64 translate-x-0' : '-translate-x-full'}`}
+      className={`bg-card border-border fixed left-0 top-0 z-50 h-full border-r transition-transform duration-300 ${isOpen ? 'w-64 translate-x-0' : '-translate-x-full'}`}
     >
       <div className="flex h-full flex-col">
         <div
           className={`flex-1 overflow-y-auto transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
         >
-          <nav className="mt-4 space-y-2">{navigationItems.map((item) => renderNavItem(item))}</nav>
+          <nav className="mt-4 space-y-2 px-4">
+            {navigationItems.map((item) => renderNavItem(item))}
+          </nav>
         </div>
         <div
           className={`mb-4 space-y-2 px-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}

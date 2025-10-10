@@ -38,12 +38,14 @@ interface ProjectType {
   title: string;
   description?: string;
   coverImage?: string;
+  thumbnail?: string;
   shortDescription?: string;
   createdAt?: string | Date;
   repoUrl?: string;
   demoUrl?: string;
   tags?: { id: string | number; name: string }[];
   owner?: ProjectOwner;
+  media?: { url: string }[];
 }
 
 interface ProjectCardModalProps {
@@ -82,17 +84,31 @@ export default function ProjectCardModal({ project, isOpen, onOpenChange }: Proj
         <DialogContent className="sm:max-w-md p-0 overflow-hidden">
           {/* Project Cover Image */}
           <div className="relative h-40 w-full bg-muted">
-            {project.coverImage ? (
+            {project.thumbnail || project.media?.[0]?.url || project.coverImage ? (
               <img
-                src={project.coverImage}
+                src={project.thumbnail || project.media?.[0]?.url || project.coverImage}
                 alt={project.title}
                 className="h-full w-full object-cover"
+                onError={(e) => {
+                  // Hide broken images and show placeholder
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  const placeholder = (e.target as HTMLImageElement)
+                    .nextElementSibling as HTMLElement;
+                  if (placeholder) placeholder.style.display = 'flex';
+                }}
               />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-primary/10">
-                <ImageIcon className="h-10 w-10 text-primary/40" />
-              </div>
-            )}
+            ) : null}
+            <div
+              className="flex h-full w-full items-center justify-center bg-primary/10"
+              style={{
+                display:
+                  project.thumbnail || project.media?.[0]?.url || project.coverImage
+                    ? 'none'
+                    : 'flex',
+              }}
+            >
+              <ImageIcon className="h-10 w-10 text-primary/40" />
+            </div>
             <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
           </div>
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { getEndpoints } from '@repo/api/endpoints';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card } from '@repo/ui/components/ui/card';
 import { Input } from '@repo/ui/components/ui/input';
@@ -12,6 +13,7 @@ import {
   Search,
 } from 'lucide-react';
 
+import { request } from '../../api/request';
 import { Skeleton } from '../components/ui/skeleton';
 import { useAuth } from '../features/user/hooks/use.auth';
 import ProjectCardModal from './ProjectCardModal';
@@ -34,11 +36,13 @@ interface Project {
   title: string;
   description?: string;
   coverImage?: string;
+  thumbnail?: string;
   shortDescription?: string;
   createdAt?: string | Date;
   repoUrl?: string;
   demoUrl?: string;
   tags?: Tag[];
+  media?: { url: string }[];
   owner?: ProjectOwner;
 }
 
@@ -62,16 +66,15 @@ export default function ProjectsGallery({ initialPage = 1, pageSize = 12 }: Proj
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const baseUrl = import.meta.env.VITE_BASE_URL;
-      const url = `${baseUrl}/api/projects?page=${page}&limit=${pageSize}&search=${encodeURIComponent(searchQuery)}`;
+      // Use endpoints configuration to get the correct URL
+      const ENDPOINTS = getEndpoints('');
+      const url = `${ENDPOINTS.projects.fetchAll}?page=${page}&limit=${pageSize}&search=${encodeURIComponent(searchQuery)}`;
 
-      const response = await fetch(url);
+      const data = await request<{
+        projects: Project[];
+        pagination: { totalPages: number };
+      }>('GET', url);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch projects');
-      }
-
-      const data = await response.json();
       setProjects(data.projects || []);
       setTotalPages(data.pagination?.totalPages || 1);
     } catch (err) {
@@ -187,17 +190,28 @@ export default function ProjectsGallery({ initialPage = 1, pageSize = 12 }: Proj
                   >
                     {/* Project Cover Image */}
                     <div className="relative h-40 w-full bg-muted">
-                      {project.coverImage ? (
+                      {project.thumbnail || project.media?.[0]?.url ? (
                         <img
-                          src={project.coverImage}
+                          src={project.thumbnail || project.media?.[0]?.url}
                           alt={project.title}
                           className="h-full w-full object-cover"
+                          onError={(e) => {
+                            // Hide broken images and show placeholder
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            const placeholder = (e.target as HTMLImageElement)
+                              .nextElementSibling as HTMLElement;
+                            if (placeholder) placeholder.style.display = 'flex';
+                          }}
                         />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-primary/10">
-                          <ImageIcon className="h-10 w-10 text-primary/40" />
-                        </div>
-                      )}
+                      ) : null}
+                      <div
+                        className="flex h-full w-full items-center justify-center bg-primary/10"
+                        style={{
+                          display: project.thumbnail || project.media?.[0]?.url ? 'none' : 'flex',
+                        }}
+                      >
+                        <ImageIcon className="h-10 w-10 text-primary/40" />
+                      </div>
 
                       {/* Lock icon for authenticated content */}
                       {!isAuthenticated && (
