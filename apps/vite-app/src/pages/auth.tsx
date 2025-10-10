@@ -249,7 +249,7 @@ export default function Auth() {
                 users.map((user) => (
                   <div
                     key={user.id}
-                    className="bg-card border border-border rounded-lg p-4 hover:border-primary/50 hover:shadow-sm transition-all duration-200"
+                    className="bg-card w-full flex-shrink-0 snap-start px-2 sm:w-1/2 lg:w-1/3 xl:w-1/4 h-40 rounded-full border border-border p-4 hover:border-primary/50 hover:shadow-sm transition-all duration-200"
                   >
                     <div className="flex items-center mb-3">
                       {/* Profile Picture */}
@@ -258,7 +258,7 @@ export default function Auth() {
                           <img
                             src={user.profilePicture}
                             alt={user.username}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover flex-1"
                           />
                         ) : (
                           <div className="w-full h-full bg-primary/10 flex items-center justify-center">
