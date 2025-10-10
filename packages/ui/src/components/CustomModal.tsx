@@ -55,29 +55,31 @@ const CustomModal: React.FC<CustomModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 p-4 md:p-0 flex items-center justify-center bg-black bg-opacity-50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
             ref={modalRef}
-            className={`bg-card text-card-foreground relative w-full rounded-lg shadow-lg p-2 ${
+            className={`bg-card text-card-foreground relative w-full rounded-xl shadow-2xl border border-border max-h-[90vh] ${
               size ? sizeClasses[size] : ''
             }`}
             style={{ width: width || undefined, height: height || undefined }}
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0.95 }}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
             <Button
               onClick={onClose}
-              className="float-end z-10 flex items-center justify-center h-8 w-8 rounded-full bg-white/20 text-white transition-all hover:bg-white/30 hover:text-white"
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 z-10 h-8 w-8 rounded-full bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </Button>
-            <div className="p-3 md:p-6">{children}</div>
+            <div className="p-6">{children}</div>
           </motion.div>
         </motion.div>
       )}
