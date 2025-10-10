@@ -20,8 +20,8 @@ const DashboardLayout: React.FC = () => {
     {
       name: 'My Portfolio',
       icon: BriefcaseBusiness,
-      link: userProfile?.username
-        ? routesConfig.userPortfolio(userProfile.username)
+      link: userProfile?.friendlyId
+        ? routesConfig.userPortfolio(userProfile.friendlyId)
         : routesConfig.home,
     },
     {
@@ -32,7 +32,7 @@ const DashboardLayout: React.FC = () => {
     {
       name: 'Users',
       icon: Users,
-      link: routesConfig.users,
+      link: routesConfig.professionals,
     },
     {
       name: 'Profile',
