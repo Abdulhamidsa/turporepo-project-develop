@@ -197,7 +197,7 @@ export interface PostType {
 //
 export type AIChatProps = {
   chatOpen: boolean;
-  chatStep: 'list-projects' | 'select-project' | 'choose-action' | 'finished';
+  chatStep: 'consent' | 'list-projects' | 'select-project' | 'choose-action' | 'finished';
   chatMessages: { role: 'user' | 'ai'; text: string }[];
   improvements?: { title: string; description: string }[];
   monetization?: { title: string; description: string }[];
