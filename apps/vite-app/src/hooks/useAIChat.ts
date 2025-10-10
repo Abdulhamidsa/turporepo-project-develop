@@ -7,7 +7,12 @@ import { z } from 'zod';
 import { request } from '../../api/request';
 import { getErrorMessage } from '../../utils/getErrorMessage';
 
-export type ChatStep = 'list-projects' | 'select-project' | 'choose-action' | 'finished';
+export type ChatStep =
+  | 'consent'
+  | 'list-projects'
+  | 'select-project'
+  | 'choose-action'
+  | 'finished';
 
 export type ChatMessage = {
   role: 'user' | 'ai';
@@ -48,7 +53,7 @@ const chatMessageSchema = z.object({
 
 export const useAIChat = () => {
   const [chatOpen, setChatOpen] = useState(false);
-  const [chatStep, setChatStep] = useState<ChatStep>('list-projects');
+  const [chatStep, setChatStep] = useState<ChatStep>('consent');
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [data, setData] = useState<ResultItem[]>([]);
@@ -58,8 +63,12 @@ export const useAIChat = () => {
 
   const startChat = () => {
     setChatOpen(true);
-    setChatStep('list-projects');
+    setChatStep('consent');
     setChatMessages([]);
+  };
+
+  const handleConsentGiven = () => {
+    setChatStep('list-projects');
   };
 
   const selectProject = (project: string) => {
@@ -149,5 +158,6 @@ export const useAIChat = () => {
     sendMessage,
     setChatOpen,
     goBack,
+    handleConsentGiven,
   };
 };
