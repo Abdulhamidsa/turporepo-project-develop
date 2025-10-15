@@ -1,6 +1,6 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 
 catalogs:
   react18:
@@ -10,18 +10,18 @@ catalogs:
     lucide-react: ^0.468.0
     react-select: ^5.0.0
     react-hook-form: ^7.0.0
-    "@types/react-select": ^5.0.0
-    "@types/react": ^18.0.0
-    "@types/react-dom": ^18.0.0
-    "@types/react-router-dom": ^5.0.0
+    '@types/react-select': ^5.0.0
+    '@types/react': ^18.0.0
+    '@types/react-dom': ^18.0.0
+    '@types/react-router-dom': ^5.0.0
     react-query: ^3.39.0
 
   next15:
-    next: ^15.0.0
+    next: ^15.5.5
 
   eslint:
     eslint: ^8.0.0
-    "@eslint/js": ^8.0.0
+    '@eslint/js': ^8.0.0
     eslint-plugin-react-hooks: ^5.0.0
     eslint-plugin-react-refresh: ^0.4.0
 
@@ -34,7 +34,7 @@ catalogs:
     typescript: ^5.0.0
 
   node-types:
-    "@types/node": ^20.0.0
+    '@types/node': ^20.0.0
 
   prettier:
     prettier: ^3.0.0
