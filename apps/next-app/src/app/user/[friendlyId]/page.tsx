@@ -16,7 +16,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
 
   const userProfile = await getUserProfile(id);
   const userProjectResponse = await getUserProject(id);
-
+  console.log('userProfile', userProfile);
   if (!userProfile) {
     return <p className="text-muted-foreground mt-10 text-center">User profile not found.</p>;
   }
