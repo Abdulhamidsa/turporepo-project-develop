@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 
 type AsyncSearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-export const dynamic = 'force-dynamic';
-
 export default async function ProjectsPage({ searchParams }: { searchParams: AsyncSearchParams }) {
   const params = await searchParams;
   const page = Number.parseInt((params.page as string) || '1', 10);

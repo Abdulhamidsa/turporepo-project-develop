@@ -22,10 +22,10 @@ async function handleApiRequest(url: string, options?: RequestInit) {
     console.log('BASE_URL at runtime:', BASE_URL);
 
     const res = await fetch(fullUrl, {
-      cache: 'force-cache',
-      next: { revalidate: 30 },
+      cache: 'no-store',
       ...options,
     });
+
     console.log('Response received with status:', res.status);
 
     if (!res.ok) {
