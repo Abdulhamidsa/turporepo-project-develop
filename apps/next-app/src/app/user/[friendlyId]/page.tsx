@@ -5,15 +5,13 @@ import ProfileHeader from '../../../components/ProfileHeader';
 import ProjectsSection from '../../../components/ProjectsSection';
 import { getUserProfile, getUserProject } from '../../../lib/api';
 
-// Define params type for Next.js App Router - using interface for better type compatibility
-interface PageProps {
-  params: {
-    friendlyId: string;
-  };
-}
+// Define AsyncParams type to match the pattern used in other pages
+type AsyncParams = Promise<{ friendlyId: string }>;
 
-export default async function PublicProfilePage({ params }: PageProps) {
-  const { friendlyId } = params;
+export default async function PublicProfilePage({ params }: { params: AsyncParams }) {
+  // Await params to get the friendlyId
+  const resolvedParams = await params;
+  const { friendlyId } = resolvedParams;
 
   // Get raw data directly from API - minimal processing
   const userProfile = await getUserProfile(friendlyId);
