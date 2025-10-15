@@ -4,7 +4,6 @@ import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui/components/ui/card';
 import Link from 'next/link';
 
-
 export default function ForProfessionals() {
   return (
     <div className="container mx-auto px-6 py-12">
@@ -54,11 +53,7 @@ export default function ForProfessionals() {
           <p className="text-secondary-foreground mb-6 text-base sm:text-lg md:text-xl">
             Join thousands of professionals managing their work with ProFolio.
           </p>
-          <Link
-            href="https://profolio-internal.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Link href="https://profolio.abdulhamidma.com" target="_blank" rel="noopener noreferrer">
             <Button className="bg-accent text-accent-foreground hover:bg-accent/90 px-6 py-3 text-base transition sm:text-lg md:text-xl">
               Get Started
             </Button>
