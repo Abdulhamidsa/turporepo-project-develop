@@ -12,7 +12,7 @@ function getFullUrl(url: string): string {
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
-  return `${BASE_URL}${url}`;
+  return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
 async function handleApiRequest(url: string, options?: RequestInit) {
