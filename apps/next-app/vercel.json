@@ -3,10 +3,6 @@
     {
       "source": "/api/:path*",
       "destination": "https://api.norpus.com/profolio/api/:path*"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
