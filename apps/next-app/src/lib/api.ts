@@ -5,7 +5,7 @@ import 'server-only';
 import { GetUserProjectResponse } from '../types';
 import { AppError } from '../utils/app.error';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '/api';
 const ENDPOINTS = getEndpoints(BASE_URL);
 
 function getFullUrl(url: string): string {
