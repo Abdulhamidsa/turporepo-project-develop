@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { Code, Globe, Layout, PenTool, Server } from 'lucide-react';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -12,7 +13,7 @@ import { SearchForm } from '../../components/SearchForm';
 // eslint-disable-next-line import/order
 import { getUsers } from '../../lib/api';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Discover Professionals - ProFolio',
   description:
     'Find top professionals across various fields, including software engineering, design, DevOps, and more.',
@@ -51,7 +52,7 @@ export default async function UsersPage({
   const resolvedSearchParams = searchParams;
   const page = Number.parseInt((resolvedSearchParams?.page as string) || '1', 10);
   if (!searchParams?.page) {
-    redirect(`/users?page=1`);
+    redirect(`/users?page=1`); // try push no need to reload
   }
   const search = (resolvedSearchParams.search as string) || '';
 
