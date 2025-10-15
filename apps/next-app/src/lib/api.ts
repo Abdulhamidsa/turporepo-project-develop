@@ -19,6 +19,7 @@ async function handleApiRequest(url: string, options?: RequestInit) {
   try {
     const fullUrl = getFullUrl(url);
     console.log('Fetching URL:', fullUrl);
+    console.log('BASE_URL at runtime:', BASE_URL);
 
     const res = await fetch(fullUrl, {
       cache: 'force-cache',
