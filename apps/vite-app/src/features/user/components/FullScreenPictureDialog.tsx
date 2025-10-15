@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { Dialog, DialogContent } from '@repo/ui/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@repo/ui/components/ui/dialog';
 
 interface FullScreenPictureDialogProps {
   pictureUrl?: string;
@@ -16,6 +16,8 @@ export default function FullScreenPictureDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="h-auto max-w-xl p-0">
+        {/* Hidden DialogTitle for accessibility */}
+        <DialogTitle className="sr-only">Profile Picture</DialogTitle>
         <div className="relative h-auto w-full">
           <img
             src={pictureUrl ?? '/placeholder.jpg'}
