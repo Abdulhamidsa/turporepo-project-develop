@@ -5,13 +5,8 @@ import ProfileHeader from '../../../components/ProfileHeader';
 import ProjectsSection from '../../../components/ProjectsSection';
 import { getUserProfile, getUserProject } from '../../../lib/api';
 
-// https://api.norpus.com/profolio/api
-export default async function PublicProfilePage({
-  params,
-}: {
-  params: Promise<{ friendlyId: string }>;
-}) {
-  const { friendlyId } = await params;
+export default async function PublicProfilePage({ params }: { params: { friendlyId: string } }) {
+  const { friendlyId } = params;
 
   const userProfile = await getUserProfile(friendlyId);
   const userProjectResponse = await getUserProject(friendlyId);
@@ -23,10 +18,10 @@ export default async function PublicProfilePage({
   const userProjects = userProjectResponse?.data?.projects || [];
 
   return (
-    <div className="min-h-screen bg-slate-900 py-8 px-4">
+    <div className="container py-8 px-4 sm:px-6">
       <div className="mx-auto max-w-5xl">
-        <div className="bg-slate-800 shadow-2xl border border-slate-700 relative overflow-hidden">
-          <div className="absolute top-4 right-6 text-6xl font-bold text-slate-700/20 select-none">
+        <div className="bg-card border-border relative overflow-hidden rounded-lg shadow-md">
+          <div className="absolute top-4 right-6 text-6xl font-bold text-muted/20 select-none">
             CV
           </div>
 

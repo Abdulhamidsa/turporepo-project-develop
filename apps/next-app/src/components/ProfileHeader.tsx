@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Briefcase, Calendar, Globe } from 'lucide-react';
 import Image from 'next/image';
 
@@ -12,17 +11,12 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
   return (
     <div className="relative">
       {/* CV Header Section */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-8 border-b-4 border-gray-500">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+      <div className="bg-card p-6 sm:p-8 border-b border-border">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-center">
           {/* Profile Picture */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 260, damping: 20 }}
-            className="flex justify-center lg:justify-start"
-          >
+          <div className="flex justify-center lg:justify-start">
             <div className="relative">
-              <div className="w-32 h-32 rounded-lg border-4 border-gray-400 shadow-2xl overflow-hidden bg-slate-600">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg border-2 border-muted overflow-hidden bg-muted">
                 {userProfile.profilePicture ? (
                   <Image
                     src={userProfile.profilePicture}
@@ -32,84 +26,71 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl font-bold bg-slate-600">
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground text-3xl font-bold">
                     {(userProfile.username || 'NA').slice(0, 2).toUpperCase()}
                   </div>
                 )}
               </div>
               {/* Professional Badge */}
-              <div className="absolute -bottom-2 -right-2 bg-gray-600 text-white px-2 py-1 rounded-md text-xs font-semibold">
+              {/* <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-semibold">
                 PRO
-              </div>
+              </div> */}
             </div>
-          </motion.div>
+          </div>
 
           {/* Main Info */}
           <div className="lg:col-span-2 text-center lg:text-left space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <h1 className="text-4xl lg:text-5xl font-bold text-white mb-2 tracking-tight">
+            <div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 tracking-tight">
                 {userProfile.username}
               </h1>
-              <div className="flex items-center justify-center lg:justify-start gap-3 text-xl text-gray-300 mb-4">
-                <Briefcase className="w-6 h-6" />
+              <div className="flex items-center justify-center lg:justify-start gap-3 text-lg sm:text-xl text-muted-foreground mb-4">
+                <Briefcase className="w-5 h-5 sm:w-6 sm:h-6" />
                 <span className="font-medium">{userProfile.profession || 'Professional'}</span>
               </div>
 
               {userProfile.bio && (
-                <p className="text-slate-300 text-lg leading-relaxed max-w-2xl">
+                <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-2xl">
                   {userProfile.bio}
                 </p>
               )}
-            </motion.div>
+            </div>
 
             {/* Quick Info Tags */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-wrap justify-center lg:justify-start gap-3"
-            >
+            <div className="flex flex-wrap justify-center lg:justify-start gap-3">
               {userProfile.countryOrigin && (
-                <div className="flex items-center gap-2 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2">
-                  <Globe className="w-4 h-4 text-gray-400" />
-                  <span className="text-slate-200 font-medium text-sm">
-                    {userProfile.countryOrigin}
-                  </span>
+                <div className="flex items-center gap-2 bg-accent border border-border rounded-lg px-3 py-1.5 sm:px-4 sm:py-2">
+                  <Globe className="w-4 h-4 text-muted-foreground" />
+                  <span className="font-medium text-sm">{userProfile.countryOrigin}</span>
                 </div>
               )}
               {userProfile.age && (
-                <div className="flex items-center gap-2 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2">
-                  <Calendar className="w-4 h-4 text-gray-400" />
-                  <span className="text-slate-200 font-medium text-sm">
-                    {userProfile.age} years
-                  </span>
+                <div className="flex items-center gap-2 bg-accent border border-border rounded-lg px-3 py-1.5 sm:px-4 sm:py-2">
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <span className="font-medium text-sm">{userProfile.age} years</span>
                 </div>
               )}
               {userProfile.profession && (
-                <div className="flex items-center gap-2 bg-gray-600 border border-gray-500 rounded-lg px-4 py-2">
-                  <span className="text-white font-medium text-sm">{userProfile.profession}</span>
+                <div className="flex items-center gap-2 bg-primary bg-opacity-20 border border-primary border-opacity-30 rounded-lg px-3 py-1.5 sm:px-4 sm:py-2">
+                  <span className="font-medium text-sm">{userProfile.profession}</span>
                 </div>
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* CV Sections Divider */}
-      <div className="bg-slate-750 px-8 py-4 border-b border-slate-600">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6 text-sm text-slate-400 font-medium uppercase tracking-wider">
-            <span className="text-gray-400">Professional Portfolio</span>
-            <span>•</span>
+      <div className="bg-accent/50 px-4 sm:px-8 py-3 sm:py-4 border-b border-border">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider overflow-x-auto pb-1 sm:pb-0">
+            <span>Professional Portfolio</span>
+            <span className="hidden sm:inline">•</span>
             <span>{userProfile.profession || 'Developer'}</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>{userProfile.countryOrigin || 'Global'}</span>
           </div>
-          <div className="text-slate-500 text-sm">
+          <div className="text-muted-foreground text-xs sm:text-sm whitespace-nowrap">
             Last updated: {new Date().toLocaleDateString()}
           </div>
         </div>
