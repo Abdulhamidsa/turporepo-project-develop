@@ -8,14 +8,14 @@ import { getUserProfile, getUserProject } from '../../../lib/api';
 export const dynamic = 'force-dynamic';
 
 interface PublicProfilePageProps {
-  params: { id: string };
+  params: { friendlyId: string };
 }
 
 export default async function PublicProfilePage({ params }: PublicProfilePageProps) {
-  const id = params.id;
+  const friendlyId = params.friendlyId;
 
-  const userProfile = await getUserProfile(id);
-  const userProjectResponse = await getUserProject(id);
+  const userProfile = await getUserProfile(friendlyId);
+  const userProjectResponse = await getUserProject(friendlyId);
   console.log('userProfile', userProfile);
   if (!userProfile) {
     return <p className="text-muted-foreground mt-10 text-center">User profile not found.</p>;

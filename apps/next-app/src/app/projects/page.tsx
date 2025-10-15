@@ -1,26 +1,22 @@
-import React from 'react';
-
+/* eslint-disable import/order */
 import { Metadata } from 'next';
 
 import ProjectsListClient from '../../components/ProjectsListClient';
-// eslint-disable-next-line import/order
 import { SearchForm } from '../../components/SearchForm';
-// eslint-disable-next-line import/order
 import { getProjects } from '../../lib/api';
 
 export const metadata: Metadata = {
   title: 'Explore Projects - ProFolio',
   description: 'Browse and discover top projects created by professionals in various industries.',
 };
+type ProjectsPageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
 export const dynamic = 'force-dynamic';
 
-export default async function ProjectsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const page = parseInt((searchParams.page as string) || '1', 10);
-  const search = (searchParams.search as string) || '';
+export default async function ProjectsPage({ searchParams = {} }: ProjectsPageProps) {
+  const page = parseInt((searchParams?.page as string) || '1', 10);
+  const search = (searchParams?.search as string) || '';
 
   const { projects, totalPages } = await getProjects(page, 12, search);
 

@@ -8,9 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-// eslint-disable-next-line import/order
 import { SearchForm } from '../../components/SearchForm';
-// eslint-disable-next-line import/order
 import { getUsers } from '../../lib/api';
 
 export const metadata: Metadata = {
@@ -47,13 +45,17 @@ export const dynamic = 'force-dynamic';
 export default async function UsersPage({
   searchParams,
 }: {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const resolvedSearchParams = searchParams;
+  // ✅ await the async dynamic API
+  const resolvedSearchParams = await searchParams;
+
   const page = Number.parseInt((resolvedSearchParams?.page as string) || '1', 10);
-  if (!searchParams?.page) {
-    redirect(`/users?page=1`); // try push no need to reload
+
+  if (!resolvedSearchParams?.page) {
+    redirect(`/users?page=1`);
   }
+
   const search = (resolvedSearchParams.search as string) || '';
 
   const { users, total } = await getUsers(page, 20, search);
@@ -62,10 +64,11 @@ export default async function UsersPage({
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl">Discover Professionals</h1>
+
       <SearchForm initialSearch={search} searchType="users" />
+
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {users.map((user: any) => {
-          // Find the mapping for the user's profession
           const mapping = ProfessionMapping.find((m) => m.profession === user.profession);
           return (
             <Link href={`/user/${user.friendlyId}`} key={user.id} className="group">
@@ -75,8 +78,8 @@ export default async function UsersPage({
                     <Image
                       src={user.profilePicture || '/placeholder.svg'}
                       alt={user.username || 'User'}
-                      layout="fill"
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
                   <div className="p-4">
@@ -98,6 +101,7 @@ export default async function UsersPage({
           );
         })}
       </div>
+
       <div className="mt-12 flex justify-center space-x-4">
         {page > 1 && (
           <Link href={`/users?page=${page - 1}&search=${search}`}>
@@ -110,6 +114,7 @@ export default async function UsersPage({
           </Link>
         )}
       </div>
+
       <p className="text-muted-foreground mt-4 text-center">
         Page {page} of {totalPages}
       </p>
