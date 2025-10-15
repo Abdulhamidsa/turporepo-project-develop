@@ -6,7 +6,7 @@ import ProjectsSection from '../../../components/ProjectsSection';
 import { getUserProfile, getUserProject } from '../../../lib/api';
 
 export const dynamic = 'force-dynamic';
-
+// https://api.norpus.com/profolio/api
 export default async function PublicProfilePage({
   params,
 }: {
