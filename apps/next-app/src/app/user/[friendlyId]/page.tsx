@@ -5,9 +5,15 @@ import ProfileHeader from '../../../components/ProfileHeader';
 import ProjectsSection from '../../../components/ProjectsSection';
 import { getUserProfile, getUserProject } from '../../../lib/api';
 
-export default async function PublicProfilePage({ params }: { params: { friendlyId: string } }) {
+// Define params type properly for Next.js App Router
+type Params = {
+  friendlyId: string;
+};
+
+export default async function PublicProfilePage({ params }: { params: Params }) {
   const { friendlyId } = params;
 
+  // Get raw data directly from API - minimal processing
   const userProfile = await getUserProfile(friendlyId);
   const userProjectResponse = await getUserProject(friendlyId);
 
@@ -15,20 +21,15 @@ export default async function PublicProfilePage({ params }: { params: { friendly
     return <p className="text-muted-foreground mt-10 text-center">User profile not found.</p>;
   }
 
-  const userProjects = userProjectResponse?.data?.projects || [];
-
+  // Pass raw data directly to components
   return (
-    <div className="container py-8 px-4 sm:px-6">
+    <div className="container py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6">
       <div className="mx-auto max-w-5xl">
         <div className="bg-card border-border relative overflow-hidden rounded-lg shadow-md">
-          <div className="absolute top-4 right-6 text-6xl font-bold text-muted/20 select-none">
-            CV
-          </div>
-
           <Suspense fallback={<LoadingSpinner />}>
             <div className="relative z-10">
               <ProfileHeader userProfile={userProfile} />
-              <ProjectsSection projects={userProjects} />
+              <ProjectsSection projects={userProjectResponse?.data?.projects || []} />
             </div>
           </Suspense>
         </div>

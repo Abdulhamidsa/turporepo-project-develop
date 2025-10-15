@@ -4,20 +4,20 @@ import { Briefcase, Calendar, Globe } from 'lucide-react';
 import Image from 'next/image';
 
 interface ProfileHeaderProps {
-  userProfile: any;
+  userProfile: any; // Accept raw user data directly
 }
 
 export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
   return (
     <div className="relative">
-      {/* CV Header Section */}
-      <div className="bg-card p-6 sm:p-8 border-b border-border">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-center">
-          {/* Profile Picture */}
-          <div className="flex justify-center lg:justify-start">
+      {/* Profile Header Section - Mobile First */}
+      <div className="bg-card p-4 sm:p-6 md:p-8 border-b border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center">
+          {/* Profile Picture - Better Mobile Layout */}
+          <div className="flex justify-center md:justify-start">
             <div className="relative">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg border-2 border-muted overflow-hidden bg-muted">
-                {userProfile.profilePicture ? (
+              <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-lg border-2 border-muted overflow-hidden bg-muted">
+                {userProfile?.profilePicture ? (
                   <Image
                     src={userProfile.profilePicture}
                     alt={userProfile.username || 'User'}
@@ -26,53 +26,51 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted-foreground text-3xl font-bold">
-                    {(userProfile.username || 'NA').slice(0, 2).toUpperCase()}
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground text-2xl sm:text-3xl font-bold">
+                    {(userProfile?.username || 'NA').slice(0, 2).toUpperCase()}
                   </div>
                 )}
               </div>
-              {/* Professional Badge */}
-              {/* <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-semibold">
-                PRO
-              </div> */}
             </div>
           </div>
 
-          {/* Main Info */}
-          <div className="lg:col-span-2 text-center lg:text-left space-y-4">
+          {/* Main Info - Responsive Text Sizes */}
+          <div className="md:col-span-2 text-center md:text-left space-y-3 md:space-y-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 tracking-tight">
-                {userProfile.username}
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 tracking-tight">
+                {userProfile?.username}
               </h1>
-              <div className="flex items-center justify-center lg:justify-start gap-3 text-lg sm:text-xl text-muted-foreground mb-4">
-                <Briefcase className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span className="font-medium">{userProfile.profession || 'Professional'}</span>
+              <div className="flex items-center justify-center md:justify-start gap-2 md:gap-3 text-base sm:text-lg md:text-xl text-muted-foreground mb-2 md:mb-4">
+                <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                <span className="font-medium">{userProfile?.profession || 'Professional'}</span>
               </div>
 
-              {userProfile.bio && (
-                <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-2xl">
+              {userProfile?.bio && (
+                <p className="text-muted-foreground text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl">
                   {userProfile.bio}
                 </p>
               )}
             </div>
 
-            {/* Quick Info Tags */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-              {userProfile.countryOrigin && (
-                <div className="flex items-center gap-2 bg-accent border border-border rounded-lg px-3 py-1.5 sm:px-4 sm:py-2">
-                  <Globe className="w-4 h-4 text-muted-foreground" />
-                  <span className="font-medium text-sm">{userProfile.countryOrigin}</span>
+            {/* Quick Info Tags - Better Mobile Layout */}
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-3">
+              {userProfile?.countryOrigin && (
+                <div className="flex items-center gap-1.5 md:gap-2 bg-accent border border-border rounded-lg px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
+                  <Globe className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                  <span className="font-medium text-xs sm:text-sm">
+                    {userProfile.countryOrigin}
+                  </span>
                 </div>
               )}
-              {userProfile.age && (
-                <div className="flex items-center gap-2 bg-accent border border-border rounded-lg px-3 py-1.5 sm:px-4 sm:py-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span className="font-medium text-sm">{userProfile.age} years</span>
+              {userProfile?.age && (
+                <div className="flex items-center gap-1.5 md:gap-2 bg-accent border border-border rounded-lg px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                  <span className="font-medium text-xs sm:text-sm">{userProfile.age} years</span>
                 </div>
               )}
-              {userProfile.profession && (
-                <div className="flex items-center gap-2 bg-primary bg-opacity-20 border border-primary border-opacity-30 rounded-lg px-3 py-1.5 sm:px-4 sm:py-2">
-                  <span className="font-medium text-sm">{userProfile.profession}</span>
+              {userProfile?.profession && (
+                <div className="flex items-center gap-1.5 md:gap-2 bg-primary/20 border border-primary/30 rounded-lg px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
+                  <span className="font-medium text-xs sm:text-sm">{userProfile.profession}</span>
                 </div>
               )}
             </div>
@@ -80,17 +78,17 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
         </div>
       </div>
 
-      {/* CV Sections Divider */}
-      <div className="bg-accent/50 px-4 sm:px-8 py-3 sm:py-4 border-b border-border">
+      {/* Profile Sections Divider - Better Mobile Layout */}
+      <div className="bg-accent/50 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 border-b border-border">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-2 sm:gap-4 md:gap-6 text-xs md:text-sm text-muted-foreground font-medium uppercase tracking-wider overflow-x-auto scrollbar-hide pb-1 sm:pb-0">
             <span>Professional Portfolio</span>
             <span className="hidden sm:inline">•</span>
-            <span>{userProfile.profession || 'Developer'}</span>
+            <span>{userProfile?.profession || 'Developer'}</span>
             <span className="hidden sm:inline">•</span>
-            <span>{userProfile.countryOrigin || 'Global'}</span>
+            <span>{userProfile?.countryOrigin || 'Global'}</span>
           </div>
-          <div className="text-muted-foreground text-xs sm:text-sm whitespace-nowrap">
+          <div className="text-muted-foreground text-xs md:text-sm whitespace-nowrap">
             Last updated: {new Date().toLocaleDateString()}
           </div>
         </div>

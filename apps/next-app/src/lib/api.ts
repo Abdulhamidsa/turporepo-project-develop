@@ -83,12 +83,13 @@ export async function getUsers(page = 1, limit = 12, search = '') {
 }
 
 /**
- * Get User Profile
+ * Get User Profile - Raw data directly from API
  */
 export async function getUserProfile(friendlyId: string) {
   try {
     const url = ENDPOINTS.users.fetchUserPublicProfile(friendlyId);
     const response = await handleApiRequest(url);
+    // Return raw data without any processing
     return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);
@@ -97,18 +98,13 @@ export async function getUserProfile(friendlyId: string) {
 }
 
 /**
- *  Get User Projects (Fast Revalidation)
+ *  Get User Projects - Raw data directly from API
  */
 export async function getUserProject(friendlyId: string): Promise<GetUserProjectResponse | null> {
   try {
     const url = ENDPOINTS.projects.fetchByFriendlyId(friendlyId);
     const response: GetUserProjectResponse = await handleApiRequest(url);
-
-    if (!response.success) {
-      throw new AppError('Failed to fetch project', 500);
-    }
-
-    console.log('response', response);
+    // Return raw response without additional processing
     return response;
   } catch (error) {
     console.error('Error fetching project:', error);
