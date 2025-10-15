@@ -26,15 +26,18 @@ export function SearchForm({
   }, debounceDelay);
 
   useEffect(() => {
-    if (query.trim() !== '') {
-      debouncedSearch(query);
-    } else {
-      const baseRoute = searchType === 'users' ? '/users' : '/projects';
-      router.push(`${baseRoute}?page=1`);
+    // Only trigger search when query actually changes and is different from initial
+    if (query !== initialSearch) {
+      if (query.trim() !== '') {
+        debouncedSearch(query);
+      } else {
+        const baseRoute = searchType === 'users' ? '/users' : '/projects';
+        router.push(`${baseRoute}?page=1`);
+      }
     }
 
     return () => debouncedSearch.cancel();
-  }, [debouncedSearch, query, router, searchType]);
+  }, [query, initialSearch, debouncedSearch, router, searchType]);
 
   return (
     <input

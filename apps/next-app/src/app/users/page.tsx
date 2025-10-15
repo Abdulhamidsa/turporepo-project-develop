@@ -11,12 +11,6 @@ import { redirect } from 'next/navigation';
 import { SearchForm } from '../../components/SearchForm';
 import { getUsers } from '../../lib/api';
 
-export const metadata: Metadata = {
-  title: 'Discover Professionals - ProFolio',
-  description:
-    'Find top professionals across various fields, including software engineering, design, DevOps, and more.',
-};
-
 const ProfessionMapping = [
   {
     profession: 'Software Engineer',
@@ -40,22 +34,29 @@ const ProfessionMapping = [
   },
 ];
 
+export const metadata: Metadata = {
+  title: 'Discover Professionals - ProFolio',
+  description:
+    'Find top professionals across various fields, including software engineering, design, DevOps, and more.',
+};
+
+// ✅ Fixed: await searchParams as required by Next.js 15
 export default async function UsersPage({
   searchParams,
 }: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  // ✅ await the async dynamic API
-  const resolvedSearchParams = await searchParams;
+  // Await searchParams before using its properties
+  const params = await searchParams;
+  const page = Number.parseInt((params?.page as string) || '1', 10);
+  const search = (params?.search as string) || '';
 
-  const page = Number.parseInt((resolvedSearchParams?.page as string) || '1', 10);
-
-  if (!resolvedSearchParams?.page) {
-    redirect(`/users?page=1`);
+  // Redirect only once, not on every render
+  if (!params?.page) {
+    return redirect(`/users?page=1`);
   }
 
-  const search = (resolvedSearchParams.search as string) || '';
-
+  // ✅ Fetch once, server-side, static unless forced dynamic elsewhere
   const { users, total } = await getUsers(page, 20, search);
   const totalPages = Math.ceil(total / 20);
 

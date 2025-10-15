@@ -22,7 +22,7 @@ async function handleApiRequest(url: string, options?: RequestInit) {
     console.log('BASE_URL at runtime:', BASE_URL);
 
     const res = await fetch(fullUrl, {
-      cache: 'no-store',
+      cache: 'no-store', // Changed from force-cache to prevent stale data and loops
       ...options,
     });
 
