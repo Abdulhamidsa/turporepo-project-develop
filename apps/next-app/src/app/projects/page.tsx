@@ -1,12 +1,14 @@
 import React from 'react';
 
+import { Metadata } from 'next';
+
 import ProjectsListClient from '../../components/ProjectsListClient';
 // eslint-disable-next-line import/order
 import { SearchForm } from '../../components/SearchForm';
 // eslint-disable-next-line import/order
 import { getProjects } from '../../lib/api';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Explore Projects - ProFolio',
   description: 'Browse and discover top projects created by professionals in various industries.',
 };
