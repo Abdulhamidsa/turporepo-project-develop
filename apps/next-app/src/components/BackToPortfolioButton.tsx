@@ -8,7 +8,7 @@ import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 const STORAGE_KEY = 'fromPortfolio';
-const EXPIRATION_TIME = 2 * 60 * 1000;
+const EXPIRATION_TIME = 2 * 60 * 1000; // 2 minutes
 
 const BackToPortfolioButton: React.FC = () => {
   return (
@@ -20,18 +20,26 @@ const BackToPortfolioButton: React.FC = () => {
 
 const BackToPortfolioLogic: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const searchParams = useSearchParams();
-  const [isFromPortfolio, setIsFromPortfolio] = useState(() => {
+
+  // ✅ safe lazy initializer
+  const [isFromPortfolio, setIsFromPortfolio] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false; // SSR guard
+
     const storedData = sessionStorage.getItem(STORAGE_KEY);
     if (!storedData) return false;
-    const { timestamp } = JSON.parse(storedData);
-    return Date.now() - timestamp < EXPIRATION_TIME;
+
+    try {
+      const { timestamp } = JSON.parse(storedData);
+      return Date.now() - timestamp < EXPIRATION_TIME;
+    } catch {
+      return false;
+    }
   });
 
+  // ✅ this effect only runs client-side anyway
   useEffect(() => {
     const queryFrom = searchParams?.get('from');
-
     if (queryFrom === 'portfolio') {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ timestamp: Date.now() }));
       setIsFromPortfolio(true);
@@ -39,9 +47,10 @@ const BackToPortfolioLogic: React.FC = () => {
   }, [searchParams]);
 
   const handleRedirect = () => {
-    sessionStorage.removeItem('fromPortfolio');
+    sessionStorage.removeItem(STORAGE_KEY);
     window.location.href = 'https://abdulhamid-sa.vercel.app/projects';
   };
+
   if (!isFromPortfolio) return null;
 
   return (
@@ -67,7 +76,7 @@ const BackToPortfolioLogic: React.FC = () => {
         >
           <Button
             onClick={handleRedirect}
-            className="flex items-center gap-2 border relative bg-background border-primary rounded-md bg-opacity-15 backdrop-blur-md px-5 py-4 shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl  active:scale-95"
+            className="flex items-center gap-2 border relative bg-background border-primary rounded-md bg-opacity-15 backdrop-blur-md px-5 py-4 shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl active:scale-95"
           >
             Back to Portfolio
           </Button>
