@@ -6,7 +6,7 @@ import { GetUserProjectResponse } from '../types';
 import { AppError } from '../utils/app.error';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
-const ENDPOINTS = getEndpoints(BASE_URL);
+const ENDPOINTS = getEndpoints(`/api/${BASE_URL}`);
 
 function getFullUrl(url: string): string {
   if (url.startsWith('http://') || url.startsWith('https://')) {
