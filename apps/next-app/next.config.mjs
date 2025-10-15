@@ -1,6 +1,12 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
   webpack(config) {
     config.output.hashFunction = 'xxhash64';
