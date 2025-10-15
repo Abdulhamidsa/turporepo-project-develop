@@ -87,9 +87,7 @@ export async function getUsers(page = 1, limit = 12, search = '') {
  */
 export async function getUserProfile(friendlyId: string) {
   try {
-    const url = ENDPOINTS.users
-      .fetchUserPublicProfile(friendlyId)
-      .replace(':friendlyId', friendlyId);
+    const url = ENDPOINTS.users.fetchUserPublicProfile(friendlyId);
     const response = await handleApiRequest(url);
     return response.data;
   } catch (error) {
