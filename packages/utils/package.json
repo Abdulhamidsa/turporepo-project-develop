@@ -1,8 +1,12 @@
 {
   "name": "@repo/utils",
   "version": "1.0.0",
-  "description": "",
+  "description": "Shared utility functions",
   "main": "index.js",
+  "exports": {
+    "./timeCalculation": "./timeCalculation.ts",
+    "./imageOptimization": "./imageOptimization.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -2,11 +2,17 @@
 
 import { useState } from 'react';
 
+import { Badge } from '@repo/ui/components/ui/badge';
 import { AnimatePresence } from 'framer-motion';
-import { ChevronRight, Code } from 'lucide-react';
+import { ChevronRight, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 
 import ProjectModal from './ProjectModal';
+
+// Utility function to get project image URL
+const getProjectImageUrl = (thumbnail: string, size: number) => {
+  return `${thumbnail}?w=${size}&q=75`; // Example logic for generating image URL
+};
 
 interface ProjectsSectionProps {
   projects: any[]; // Accept raw project data directly
@@ -15,91 +21,82 @@ interface ProjectsSectionProps {
 export default function ProjectsSection({ projects }: ProjectsSectionProps) {
   const [selectedProject, setSelectedProject] = useState(null);
 
-  return (
-    <div className="bg-card">
-      {/* Portfolio Section Header */}
-      <div className="bg-accent/60 px-4 sm:px-8 py-4 sm:py-6 border-b border-border">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary bg-opacity-20 rounded-lg flex items-center justify-center">
-            <Code className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">PROFESSIONAL PORTFOLIO</h2>
-            <p className="text-muted-foreground text-xs sm:text-sm">
-              Featured projects and technical achievements
-            </p>
-          </div>
-        </div>
-      </div>
+  // Using imported utility function for project images
 
-      {/* Projects Content - Improved Mobile First Design */}
-      <div className="p-3 sm:p-5 md:p-6 lg:p-8">
+  return (
+    <div className="bg-background">
+      {/* Projects Content - Modern Clean Design */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         {projects && projects.length > 0 ? (
-          <div className="grid gap-3 sm:gap-4 md:gap-6">
-            {projects.map((project: any, index: number) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {projects.map((project: any) => (
               <div key={project.id} className="relative">
-                {/* Project Entry - Better Mobile Layout */}
+                {/* Modern Project Card */}
                 <div
-                  className="bg-accent/30 border border-border rounded-lg p-3 sm:p-4 md:p-6 hover:border-primary/50 transition-colors cursor-pointer group"
+                  className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer group h-full flex flex-col"
                   onClick={() => setSelectedProject(project)}
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                    {/* Project Image - Better Size Management */}
-                    <div className="sm:col-span-1">
-                      <div className="aspect-square max-w-[180px] sm:max-w-full mx-auto sm:mx-0 rounded-lg overflow-hidden border border-border">
-                        <Image
-                          src={project.thumbnail || '/placeholder.svg'}
-                          alt={project.title || 'Project Image'}
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
-                        />
+                  {/* Project Image with Better Quality */}
+                  <div className="relative w-full h-48 overflow-hidden">
+                    <Image
+                      src={getProjectImageUrl(project.thumbnail, 800)}
+                      alt={project.title || 'Project'}
+                      fill
+                      className="object-cover transition-transform group-hover:scale-105 duration-300"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      quality={90}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    {project.url && (
+                      <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <a
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="bg-background/90 hover:bg-background p-2 rounded-full flex items-center justify-center shadow-md"
+                          aria-label="Visit project website"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Project Content */}
+                  <div className="p-5 flex-grow flex flex-col">
+                    {/* Title and Tags */}
+                    <div className="mb-3">
+                      <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                        {project.title}
+                      </h3>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {project.tags?.slice(0, 3).map((tag: any) => (
+                          <Badge key={tag.id} variant="secondary" className="text-xs py-0 px-2">
+                            {tag.name}
+                          </Badge>
+                        ))}
+                        {project.tags?.length > 3 && (
+                          <Badge variant="outline" className="text-xs py-0 px-2">
+                            +{project.tags.length - 3} more
+                          </Badge>
+                        )}
                       </div>
                     </div>
 
-                    {/* Project Details - Better Text Sizing */}
-                    <div className="sm:col-span-2 lg:col-span-3 space-y-2 sm:space-y-3 md:space-y-4">
-                      {/* Header */}
-                      <div>
-                        <h3 className="text-base sm:text-lg md:text-xl font-bold group-hover:text-primary transition-colors">
-                          {project.title}
-                        </h3>
-                        <div className="flex items-center gap-2 text-muted-foreground mt-1">
-                          <span className="text-xs font-medium">
-                            PROJECT #{String(index + 1).padStart(2, '0')}
-                          </span>
-                          <span className="w-1 h-1 bg-muted-foreground rounded-full"></span>
-                          <span className="text-xs">Featured Work</span>
-                        </div>
-                      </div>
+                    {/* Description */}
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow">
+                      {project.description}
+                    </p>
 
-                      {/* Description - Better Line Height Control */}
-                      <p className="text-xs sm:text-sm md:text-base text-muted-foreground leading-relaxed line-clamp-2 md:line-clamp-3">
-                        {project.description}
-                      </p>
-
-                      {/* Technologies - More Compact Mobile View */}
-                      <div className="space-y-1 md:space-y-2">
-                        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                          TECHNOLOGIES & SKILLS
-                        </h4>
-                        <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2">
-                          {project.tags?.map((tag: any) => (
-                            <span
-                              key={tag.id}
-                              className="px-2 py-0.5 bg-card border border-border text-muted-foreground rounded-full text-xs font-medium hover:border-primary/30 transition-colors"
-                            >
-                              {tag.name}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Action Indicator */}
-                      <div className="flex items-center gap-1 text-primary/70 text-xs">
-                        <span>Click to view detailed information</span>
-                        <ChevronRight className="w-3 h-3" />
-                      </div>
+                    {/* Action Button */}
+                    <div className="flex items-center justify-end mt-auto pt-2 border-t border-border">
+                      <button className="flex items-center gap-1 text-xs sm:text-sm text-primary group-hover:underline">
+                        <span>View details</span>
+                        <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -107,15 +104,35 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 sm:py-12 md:py-16">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-accent border border-border rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Code className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-muted-foreground" />
+          <div className="text-center py-16 bg-card border border-border rounded-xl">
+            <div className="w-20 h-20 bg-accent/50 flex items-center justify-center rounded-full mx-auto mb-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-muted-foreground"
+              >
+                <rect width="8" height="8" x="8" y="8" rx="1" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="M20 12h2" />
+                <path d="M2 12h2" />
+                <path d="m17 3-1 1" />
+                <path d="m8 3 1 1" />
+                <path d="m16 19 1 1" />
+                <path d="m7 19 1 1" />
+              </svg>
             </div>
-            <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-2">
-              No Projects Available
-            </h3>
-            <p className="text-muted-foreground text-xs sm:text-sm">
-              Portfolio projects will be displayed here once added.
+            <h3 className="text-xl font-semibold mb-2">No Projects Yet</h3>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              This portfolio doesn&apos;t have any projects to showcase yet. Check back later for
+              updates.
             </p>
           </div>
         )}
