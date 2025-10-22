@@ -1,18 +1,6 @@
-import { useState } from 'react';
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
-import { Tooltip, TooltipProvider, TooltipTrigger } from '@repo/ui/components/ui/tooltip';
-import { FetchedProjectType } from '@repo/zod/validation';
 import { UserProfile } from '@repo/zod/validation/user';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Bot, Plus } from 'lucide-react';
 
-import { useAIChat } from '../../../hooks/useAIChat';
-import UserPosts from '../../post/components/UserPosts';
-import AIChat from '../../projects/components/AIChat';
-import ProjectCard from '../../projects/components/ProjectCard';
-import ProjectModal from '../../projects/components/ProjectModal';
-import AddProjectModal from '../../projects/components/addProjectModal';
+import ModernProfileTabs from './ModernProfileTabs';
 
 interface ProfileTabsProps {
   userProfile: UserProfile;
@@ -22,139 +10,10 @@ interface ProfileTabsProps {
 }
 
 const ProfileTabs = ({ userProfile, projects, viewOnly = false }: ProfileTabsProps) => {
-  const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
-  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
-  const {
-    chatStep,
-    chatMessages,
-    data,
-    loading,
-    startChat,
-    selectProject,
-    sendMessage,
-    goBack,
-    handleConsentGiven,
-  } = useAIChat();
-  const [chatOpen, setChatOpen] = useState(false);
-
   return (
-    <>
-      <div className="min-h-[500px]">
-        <Tabs defaultValue="posts" className="mt-8">
-          <TabsList className="bg-muted border-border grid w-full grid-cols-2 overflow-hidden rounded-lg border">
-            <TabsTrigger
-              value="posts"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-red-500"
-            >
-              Posts
-            </TabsTrigger>
-            <TabsTrigger
-              value="projects"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-red-500"
-            >
-              Projects
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="posts" className="mt-6">
-            {userProfile.friendlyId ? (
-              <UserPosts friendlyId={userProfile.friendlyId} />
-            ) : (
-              <div className="flex items-center justify-center py-12">
-                <p className="text-muted-foreground">Loading user posts...</p>
-              </div>
-            )}
-          </TabsContent>
-          <TabsContent value="projects" className="mt-6">
-            {!viewOnly && (
-              <TooltipProvider>
-                <Tooltip content="AI Chat">
-                  <TooltipTrigger asChild>
-                    <button
-                      className="bg-primary hover:bg-primary/90 fixed bottom-12 right-4 sm:bottom-16 sm:right-6 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-110"
-                      onClick={() => setChatOpen(true)}
-                    >
-                      <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
-                    </button>
-                  </TooltipTrigger>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-            {/* AI Chat Drawer */}
-            <AnimatePresence>
-              {chatOpen && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                  className="fixed inset-4 z-50 flex items-center justify-center sm:inset-auto sm:bottom-20 sm:right-4 sm:top-auto sm:left-auto"
-                >
-                  <AIChat
-                    {...{
-                      chatOpen,
-                      chatStep,
-                      chatMessages,
-                      data,
-                      loading,
-                      projects,
-                      userProfilePicture: userProfile.profilePicture || undefined,
-                      userName: userProfile.username || undefined,
-                      startChat,
-                      selectProject,
-                      sendMessage,
-                      setChatOpen,
-                      goBack,
-                      onConsentGiven: handleConsentGiven,
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {!viewOnly && (
-                <div
-                  className="bg-card hover:bg-primary-foreground group relative flex h-full w-full items-center justify-center rounded-lg border p-4 transition duration-300 ease-in-out hover:cursor-pointer"
-                  onClick={() => setIsProjectDialogOpen(true)}
-                >
-                  <Plus className="text-primary-foreground h-52 w-12 opacity-100 transition-all duration-300 ease-in-out group-hover:opacity-0" />
-                  <span className="text-card absolute text-lg font-semibold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
-                    Add Project
-                  </span>
-                </div>
-              )}
-
-              {projects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={{
-                    ...project,
-                  }}
-                  onClick={() => setSelectedProject(project)}
-                  friendlyId={userProfile.friendlyId ?? ''}
-                />
-              ))}
-            </div>
-            {projects.length === 0 && (
-              <p className="text-muted-foreground col-span-full p-4 text-center">
-                No projects available.
-              </p>
-            )}
-          </TabsContent>
-          {selectedProject && (
-            <ProjectModal
-              project={selectedProject}
-              user={{
-                friendlyId: userProfile.friendlyId ?? '',
-                username: userProfile.username ?? '',
-                profilePicture: userProfile.profilePicture ?? '',
-              }}
-              isOpen={!!selectedProject}
-              onClose={() => setSelectedProject(null)}
-            />
-          )}
-        </Tabs>
-      </div>
-      <AddProjectModal isOpen={isProjectDialogOpen} onClose={() => setIsProjectDialogOpen(false)} />
-    </>
+    <div className="min-h-[500px]">
+      <ModernProfileTabs userProfile={userProfile} projects={projects} viewOnly={viewOnly} />
+    </div>
   );
 };
 

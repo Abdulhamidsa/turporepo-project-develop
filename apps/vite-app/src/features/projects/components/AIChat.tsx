@@ -19,6 +19,75 @@ import {
 
 import { ChatMessage, ResultItem } from '../../../hooks/useAIChat';
 
+// No Projects Screen Component
+function NoProjectsScreen({
+  onClose,
+  userName,
+}: {
+  onClose: () => void;
+  userName?: string | undefined;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex-1 flex flex-col h-full"
+    >
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6">
+        {/* Header */}
+        <div className="text-center space-y-3 mb-6">
+          <div className="mx-auto w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center">
+            <Bot className="h-8 w-8 text-muted-foreground/50" />
+          </div>
+          <h3 className="text-xl font-semibold text-foreground">No Projects Found</h3>
+          <p className="text-sm text-muted-foreground">
+            Hello {userName ? userName : 'there'}! I can't help you yet.
+          </p>
+        </div>
+
+        {/* Info Content */}
+        <div className="bg-muted/30 rounded-xl p-3 sm:p-4 space-y-3 sm:space-y-4">
+          <div className="flex items-start gap-3">
+            <FileText className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">AI Assistant Requirements:</h4>
+              <ul className="text-sm text-muted-foreground space-y-1 pl-4">
+                <li>• You need at least one project to use the AI assistant</li>
+                <li>• Projects provide data for analysis and recommendations</li>
+                <li>• The AI can suggest improvements, monetization ideas, and more</li>
+                <li>• Your project data helps generate personalized insights</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="space-y-2">
+              <h4 className="font-medium text-foreground">Get Started:</h4>
+              <p className="text-sm text-muted-foreground pl-4">
+                Create your first project to unlock AI-powered insights and recommendations. Once
+                you have projects, I'll be ready to help you optimize and improve them!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky Action Button */}
+      <div className="flex-shrink-0 p-4 sm:p-6 border-t border-border/50 bg-muted/10">
+        <Button
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm"
+          onClick={onClose}
+        >
+          <CheckCircle className="h-4 w-4 mr-2" />
+          Got it
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
+
 // Consent Screen Component
 function ConsentScreen({
   onAccept,
@@ -240,7 +309,11 @@ export default function AIChat({
                         AI Assistant
                       </CardTitle>
                       <p className="text-xs text-muted-foreground">
-                        {!consentGiven ? 'Awaiting consent' : 'Online'}
+                        {projects.length === 0
+                          ? 'No projects available'
+                          : !consentGiven
+                            ? 'Awaiting consent'
+                            : 'Online'}
                       </p>
                     </div>
                   </div>
@@ -254,7 +327,11 @@ export default function AIChat({
                   </Button>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col overflow-hidden p-0">
-                  {!consentGiven ? (
+                  {projects.length === 0 ? (
+                    <div className="flex-1 flex flex-col overflow-hidden">
+                      <NoProjectsScreen onClose={() => setChatOpen(false)} userName={userName} />
+                    </div>
+                  ) : !consentGiven ? (
                     <div className="flex-1 flex flex-col overflow-hidden">
                       <ConsentScreen
                         onAccept={handleConsentAccept}
@@ -322,7 +399,7 @@ export default function AIChat({
                     </SimpleScrollArea>
                   )}
                 </CardContent>
-                {consentGiven && (
+                {consentGiven && projects.length > 0 && (
                   <CardFooter className="flex-shrink-0 p-3 sm:p-4 border-t border-border/50 bg-muted/10">
                     <div className="flex w-full items-end gap-2">
                       <div className="flex-1 relative">
