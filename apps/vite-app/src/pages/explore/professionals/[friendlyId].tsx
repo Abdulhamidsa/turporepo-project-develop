@@ -131,7 +131,13 @@ export default function ProfessionalProfileView() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="posts" className="mt-6">
-              <UserPosts friendlyId={user?.friendlyId ?? ''} />
+              {user?.friendlyId ? (
+                <UserPosts friendlyId={user.friendlyId} />
+              ) : (
+                <div className="flex items-center justify-center py-12">
+                  <p className="text-muted-foreground">Loading user posts...</p>
+                </div>
+              )}
             </TabsContent>
             <TabsContent value="projects" className="mt-6">
               {isLoading ? (
