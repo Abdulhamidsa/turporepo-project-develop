@@ -249,8 +249,8 @@ export default function AdminUserProfile() {
           allPosts.forEach(
             (
               post: {
-                comments?: any[];
-                recentComments?: any[];
+                comments?: UserComment[];
+                recentComments?: UserComment[];
                 _id?: string;
                 id?: string;
                 content?: string;
@@ -316,33 +316,30 @@ export default function AdminUserProfile() {
               console.log('Fallback: Processing posts for comments:', allPosts.length);
 
               // Extract comments from posts (old method)
-              allPosts.forEach((post: Record<string, unknown>) => {
-                const postComments = post.comments || post.recentComments || [];
-                if (postComments && Array.isArray(postComments)) {
-                  postComments.forEach((comment: Record<string, unknown>) => {
-                    // Check if this comment was made by the current user
-                    const isUserComment =
-                      comment.author?.username === userProfile?.username ||
-                      comment.author === userProfile?.id ||
-                      comment.authorId === userProfile?.id;
-
-                    if (isUserComment) {
-                      userComments.push({
-                        id: comment._id || comment.id || `comment-${Date.now()}-${Math.random()}`,
-                        content: comment.content || 'No content',
-                        createdAt: comment.createdAt,
-                        postId: post._id || post.id || '',
-                        postTitle:
-                          (post as any).title ||
-                          ((post as any).content
-                            ? (post as any).content.substring(0, 50) + '...'
-                            : 'Untitled Post'),
-                        likesCount: comment.likesCount || 0,
-                      });
-                    }
-                  });
-                }
-              });
+              // allPosts.forEach((post: Record<string, unknown>) => {
+              //   // const postComments = post.comments || post.recentComments || [];
+              //   // if (postComments && Array.isArray(postComments)) {
+              //   //   postComments.forEach((comment: Record<string, unknown>) => {
+              //   //     // Check if this comment was made by the current user
+              //   //     // const isUserComment =
+              //   //     //   comment.author === userProfile?.id || comment.authorId === userProfile?.id;
+              //   //     // if (isUserComment) {
+              //   //     //   userComments.push({
+              //   //     //     id: comment._id || comment.id || `comment-${Date.now()}-${Math.random()}`,
+              //   //     //     content: comment.content || 'No content',
+              //   //     //     createdAt: comment.createdAt,
+              //   //     //     postId: post._id || post.id || '',
+              //   //     //     postTitle:
+              //   //     //       (post as any).title ||
+              //   //     //       ((post as any).content
+              //   //     //         ? (post as any).content.substring(0, 50) + '...'
+              //   //     //         : 'Untitled Post'),
+              //   //     //     likesCount: comment.likesCount || 0,
+              //   //     //   });
+              //   //     // }
+              //   //   });
+              //   // }
+              // });
               console.log('Fallback: Found', userComments.length, 'comments');
             }
           } catch (fallbackError) {
