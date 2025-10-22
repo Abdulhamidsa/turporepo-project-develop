@@ -3,10 +3,9 @@ import { useState } from 'react';
 import CustomModal from '@repo/ui/components/CustomModal';
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { Button } from '@repo/ui/components/ui/button';
-import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { timeAgo } from '@repo/utils/timeCalculation';
 import { UserPostType } from '@repo/zod/validation/post';
-import { Heart, Loader, MessageCircle, Plus, Trash2 } from 'lucide-react';
+import { Heart, Loader, MessageCircle, Trash2 } from 'lucide-react';
 
 import { useDeletePost } from '../../../hooks/useDeletePost';
 import { PostForm } from '../../user/components/PostForm';
@@ -15,9 +14,10 @@ import { useUserPosts } from '../../user/hooks/useFetchUserPosts';
 
 interface UserPostsProps {
   friendlyId: string;
+  viewOnly?: boolean;
 }
 
-const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
+const UserPosts: React.FC<UserPostsProps> = ({ friendlyId, viewOnly = false }) => {
   const { posts, mutate } = useUserPosts(friendlyId);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<UserPostType | null>(null);
@@ -47,65 +47,133 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {loggedUser?.friendlyId === friendlyId && (
-          <div
-            className="bg-card hover:bg-primary-foreground group relative flex h-full w-full items-center justify-center rounded-lg border p-4 transition duration-300 ease-in-out hover:cursor-pointer"
+      {/* Simple Add Post Prompt */}
+      {!viewOnly && loggedUser?.friendlyId === friendlyId && (
+        <div className="mb-6">
+          <button
             onClick={() => setIsPostDialogOpen(true)}
+            className="w-full bg-card border border-border rounded-lg p-4 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/30"
           >
-            <Plus className="text-primary-foreground h-52 w-12 opacity-100 transition-all duration-300 ease-in-out group-hover:opacity-0" />
-            <span className="text-card absolute text-lg font-semibold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
-              Add Post
-            </span>
-          </div>
-        )}
+            <div className="flex items-center gap-3 text-left">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={loggedUser?.profilePicture || '/placeholder.png'} />
+                <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                  {loggedUser?.username?.charAt(0).toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 bg-muted/30 rounded-full px-4 py-3 text-muted-foreground text-sm">
+                What's on your mind, {loggedUser?.username?.split(' ')[0] || 'there'}?
+              </div>
+            </div>
+          </button>
+        </div>
+      )}
 
+      {/* Facebook-style Posts Feed */}
+      <div className="space-y-4">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <Card
+            <div
               key={post._id}
-              className="bg-card text-card-foreground group relative w-full cursor-pointer overflow-hidden rounded-lg shadow-md transition hover:shadow-lg"
-              onClick={() =>
-                openPostModal({
-                  ...post,
-                  content: post.content ?? 'No Content',
-                  image: post.image ?? '',
-                  likes: post.likes ?? [],
-                  comments:
-                    post.comments?.map((comment) => ({
-                      ...comment,
-                      _id: comment._id ?? 'unknown',
-                    })) ?? [],
-                })
-              }
+              className="bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
-              <CardContent className="relative p-0">
-                {post.image ? (
-                  <img src={post.image} alt="Post" className="h-56 w-full object-cover" />
-                ) : (
-                  <div className="text-card bg-card flex h-56 w-full items-center justify-center">
-                    <p className="text-muted-foreground text-sm">No image</p>
+              {/* Post Header */}
+              <div className="p-4 pb-3">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={post.userId?.profilePicture || '/placeholder.png'} />
+                    <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                      {post.userId?.username?.charAt(0).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-foreground text-sm">
+                      {post.userId?.username || 'Anonymous'}
+                    </h3>
+                    <p className="text-muted-foreground text-xs">{timeAgo(post.createdAt ?? '')}</p>
                   </div>
-                )}
 
-                <div className="absolute inset-0 bg-black bg-opacity-0 transition-all duration-300 ease-in-out group-hover:bg-opacity-40"></div>
-
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                  <h3 className="mb-2 text-lg font-bold line-clamp-2">
-                    {post.content && post.content.length > 100
-                      ? `${post.content.slice(0, 100)}...`
-                      : (post.content ?? 'No Content')}
-                  </h3>
-
-                  <p className="text-muted-foreground text-xs">
-                    Likes: {post.likes?.length || 0} | Comments: {post.comments?.length || 0}
-                  </p>
+                  {/* Three dots menu - always visible for better UX */}
+                  <button
+                    className="p-2 rounded-full hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground opacity-70 hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent opening the post modal
+                      openPostModal({
+                        ...post,
+                        content: post.content ?? 'No Content',
+                        image: post.image ?? '',
+                        likes: post.likes ?? [],
+                        comments:
+                          post.comments?.map((comment) => ({
+                            ...comment,
+                            _id: comment._id ?? 'unknown',
+                          })) ?? [],
+                      });
+                    }}
+                    title="More options"
+                  >
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                    </svg>
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* Post Content */}
+              {post.content && (
+                <div className="px-4 pb-3">
+                  <p className="text-foreground text-sm leading-relaxed">{post.content}</p>
+                </div>
+              )}
+
+              {/* Post Image */}
+              {post.image && (
+                <div className="px-4 pb-3">
+                  <div className="rounded-lg overflow-hidden">
+                    <img
+                      src={post.image}
+                      alt="Post content"
+                      className="w-full h-auto max-h-96 object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Engagement Stats */}
+              <div className="px-4 py-2 border-t border-border/50">
+                <div className="flex items-center justify-between text-muted-foreground text-xs">
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1">
+                      <Heart className="h-3 w-3" />
+                      {post.likes?.length || 0}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" />
+                      {post.comments?.length || 0}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              {/* <div className="px-4 py-2 border-t border-border/50">
+                <div className="flex items-center justify-around">
+                  <button className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
+                    <Heart className="h-4 w-4" />
+                    <span className="text-sm font-medium">Like</span>
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
+                    <MessageCircle className="h-4 w-4" />
+                    <span className="text-sm font-medium">Comment</span>
+                  </button>
+                </div>
+              </div> */}
+            </div>
           ))
         ) : (
-          <p className="text-muted-foreground col-span-full text-center">No posts available.</p>
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No posts available.</p>
+          </div>
         )}
       </div>
 
