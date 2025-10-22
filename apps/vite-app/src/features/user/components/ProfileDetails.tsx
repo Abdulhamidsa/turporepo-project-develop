@@ -1,8 +1,11 @@
+import { useState } from 'react';
+
 import { UserProfile } from '@repo/data/types/types';
 import { motion } from 'framer-motion';
 import { Briefcase, CakeIcon, LucideHome } from 'lucide-react';
 
 import { getCountryFlagIcon } from '../../../../utils/generateCountryFlag';
+import FullScreenPictureDialog from './FullScreenPictureDialog';
 import ProfilePictureEdit from './ProfilePicture';
 
 interface ProfileDetailsProps {
@@ -10,6 +13,8 @@ interface ProfileDetailsProps {
 }
 
 const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
+  const [isProfilePicOpen, setIsProfilePicOpen] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -18,9 +23,13 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
       className="bg-card text-card-foreground relative mb-8 rounded-lg p-3 md:p-6 shadow-xl sm:p-8"
     >
       <div className="flex flex-col items-center sm:flex-row sm:items-start sm:space-x-8">
-        {/* Avatar */}
-        <div className="cursor-pointer">
-          <ProfilePictureEdit label="Profile Picture" field="profilePicture" />
+        {/* Avatar - Clickable for full screen view */}
+        <div>
+          <ProfilePictureEdit
+            label="Profile Picture"
+            field="profilePicture"
+            onImageClick={() => setIsProfilePicOpen(true)}
+          />
         </div>
 
         <div className="flex-1 text-center sm:text-left">
@@ -59,6 +68,13 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
           <p className="text-foreground mt-6">{userProfile.bio || 'No bio available'}</p>
         </div>
       </div>
+
+      {/* Full Screen Profile Picture Dialog */}
+      <FullScreenPictureDialog
+        pictureUrl={userProfile.profilePicture ?? '/placeholder.jpg'}
+        isOpen={isProfilePicOpen}
+        setIsOpen={setIsProfilePicOpen}
+      />
     </motion.div>
   );
 };

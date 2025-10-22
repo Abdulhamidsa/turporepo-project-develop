@@ -16,9 +16,14 @@ import { useUpdateUserProfile } from '../hooks/useUpdateUserProfile';
 interface ProfilePictureEditProps {
   label: string;
   field: 'profilePicture';
+  onImageClick?: () => void;
 }
 
-export default function ProfilePictureEdit({ label, field }: ProfilePictureEditProps) {
+export default function ProfilePictureEdit({
+  label,
+  field,
+  onImageClick,
+}: ProfilePictureEditProps) {
   const { userProfile, mutate } = useUserProfile();
   const { updateProfile } = useUpdateUserProfile();
   const [isUploading, setIsUploading] = useState(false);
@@ -70,7 +75,8 @@ export default function ProfilePictureEdit({ label, field }: ProfilePictureEditP
       <img
         src={imageSrc}
         alt={label}
-        className="border-border h-32 w-32 rounded-full border object-cover shadow-md md:h-52 md:w-52"
+        className="border-border h-32 w-32 rounded-full border object-cover shadow-md md:h-52 md:w-52 cursor-pointer"
+        onClick={onImageClick}
       />
       {isUploading && (
         <div className="bg-muted absolute inset-0 flex items-center justify-center rounded-full bg-opacity-75">

@@ -80,6 +80,12 @@ type UserComment = {
   postId: string;
   postTitle?: string;
   likesCount?: number;
+  userId?: {
+    _id?: string;
+    id?: string;
+    friendlyId?: string;
+    username?: string;
+  };
 };
 
 export default function AdminUserProfile() {
@@ -155,16 +161,20 @@ export default function AdminUserProfile() {
           console.log('👤 Current user profile:', userProfile);
 
           // Filter projects for current user since we're using the general admin endpoint
-          const filteredProjects = allProjects.filter((project: any) => {
-            const projectUserId = project.userId?._id || project.userId?.id || project.userId;
-            const targetUserId = userProfile?.id;
-            console.log(`🔍 Comparing project user ${projectUserId} with target ${targetUserId}`);
-            return (
-              projectUserId === targetUserId ||
-              project.userId?.friendlyId === userId ||
-              project.userId?.username === userProfile?.username
-            );
-          });
+          const filteredProjects = allProjects.filter(
+            (project: {
+              userId?: { _id?: string; id?: string; friendlyId?: string; username?: string };
+            }) => {
+              const projectUserId = project.userId?._id || project.userId?.id || project.userId;
+              const targetUserId = userProfile?.id;
+              console.log(`🔍 Comparing project user ${projectUserId} with target ${targetUserId}`);
+              return (
+                projectUserId === targetUserId ||
+                project.userId?.friendlyId === userId ||
+                project.userId?.username === userProfile?.username
+              );
+            },
+          );
 
           console.log(
             `📊 Filtered ${filteredProjects.length} projects from ${allProjects.length} total`,
@@ -215,7 +225,7 @@ export default function AdminUserProfile() {
         console.log(`🔍 Fetching comments for user: ${userId}`);
 
         // Initialize userComments array at the correct scope
-        const userComments: any[] = [];
+        const userComments: UserComment[] = [];
 
         const response = await fetch(`http://localhost:4000/api/admin/posts`, {
           method: 'GET',
@@ -236,39 +246,50 @@ export default function AdminUserProfile() {
           console.log('📝 Extracted posts array:', allPosts.length, 'posts');
 
           // Extract comments from posts for this user
-          allPosts.forEach((post: any, postIndex: number) => {
-            const postComments = post.comments || post.recentComments || [];
-            console.log(`� Post ${postIndex + 1}: ${postComments.length} comments`);
+          allPosts.forEach(
+            (
+              post: {
+                comments?: any[];
+                recentComments?: any[];
+                _id?: string;
+                id?: string;
+                content?: string;
+              },
+              postIndex: number,
+            ) => {
+              const postComments = post.comments || post.recentComments || [];
+              console.log(`� Post ${postIndex + 1}: ${postComments.length} comments`);
 
-            if (postComments && Array.isArray(postComments)) {
-              postComments.forEach((comment: any) => {
-                // Check if this comment belongs to the current user
-                const commentUserId = comment.userId?._id || comment.userId?.id || comment.userId;
-                const commentUsername = comment.userId?.username || comment.author?.username;
-                const targetUserId = (userProfile as any)?._id || (userProfile as any)?.id;
-                const targetUsername = (userProfile as any)?.username;
+              if (postComments && Array.isArray(postComments)) {
+                postComments.forEach((comment: UserComment) => {
+                  // Check if this comment belongs to the current user
+                  const commentUserId = comment.userId?._id || comment.userId?.id || comment.userId;
+                  const commentUsername = comment.userId?.username || comment.userId?.username;
+                  const targetUserId = userProfile?.id || userProfile?.id;
+                  const targetUsername = userProfile?.username;
 
-                console.log(
-                  `🔍 Comment by: ${commentUsername} (${commentUserId}), Target: ${targetUsername} (${targetUserId})`,
-                );
+                  console.log(
+                    `🔍 Comment by: ${commentUsername} (${commentUserId}), Target: ${targetUsername} (${targetUserId})`,
+                  );
 
-                if (
-                  commentUserId === targetUserId ||
-                  commentUsername === targetUsername ||
-                  comment.userId?.friendlyId === userId
-                ) {
-                  userComments.push({
-                    id: comment._id || comment.id || `comment-${Date.now()}-${Math.random()}`,
-                    content: comment.content || 'No content',
-                    createdAt: comment.createdAt || new Date().toISOString(),
-                    postId: post._id || post.id || '',
-                    postTitle: post.content?.substring(0, 50) + '...' || 'Untitled Post',
-                    likesCount: comment.likesCount || 0,
-                  });
-                }
-              });
-            }
-          });
+                  if (
+                    commentUserId === targetUserId ||
+                    commentUsername === targetUsername ||
+                    comment.userId?.friendlyId === userId
+                  ) {
+                    userComments.push({
+                      id: comment.id || comment.id || `comment-${Date.now()}-${Math.random()}`,
+                      content: comment.content || 'No content',
+                      createdAt: comment.createdAt || new Date().toISOString(),
+                      postId: post._id || post.id || '',
+                      postTitle: post.content?.substring(0, 50) + '...' || 'Untitled Post',
+                      likesCount: comment.likesCount || 0,
+                    });
+                  }
+                });
+              }
+            },
+          );
 
           console.log(`🎯 Found ${userComments.length} comments for user ${userId}`);
           setComments(userComments);
@@ -301,9 +322,9 @@ export default function AdminUserProfile() {
                   postComments.forEach((comment: Record<string, unknown>) => {
                     // Check if this comment was made by the current user
                     const isUserComment =
-                      (comment.author as any)?.username === (userProfile as any)?.username ||
-                      (comment.author as any)?._id === (userProfile as any)?.id ||
-                      (comment as any).authorId === (userProfile as any)?.id;
+                      comment.author?.username === userProfile?.username ||
+                      comment.author === userProfile?.id ||
+                      comment.authorId === userProfile?.id;
 
                     if (isUserComment) {
                       userComments.push({
