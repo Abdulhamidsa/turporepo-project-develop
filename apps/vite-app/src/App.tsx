@@ -6,6 +6,7 @@ import { swrFetcher } from '../api/swrFetcher';
 import { AuthProvider } from '../context/AuthContext';
 import { appRoutes } from '../routes/appRoutes';
 import BackToPortfolioButton from './components/BackToPortfolioButton';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   const routing = useRoutes(appRoutes);
@@ -22,6 +23,7 @@ function App() {
       }}
     >
       <AuthProvider>
+        <ScrollToTop />
         {routing}
         <Analytics />
         <BackToPortfolioButton />

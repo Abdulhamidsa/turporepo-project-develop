@@ -23,8 +23,8 @@ import {
 import { Link } from 'react-router-dom';
 
 import { routesConfig } from '../../routes/routesConfig';
+import { getCountryFlagIcon } from '../../utils/generateCountryFlag';
 import { useAuth } from '../features/user/hooks/use.auth';
-import { getCountryFlagIcon } from '../utils/generateCountryFlag';
 
 // Import User type from UsersGallery component - extended to match UserProfile
 interface User {

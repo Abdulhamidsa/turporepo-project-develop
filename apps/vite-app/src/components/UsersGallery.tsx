@@ -7,9 +7,9 @@ import { Input } from '@repo/ui/components/ui/input';
 import { ArrowLeft, ArrowRight, Menu, Search, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { getCountryFlagIcon } from '../../utils/generateCountryFlag';
 import { Skeleton } from '../components/ui/skeleton';
 import { DarkModeToggle } from '../layout/DarkModeToggle';
-import { getCountryFlagIcon } from '../utils/generateCountryFlag';
 
 // import { useAuth } from '../features/user/hooks/use.auth';
 

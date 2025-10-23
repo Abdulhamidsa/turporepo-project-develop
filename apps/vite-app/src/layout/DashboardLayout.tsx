@@ -12,7 +12,9 @@ import { useUserProfile } from '../features/user/hooks/use.user.profile';
 import { NavbarApp } from './NavbarApp';
 
 const DashboardLayout: React.FC = () => {
+  // For mobile, use original behavior. For desktop, sidebar is always open by default
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const { userProfile } = useUserProfile();
 
   const navigationItems = [
@@ -46,10 +48,18 @@ const DashboardLayout: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsSidebarOpen(false);
+      const desktop = window.innerWidth >= 768;
+      setIsDesktop(desktop);
+
+      if (desktop) {
+        setIsSidebarOpen(true); // Always open on desktop
+      } else {
+        setIsSidebarOpen(false); // Keep mobile behavior
       }
     };
+
+    // Set initial state
+    handleResize();
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -60,20 +70,37 @@ const DashboardLayout: React.FC = () => {
   };
 
   return (
-    <div className="bg-background text-foreground relative h-screen overflow-y-scroll">
+    <div className="bg-background text-foreground relative h-screen overflow-hidden">
       <NavbarApp />
+
+      {/* Show toggle on both mobile and desktop, but different behavior */}
       <SidebarToggle isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <Sidebar
-        isOpen={isSidebarOpen}
-        navigationItems={navigationItems}
-        sidebarOnlyItems={sidebarOnlyItems}
-        onClose={toggleSidebar}
-      />
-      <Overlay isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
-      <main className="m-auto max-w-screen-lg flex-1 overflow-auto md:p-4">
-        <Outlet />
-      </main>
-      <footer className="mb-16">
+
+      <div className={`${isDesktop ? 'flex' : 'block'} h-full`}>
+        {/* Sidebar - different rendering for desktop vs mobile */}
+        <Sidebar
+          isOpen={isSidebarOpen}
+          isDesktopMode={isDesktop}
+          navigationItems={navigationItems}
+          sidebarOnlyItems={sidebarOnlyItems}
+          onClose={() => !isDesktop && setIsSidebarOpen(false)}
+        />
+
+        {/* Mobile overlay - only on mobile */}
+        {!isDesktop && (
+          <Overlay isOpen={isSidebarOpen} closeSidebar={() => setIsSidebarOpen(false)} />
+        )}
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="m-auto max-w-screen-lg p-4">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+
+      {/* Bottom Navigation - only on mobile */}
+      <footer className="md:hidden mb-16">
         <BottomNavigation navigationItems={navigationItems} sidebarOnlyItems={sidebarOnlyItems} />
       </footer>
     </div>
