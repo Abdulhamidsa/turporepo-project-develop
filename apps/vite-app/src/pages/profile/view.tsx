@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
+import axiosClient from '../../../api/axiosClient';
 import { Skeleton } from '../../components/ui/skeleton';
 import { useGetRequest } from '../../hooks/useRequest';
 
