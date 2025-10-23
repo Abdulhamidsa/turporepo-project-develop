@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { useLocation } from 'react-router-dom';
 
 /**
@@ -11,13 +12,13 @@ const ScrollToTop = () => {
   useEffect(() => {
     // Scroll the main window to top
     window.scrollTo(0, 0);
-    
+
     // Also scroll any scrollable containers to top (like our main content area)
     const scrollableElements = document.querySelectorAll(
-      'main[class*="overflow-auto"], [class*="overflow-auto"], [class*="overflow-scroll"], .overflow-auto, .overflow-scroll'
+      'main[class*="overflow-auto"], [class*="overflow-auto"], [class*="overflow-scroll"], .overflow-auto, .overflow-scroll',
     );
-    
-    scrollableElements.forEach(element => {
+
+    scrollableElements.forEach((element) => {
       element.scrollTop = 0;
     });
 
