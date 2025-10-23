@@ -2,7 +2,7 @@ import { ProjectCardProps } from '@repo/data/types/types';
 import { Badge } from '@repo/ui/components/ui/badge';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { timeAgo } from '@repo/utils/timeCalculation';
-import { ExternalLink, MoreHorizontal } from 'lucide-react';
+import { ExternalLink, MoreVertical } from 'lucide-react';
 
 export default function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
@@ -37,9 +37,9 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
         {/* Three Dots Menu */}
         <button
           onClick={onClick}
-          className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white rounded-lg group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm shadow-sm"
+          className="absolute top-3 right-3 p-2 bg-white rounded-lg group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm shadow-sm"
         >
-          <MoreHorizontal className="h-4 w-4 text-gray-700" />
+          <MoreVertical className="h-4 w-4 text-black" />
         </button>
       </div>
 
