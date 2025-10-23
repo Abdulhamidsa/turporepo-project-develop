@@ -9,7 +9,7 @@ interface SaveButtonProps {
 
 const SaveButton: React.FC<SaveButtonProps> = ({ onClick, loading, label = 'Save', progress }) => {
   return (
-    <div className="w-full">
+    <div className="w-full p-1 ">
       <Button
         onClick={onClick}
         disabled={loading}

@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { Badge } from '@repo/ui/components/ui/badge';
-import { Button } from '@repo/ui/components/ui/button';
-import { Card, CardContent, CardFooter } from '@repo/ui/components/ui/card';
+// import { Button } from '@repo/ui/components/ui/button';
+import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { AddProjectInput } from '@repo/zod/validation';
 
 import { ProfessionBadge } from '../../../../../../packages/ui/src/components/ProfessionBadge';
@@ -26,7 +26,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project, pendingThumbna
         <img
           src={thumbnailUrl}
           alt={project.title || 'Project'}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
       </div>
@@ -63,13 +63,13 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project, pendingThumbna
         )}
       </CardContent>
 
-      <CardFooter className="border-border text-muted-foreground flex items-center justify-between border-t p-4 text-sm">
+      {/* <CardFooter className="border-border text-muted-foreground flex items-center justify-between border-t p-4 text-sm">
         {project.url?.trim() && (
           <Button variant="outline" onClick={() => window.open(project.url, '_blank')}>
             View Preview
           </Button>
         )}
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };

@@ -121,6 +121,24 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           )}
         </div>
 
+        <div>
+          <Label htmlFor="url" className="text-foreground">
+            Project URL <span className="text-muted-foreground">(optional)</span>
+          </Label>
+          <Input
+            id="url"
+            name="url"
+            type="url"
+            placeholder="https://your-project-demo.com"
+            value={project.url || ''}
+            onChange={handleInputChange}
+            className={`bg-input text-foreground border-border ${
+              errors.url ? 'border-red-500' : 'border-gray-300'
+            }`}
+          />
+          {errors.url && <p className="text-destructive mt-1 text-sm">{errors.url}</p>}
+        </div>
+
         {pendingThumbnail || project.thumbnail ? (
           <div className="relative mt-4 flex justify-center">
             <img
@@ -161,7 +179,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         <TagInput tags={project.tags || []} setTags={handleTagsChange} error={errors.tags} />
 
         {/* Save Button + Progress Bar */}
-        <div className="mt-6">
+        <div>
           <SaveButton onClick={handleSaveProject} loading={isUploading} progress={progress} />
         </div>
       </div>

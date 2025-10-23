@@ -13,7 +13,7 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
           <img
             src={project.thumbnail || '/placeholder.png'}
             alt={project.title}
-            className="w-full h-full object-cover transition-all duration-500 group-hover:brightness-110"
+            className="w-full h-full object-contain p-4 transition-all duration-500 group-hover:brightness-110"
           />
         </div>
 

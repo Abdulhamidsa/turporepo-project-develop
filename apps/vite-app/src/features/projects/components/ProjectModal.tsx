@@ -75,7 +75,7 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
             <img
               src={project.media[currentImageIndex].url}
               alt={`Project image ${currentImageIndex + 1}`}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
             />
             {project.media.length > 1 && (
               <>
