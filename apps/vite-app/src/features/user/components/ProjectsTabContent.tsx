@@ -156,31 +156,26 @@ const ProjectsTabContent = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
           >
             <div
-              className="group relative flex items-center gap-4 p-6 rounded-2xl border-2 border-dashed border-muted-foreground/20 bg-gradient-to-r from-card/80 to-muted/20 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-gradient-to-r hover:from-primary/5 hover:to-primary/10 cursor-pointer"
+              className="group relative flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 border-dashed border-muted-foreground/20 bg-gradient-to-r from-card/80 to-muted/20 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-gradient-to-r hover:from-primary/5 hover:to-primary/10 cursor-pointer"
               onClick={() => setIsProjectDialogOpen(true)}
             >
               {/* Icon */}
-              <div className="flex-shrink-0 p-4 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
-                <Plus className="h-6 w-6 text-primary" />
+              <div className="flex-shrink-0 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+                <Plus className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mb-1">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mb-1">
                   Create New Project
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   Share your latest work, experiments, or achievements with the community
                 </p>
               </div>
-
-              {/* Arrow indicator */}
-              {/* <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Sparkles className="h-5 w-5 text-primary" />
-              </div> */}
             </div>
           </motion.div>
         )}
@@ -190,7 +185,7 @@ const ProjectsTabContent = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="columns-1 md:columns-2 xl:columns-3 2xl:columns-4 gap-6 space-y-6"
+          className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6"
         >
           {projects.map((project, index) => (
             <motion.div
