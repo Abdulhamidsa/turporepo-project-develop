@@ -44,19 +44,19 @@ export default function ProfessionalProfileView() {
   // Handle user not found - redirect to main page
   useEffect(() => {
     // Log debug info to help troubleshoot
-    console.log('Profile debug:', {
-      friendlyId,
-      profileLoading,
-      profileError,
-      hasUsername: !!userProfile?.username,
-      userProfile,
-    });
+    // console.log('Profile debug:', {
+    //   friendlyId,
+    //   profileLoading,
+    //   profileError,
+    //   hasUsername: !!userProfile?.username,
+    //   userProfile,
+    // });
 
     // Check if profile load is complete and profile doesn't have required data
     if (!profileLoading && !profileError && !userProfile?.username && friendlyId) {
       // Store the attempted ID
       localStorage.setItem('lastAttemptedProfile', friendlyId);
-      console.log('Redirecting due to missing profile data for:', friendlyId);
+      // console.log('Redirecting due to missing profile data for:', friendlyId);
       setRedirecting(true);
 
       // Set a timeout for redirection

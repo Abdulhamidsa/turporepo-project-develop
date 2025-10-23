@@ -162,7 +162,7 @@ export default function AdminContentManager() {
 
   const handleDeleteContent = async (item: ContentItem, reason: string) => {
     try {
-      console.log('Deleting content:', item.id, 'Reason:', reason);
+      // console.log('Deleting content:', item.id, 'Reason:', reason);
 
       // Make the actual DELETE request to the backend
       const endpoint =
@@ -184,22 +184,22 @@ export default function AdminContentManager() {
         throw new Error(errorData.message || `Failed to delete ${item.type}: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log(`${item.type} deleted successfully:`, result);
+      // const result = await response.json();
+      // console.log(`${item.type} deleted successfully:`, result);
 
       setDeleteDialog({ isOpen: false, reason: '' });
       showToast(`${item.type} has been deleted successfully`, 'success');
 
       // Log admin action
-      console.log('Admin Action Log:', {
-        action: `delete_${item.type}`,
-        targetId: item.id,
-        targetType: item.type,
-        authorId: item.authorId,
-        reason,
-        timestamp: new Date().toISOString(),
-        result,
-      });
+      // console.log('Admin Action Log:', {
+      //   action: `delete_${item.type}`,
+      //   targetId: item.id,
+      //   targetType: item.type,
+      //   authorId: item.authorId,
+      //   reason,
+      //   timestamp: new Date().toISOString(),
+      //   result,
+      // });
 
       // Refresh the data after deletion - trigger SWR revalidation
       if (item.type === 'post') {

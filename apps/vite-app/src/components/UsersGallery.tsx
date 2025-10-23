@@ -131,7 +131,7 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
       }
 
       const response_data = await response.json();
-      console.log('API Response:', response_data); // Debug log
+      // console.log('API Response:', response_data); // Debug log
 
       // Handle the API response format: { success: true, data: { users: [...] } }
       let usersList: User[] = [];

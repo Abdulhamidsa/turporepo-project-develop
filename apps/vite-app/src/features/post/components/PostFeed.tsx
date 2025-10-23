@@ -35,7 +35,7 @@ type PostProps = {
   };
 };
 
-export function PostFeed({ post, user }: PostProps) {
+export function PostFeed({ post, user, index = 0 }: PostProps & { index?: number }) {
   const { loggedUser } = useAuth();
   const navigate = useNavigate();
   const [likedByUser, setLikedByUser] = useState(post.likedByUser);
@@ -49,6 +49,21 @@ export function PostFeed({ post, user }: PostProps) {
   const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
   const [isToggling, setIsToggling] = useState(false);
   const [, setIsHovered] = useState(false);
+
+  // Add staggered animation delay
+  const animationDelay = index * 100;
+
+  // Add visual variety based on content
+  const isLongPost = post.content.length > 200;
+  const hasHighEngagement = likesCount > 10 || comments.length > 5;
+
+  // Dynamic styling based on content type - Clean minimal approach
+  const getPostVariant = () => {
+    if (hasHighEngagement) {
+      return 'border-l-2 border-l-foreground/20';
+    }
+    return '';
+  };
 
   const handleDeleteComment = async (commentId: string) => {
     const isDeleted = await deleteComment(commentId);
@@ -116,7 +131,14 @@ export function PostFeed({ post, user }: PostProps) {
 
   return (
     <Card
-      className="bg-card/95 backdrop-blur-sm border-border/50 text-card-foreground mx-auto w-full max-w-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 rounded-xl border group"
+      className={`backdrop-blur-sm border text-card-foreground mx-auto w-full max-w-lg transition-all duration-500 hover:shadow-lg hover:shadow-primary/10 rounded-xl group ${getPostVariant()}`}
+      style={{
+        animationDelay: `${animationDelay}ms`,
+        animationFillMode: 'both',
+        transform: `translateY(${animationDelay > 0 ? '10px' : '0px'})`,
+        opacity: animationDelay > 0 ? 0 : 1,
+        animation: `fadeInSlideUp 0.6s ease-out ${animationDelay}ms forwards`,
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -155,13 +177,35 @@ export function PostFeed({ post, user }: PostProps) {
       {/* Post Content */}
       <CardContent className="px-6 pb-6">
         <div className="space-y-4">
-          <p className="text-foreground text-base leading-relaxed font-medium">{post.content}</p>
+          <div className={`${isLongPost ? 'relative' : ''}`}>
+            <p
+              className={`text-foreground text-base leading-relaxed font-medium ${isLongPost ? 'text-justify' : ''}`}
+            >
+              {post.content}
+            </p>
+            {isLongPost && (
+              <div className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-tl from-card to-transparent opacity-60"></div>
+            )}
+          </div>
+          {/* Engagement Stats - Clean and minimal */}
+          <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
+            <span className="flex items-center gap-1">
+              <span className="font-medium">{likesCount}</span> likes
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="font-medium">{comments.length}</span> comments
+            </span>
+
+            {hasHighEngagement && (
+              <span className="text-foreground font-medium">• High Engagement</span>
+            )}
+          </div>
           {post.image && (
-            <div className="overflow-hidden rounded-2xl bg-muted/30 transition-all duration-300 cursor-zoom-in">
+            <div className="overflow-hidden rounded-2xl bg-muted/30 transition-all duration-300 cursor-zoom-in group-hover:shadow-xl group-hover:shadow-primary/10">
               <img
                 src={post.image}
                 alt="Post content"
-                className="h-auto w-full object-cover transition-all duration-500 hover:brightness-105"
+                className="h-auto w-full object-cover transition-all duration-500 hover:brightness-105 group-hover:scale-[1.02]"
               />
             </div>
           )}

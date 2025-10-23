@@ -1,26 +1,24 @@
 import { Briefcase, CakeIcon, LucideHome } from 'lucide-react';
-import { useParams } from 'react-router-dom';
 
 import { getCountryFlagIcon } from '../../utils/generateCountryFlag';
 import { useUserProfileView } from '../features/user/hooks/useUserProfileView';
+import ClickableProfileAvatar from './ClickableProfileAvatar';
 
 function ProfileCardView() {
   const { userProfile } = useUserProfileView();
-  const params = useParams();
-
-  // Debug info to help identify issues
-  console.log('ProfileCardView params:', params, 'userProfile:', userProfile);
 
   return (
     <>
       {/* Profile Card Section */}
-      <div className="bg-popover relative mx-auto -mt-24 w-full max-w-5xl p-6 shadow-lg">
+      <div className="bg-popover relative -mt-24 w-full max-w-5xl p-6 shadow-lg mx-auto">
         <div className="flex flex-col items-center sm:flex-row sm:items-start">
-          <div className="relative h-40 w-40 rounded-full border-4 border-white shadow-lg">
-            <img
-              src={userProfile.profilePicture || '/default-avatar.png'}
-              alt="Profile"
-              className="h-full w-full rounded-full object-cover"
+          <div className="relative">
+            <ClickableProfileAvatar
+              profilePicture={userProfile.profilePicture || null}
+              username={userProfile.username || null}
+              friendlyId={userProfile.friendlyId}
+              size="xl"
+              className="border-4 border-white shadow-lg"
             />
           </div>
 

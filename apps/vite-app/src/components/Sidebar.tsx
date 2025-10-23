@@ -9,9 +9,9 @@ import NavigationItem from './NavigationItem';
 interface SidebarProps {
   isOpen: boolean;
   navigationItems: NavigationItemProps[];
-  sidebarOnlyItems: NavigationItemProps[];
+  // sidebarOnlyItems: NavigationItemProps[];
   onClose: () => void;
-  isDesktopMode?: boolean; // Optional prop to determine desktop behavior
+  isDesktopMode?: boolean;
 }
 
 export interface NavigationItemProps {
@@ -24,7 +24,7 @@ export interface NavigationItemProps {
 const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   navigationItems,
-  sidebarOnlyItems,
+  // sidebarOnlyItems,
   onClose,
   isDesktopMode = false,
 }) => {
@@ -50,22 +50,22 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   if (isDesktopMode) {
-    // Desktop: Static sidebar that pushes content
     return (
       <aside
-        className={`bg-card border-border border-r transition-all duration-300 ${
+        className={`bg-card border-border border-r transition-all duration-300 sticky top-16 ${
           isOpen ? 'w-64' : 'w-0'
         } overflow-hidden`}
+        style={{ height: 'calc(100vh - 4rem)' }}
       >
-        <div className="flex h-full flex-col w-64">
+        <div className="flex h-full flex-col">
           <div className="flex-1 overflow-y-auto pt-4">
             <nav className="space-y-2 px-4">
               {navigationItems.map((item) => renderNavItem(item))}
             </nav>
           </div>
-          <div className="mb-4 space-y-2 px-4">
+          {/* <div className="mb-4 space-y-2 px-4">
             {sidebarOnlyItems.map((item) => renderNavItem(item))}
-          </div>
+          </div> */}
         </div>
       </aside>
     );
@@ -88,13 +88,13 @@ const Sidebar: React.FC<SidebarProps> = ({
             {navigationItems.map((item) => renderNavItem(item))}
           </nav>
         </div>
-        <div
+        {/* <div
           className={`mb-4 space-y-2 px-4 transition-opacity duration-300 ${
             isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
           }`}
         >
           {sidebarOnlyItems.map((item) => renderNavItem(item))}
-        </div>
+        </div> */}
       </div>
     </aside>
   );

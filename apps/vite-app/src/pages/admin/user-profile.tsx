@@ -140,7 +140,7 @@ export default function AdminUserProfile() {
 
       // Fetch user projects using admin projects endpoint and filter
       try {
-        console.log(`🔍 Fetching projects for user: ${userId}`);
+        // console.log(`🔍 Fetching projects for user: ${userId}`);
         const response = await fetch(`http://localhost:4000/api/admin/projects`, {
           method: 'GET',
           credentials: 'include',
@@ -149,16 +149,16 @@ export default function AdminUserProfile() {
           },
         });
 
-        console.log(`📡 Projects API Response Status: ${response.status}`);
+        // console.log(`📡 Projects API Response Status: ${response.status}`);
 
         if (response.ok) {
           const result = await response.json();
-          console.log('🎯 FULL Projects API Response:', JSON.stringify(result, null, 2));
+          // console.log('🎯 FULL Projects API Response:', JSON.stringify(result, null, 2));
 
           // Handle nested data structure: result.data.projects or result.projects
           const allProjects = result.data?.projects || result.projects || [];
-          console.log('📝 Extracted projects array:', allProjects);
-          console.log('👤 Current user profile:', userProfile);
+          // console.log('📝 Extracted projects array:', allProjects);
+          // console.log('👤 Current user profile:', userProfile);
 
           // Filter projects for current user since we're using the general admin endpoint
           const filteredProjects = allProjects.filter(
@@ -167,7 +167,7 @@ export default function AdminUserProfile() {
             }) => {
               const projectUserId = project.userId?._id || project.userId?.id || project.userId;
               const targetUserId = userProfile?.id;
-              console.log(`🔍 Comparing project user ${projectUserId} with target ${targetUserId}`);
+              // console.log(`🔍 Comparing project user ${projectUserId} with target ${targetUserId}`);
               return (
                 projectUserId === targetUserId ||
                 project.userId?.friendlyId === userId ||
@@ -176,9 +176,9 @@ export default function AdminUserProfile() {
             },
           );
 
-          console.log(
-            `📊 Filtered ${filteredProjects.length} projects from ${allProjects.length} total`,
-          );
+          // console.log(
+          //   `📊 Filtered ${filteredProjects.length} projects from ${allProjects.length} total`,
+          // );
 
           let userProjects = filteredProjects.map(
             (project: {
@@ -197,7 +197,7 @@ export default function AdminUserProfile() {
 
           // If no projects from API, show a sample for testing
           if (userProjects.length === 0) {
-            console.log('No projects from API, showing sample data for testing');
+            // console.log('No projects from API, showing sample data for testing');
             userProjects = [
               {
                 id: 'sample_project_1',
@@ -208,7 +208,7 @@ export default function AdminUserProfile() {
             ];
           }
 
-          console.log('✅ Final projects to display:', userProjects);
+          // console.log('✅ Final projects to display:', userProjects);
           setProjects(userProjects);
         } else {
           const errorText = await response.text().catch(() => 'Could not read error response');
@@ -222,7 +222,7 @@ export default function AdminUserProfile() {
 
       // Fetch user comments using admin posts endpoint and extract user comments
       try {
-        console.log(`🔍 Fetching comments for user: ${userId}`);
+        // console.log(`🔍 Fetching comments for user: ${userId}`);
 
         // Initialize userComments array at the correct scope
         const userComments: UserComment[] = [];
@@ -235,30 +235,27 @@ export default function AdminUserProfile() {
           },
         });
 
-        console.log(`📡 Comments API Response Status: ${response.status}`);
+        // console.log(`📡 Comments API Response Status: ${response.status}`);
 
         if (response.ok) {
           const result = await response.json();
-          console.log('🎯 FULL Posts API Response:', JSON.stringify(result, null, 2));
+          // console.log('🎯 FULL Posts API Response:', JSON.stringify(result, null, 2));
 
           // Extract posts and then comments from posts
           const allPosts = result.data?.posts || result.posts || [];
-          console.log('📝 Extracted posts array:', allPosts.length, 'posts');
+          // console.log('📝 Extracted posts array:', allPosts.length, 'posts');
 
           // Extract comments from posts for this user
           allPosts.forEach(
-            (
-              post: {
-                comments?: UserComment[];
-                recentComments?: UserComment[];
-                _id?: string;
-                id?: string;
-                content?: string;
-              },
-              postIndex: number,
-            ) => {
+            (post: {
+              comments?: UserComment[];
+              recentComments?: UserComment[];
+              _id?: string;
+              id?: string;
+              content?: string;
+            }) => {
               const postComments = post.comments || post.recentComments || [];
-              console.log(`� Post ${postIndex + 1}: ${postComments.length} comments`);
+              // console.log(`� Post ${postIndex + 1}: ${postComments.length} comments`);
 
               if (postComments && Array.isArray(postComments)) {
                 postComments.forEach((comment: UserComment) => {
@@ -268,9 +265,9 @@ export default function AdminUserProfile() {
                   const targetUserId = userProfile?.id || userProfile?.id;
                   const targetUsername = userProfile?.username;
 
-                  console.log(
-                    `🔍 Comment by: ${commentUsername} (${commentUserId}), Target: ${targetUsername} (${targetUserId})`,
-                  );
+                  // console.log(
+                  //   `🔍 Comment by: ${commentUsername} (${commentUserId}), Target: ${targetUsername} (${targetUserId})`,
+                  // );
 
                   if (
                     commentUserId === targetUserId ||
@@ -291,7 +288,7 @@ export default function AdminUserProfile() {
             },
           );
 
-          console.log(`🎯 Found ${userComments.length} comments for user ${userId}`);
+          // console.log(`🎯 Found ${userComments.length} comments for user ${userId}`);
           setComments(userComments);
         } else {
           const errorText = await response.text().catch(() => 'Could not read error response');
@@ -299,7 +296,7 @@ export default function AdminUserProfile() {
 
           // Fallback: If user-specific comments endpoint doesn't exist,
           // try the old method with posts endpoint
-          console.log('Falling back to posts endpoint for comments...');
+          // console.log('Falling back to posts endpoint for comments...');
 
           try {
             const postsResponse = await fetch('http://localhost:4000/api/admin/posts', {
@@ -311,10 +308,9 @@ export default function AdminUserProfile() {
             });
 
             if (postsResponse.ok) {
-              const postsResult = await postsResponse.json();
-              const allPosts = postsResult.data?.posts || postsResult.posts || [];
-              console.log('Fallback: Processing posts for comments:', allPosts.length);
-
+              // const postsResult = await postsResponse.json();
+              // const allPosts = postsResult.data?.posts || postsResult.posts || [];
+              // console.log('Fallback: Processing posts for comments:', allPosts.length);
               // Extract comments from posts (old method)
               // allPosts.forEach((post: Record<string, unknown>) => {
               //   // const postComments = post.comments || post.recentComments || [];
@@ -340,7 +336,7 @@ export default function AdminUserProfile() {
               //   //   });
               //   // }
               // });
-              console.log('Fallback: Found', userComments.length, 'comments');
+              // console.log('Fallback: Found', userComments.length, 'comments');
             }
           } catch (fallbackError) {
             console.error('Fallback posts request failed:', fallbackError);
@@ -349,7 +345,7 @@ export default function AdminUserProfile() {
 
         // If no comments from API, show sample data for testing
         if (userComments.length === 0) {
-          console.log('No comments from API, showing sample data for testing');
+          // console.log('No comments from API, showing sample data for testing');
           userComments.push({
             id: 'sample_comment_1',
             content: 'This is a sample comment (API returned empty)',
@@ -360,17 +356,18 @@ export default function AdminUserProfile() {
           });
         }
 
-        console.log('\n=== FINAL COMMENTS SUMMARY ===');
-        console.log('Total unique comments found:', userComments.length);
-        userComments.forEach((comment, index) => {
-          console.log(`Comment ${index + 1}:`, {
-            id: comment.id,
-            content: comment.content.substring(0, 30) + '...',
-            postTitle: comment.postTitle,
-            createdAt: comment.createdAt,
-          });
-        });
-        console.log('=================================\n');
+        // console.log('\n=== FINAL COMMENTS SUMMARY ===');
+
+        // console.log('Total unique comments found:', userComments.length);
+        // userComments.forEach((comment, index) => {
+        //   // console.log(`Comment ${index + 1}:`, {
+        //   //   id: comment.id,
+        //   //   content: comment.content.substring(0, 30) + '...',
+        //   //   postTitle: comment.postTitle,
+        //   //   createdAt: comment.createdAt,
+        //   // });
+        // });
+        // console.log('=================================\n');
 
         setComments(userComments);
       } catch (commentsError) {
@@ -400,7 +397,7 @@ export default function AdminUserProfile() {
     if (!user) return;
 
     try {
-      console.log('Admin Action: Deleting user:', user.friendlyId, 'Reason:', reason);
+      // console.log('Admin Action: Deleting user:', user.friendlyId, 'Reason:', reason);
 
       // Actually delete the user using the backend API
       const userId = user.id || user.friendlyId;
@@ -419,7 +416,7 @@ export default function AdminUserProfile() {
       }
 
       const result = await response.json();
-      console.log('User deleted successfully:', result);
+      // console.log('User deleted successfully:', result);
 
       // Log admin action for audit trail
       console.log('Admin Action Success:', {

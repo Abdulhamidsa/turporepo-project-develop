@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { ProfessionBadge } from '@repo/ui/components/ProfessionBadge';
-import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { showToast } from '@repo/ui/components/ui/toaster';
@@ -11,6 +10,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import axiosClient from '../../../api/axiosClient';
 import { routesConfig } from '../../../routes/routesConfig';
+import ClickableProfileAvatar from '../../components/ClickableProfileAvatar';
 
 interface ProjectType {
   _id: string;
@@ -110,15 +110,13 @@ export default function SimplePublicProfile() {
           <div className="relative px-6 pb-6">
             {/* Avatar */}
             <div className="absolute -top-20 left-6">
-              <Avatar className="border-background h-40 w-40 border-4 shadow-xl">
-                <AvatarImage
-                  src={profileData.profilePicture || '/placeholder.png'}
-                  className="object-cover"
-                />
-                <AvatarFallback className="text-5xl font-bold bg-gradient-to-br from-primary to-secondary text-white">
-                  {profileData.username?.charAt(0).toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
+              <ClickableProfileAvatar
+                profilePicture={profileData.profilePicture}
+                username={profileData.username}
+                friendlyId={profileData.friendlyId}
+                size="xl"
+                className="border-background border-4 shadow-xl"
+              />
             </div>
 
             <div className="mt-24 flex flex-col items-start justify-between space-y-4 md:flex-row md:items-end md:space-y-0">

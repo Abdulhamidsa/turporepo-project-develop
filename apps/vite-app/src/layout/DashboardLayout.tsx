@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { BriefcaseBusiness, Home, KanbanSquare, Settings, UserCircle, Users } from 'lucide-react';
+import { BriefcaseBusiness, Home, KanbanSquare, UserCircle, Users } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 
 import { routesConfig } from '../../routes/routesConfig';
@@ -44,7 +44,7 @@ const DashboardLayout: React.FC = () => {
     },
   ];
 
-  const sidebarOnlyItems = [{ name: 'Settings', icon: Settings, link: routesConfig.settings }];
+  // const sidebarOnlyItems = [{ name: 'Settings', icon: Settings, link: routesConfig.settings }];
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,19 +70,19 @@ const DashboardLayout: React.FC = () => {
   };
 
   return (
-    <div className="bg-background text-foreground relative h-screen overflow-hidden">
+    <div className="bg-background text-foreground relative min-h-screen">
       <NavbarApp />
 
       {/* Show toggle on both mobile and desktop, but different behavior */}
       <SidebarToggle isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <div className={`${isDesktop ? 'flex' : 'block'} h-full`}>
+      <div className={`${isDesktop ? 'flex' : 'block'}`}>
         {/* Sidebar - different rendering for desktop vs mobile */}
         <Sidebar
           isOpen={isSidebarOpen}
           isDesktopMode={isDesktop}
           navigationItems={navigationItems}
-          sidebarOnlyItems={sidebarOnlyItems}
+          // sidebarOnlyItems={sidebarOnlyItems}
           onClose={() => !isDesktop && setIsSidebarOpen(false)}
         />
 
@@ -92,7 +92,7 @@ const DashboardLayout: React.FC = () => {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1">
           <div className="m-auto max-w-screen-lg p-4">
             <Outlet />
           </div>
@@ -101,7 +101,7 @@ const DashboardLayout: React.FC = () => {
 
       {/* Bottom Navigation - only on mobile */}
       <footer className="md:hidden mb-16">
-        <BottomNavigation navigationItems={navigationItems} sidebarOnlyItems={sidebarOnlyItems} />
+        <BottomNavigation navigationItems={navigationItems} />
       </footer>
     </div>
   );

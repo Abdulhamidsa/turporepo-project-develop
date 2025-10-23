@@ -26,7 +26,7 @@ export const useAddComment = (postId: string) => {
 
       // Validate the comments array using the frontend schema
       const commentsValidation = z.array(frontendCommentSchema).safeParse(response.post?.comments);
-      console.log('API Response Comments:', response.post?.comments);
+      // console.log('API Response Comments:', response.post?.comments);
 
       if (!commentsValidation.success) {
         console.error('Validation Errors:', commentsValidation.error.errors);

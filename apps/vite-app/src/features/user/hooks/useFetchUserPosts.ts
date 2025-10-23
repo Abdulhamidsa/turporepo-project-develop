@@ -7,9 +7,13 @@ import { swrFetcher } from '../../../../api/swrFetcher';
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 
 export const useUserPosts = (friendlyId: string) => {
-  console.log(friendlyId);
+  // console.log(friendlyId);
+
+  // Don't fetch if friendlyId is empty or undefined
+  const shouldFetch = friendlyId && friendlyId.trim() !== '';
+
   const { data, error, isLoading, mutate } = useSWR(
-    ENDPOINTS.posts.fetchUserPosts(friendlyId),
+    shouldFetch ? ENDPOINTS.posts.fetchUserPosts(friendlyId) : null,
     (url) => swrFetcher(url, UserPostSchema.array(), []),
   );
 

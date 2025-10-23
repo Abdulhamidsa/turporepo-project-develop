@@ -25,10 +25,13 @@ export const usePostSubmit = (friendlyId: string) => {
     if (!response) {
       throw new Error('Failed to create post');
     }
-    await mutate();
+
+    // Only try to mutate if friendlyId is valid
+    if (friendlyId && friendlyId.trim() !== '') {
+      await mutate();
+    }
     await refreshPosts();
 
-    // Or, if you prefer, you can call mutate() to update the cache immediately
     return response;
   };
 

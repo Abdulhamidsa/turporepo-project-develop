@@ -81,8 +81,8 @@ export default function PublicProfilePage() {
   // Direct API fetch when mounted to check all possible endpoints
   useEffect(() => {
     if (id) {
-      const apiBaseUrl = import.meta.env.VITE_BASE_URL;
-      console.log('API Base URL:', apiBaseUrl);
+      // const apiBaseUrl = import.meta.env.VITE_BASE_URL;
+      // console.log('API Base URL:', apiBaseUrl);
 
       // Try several endpoint formats to see which one works
       const endpoints = [
@@ -93,10 +93,10 @@ export default function PublicProfilePage() {
       ];
 
       endpoints.forEach((endpoint) => {
-        console.log(`Trying direct API fetch for ${endpoint}`);
-        fetch(`${apiBaseUrl}${endpoint}`)
-          .then((res) => res.json())
-          .then((data) => console.log(`Direct fetch result for ${endpoint}:`, data))
+        // console.log(`Trying direct API fetch for ${endpoint}`);
+        axiosClient
+          .get(endpoint)
+          // .then((data) => console.log(`Direct fetch result for ${endpoint}:`, data))
           .catch((err) => console.error(`Direct fetch error for ${endpoint}:`, err));
       });
     }
@@ -112,13 +112,13 @@ export default function PublicProfilePage() {
     : projectsResponse?.projects || [];
 
   // Debug information
-  console.log('User Profile:', userProfile);
-  console.log('Projects Data (primary):', projectsData);
-  console.log('Projects Data (alternate):', projectsDataAlt);
-  console.log('Projects Error:', projectsError);
-  console.log('Final Projects List:', projectsList);
-  console.log('Array.isArray(projectsData)', Array.isArray(projectsData));
-  console.log('Array.isArray(projectsDataAlt)', Array.isArray(projectsDataAlt));
+  // console.log('User Profile:', userProfile);
+  // console.log('Projects Data (primary):', projectsData);
+  // console.log('Projects Data (alternate):', projectsDataAlt);
+  // console.log('Projects Error:', projectsError);
+  // console.log('Final Projects List:', projectsList);
+  // console.log('Array.isArray(projectsData)', Array.isArray(projectsData));
+  // console.log('Array.isArray(projectsDataAlt)', Array.isArray(projectsDataAlt));
 
   if (userLoading) {
     return <ProfileSkeleton />;

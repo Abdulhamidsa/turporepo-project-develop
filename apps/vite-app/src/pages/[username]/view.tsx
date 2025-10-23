@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs';
 import { FetchedProjectType } from '@repo/zod/validation';
@@ -13,30 +13,10 @@ import { useUserProfileView } from '../../features/user/hooks/useUserProfileView
 import { useUserProjectsView } from '../../hooks/useUserProjectsView';
 import PageTransition from '../../layout/animation/PageTransition';
 
-function GetCorrectHeight() {
-  const { userProfile } = useUserProfileView();
-  const { projects } = useUserProjectsView(userProfile.friendlyId ?? '');
-
-  const tabsContentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (tabsContentRef.current) {
-      const tabContents =
-        tabsContentRef.current.querySelectorAll<HTMLDivElement>("[role='tabpanel']");
-      let maxHeight = 0;
-      tabContents.forEach((tabContent) => {
-        maxHeight = Math.max(maxHeight, tabContent.scrollHeight);
-      });
-      tabsContentRef.current.style.minHeight = `${maxHeight}px`;
-    }
-  }, [userProfile, projects]);
-}
-
 export default function ProfileViewPage() {
   const [selectedProject, setSelectedProject] = useState<FetchedProjectType | null>(null);
   const [redirecting, setRedirecting] = useState(false);
   const { userProfile, error: profileError, isLoading: profileLoading } = useUserProfileView();
-  GetCorrectHeight();
 
   // Get current URL parameter
   const { friendlyId } = useParams<{ friendlyId: string }>();
@@ -89,7 +69,7 @@ export default function ProfileViewPage() {
 
   return (
     <PageTransition>
-      <div className="bg-background flex min-h-screen flex-col items-center justify-start">
+      <div className="bg-background">
         {/* Cover Image Section */}
         <div className="from-card to-primary-foreground relative h-96 w-full bg-gradient-to-r shadow-lg">
           <img
@@ -100,12 +80,13 @@ export default function ProfileViewPage() {
         </div>
 
         {/* Profile Card Section */}
-
-        <ProfileCardView />
+        <div className="flex justify-center">
+          <ProfileCardView />
+        </div>
 
         {/* Tabs Section */}
-        <div className="mt-12 w-full max-w-5xl px-6">
-          <Tabs defaultValue="posts">
+        <div className="mt-12 w-full max-w-5xl mx-auto px-6 pb-8">
+          <Tabs defaultValue="posts" className="w-full">
             <TabsList className="bg-muted flex justify-center overflow-hidden rounded-lg border border-gray-300 dark:border-gray-700">
               <TabsTrigger
                 value="posts"

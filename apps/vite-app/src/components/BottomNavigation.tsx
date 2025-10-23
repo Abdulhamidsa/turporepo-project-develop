@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Popover, PopoverContent } from '@repo/ui/components/ui/popover';
+import { Popover } from '@repo/ui/components/ui/popover';
 import { useLocation } from 'react-router-dom';
 
 import NavigationItem from './NavigationItem';
@@ -8,12 +8,12 @@ import { NavigationItemProps } from './Sidebar';
 
 interface BottomNavigationProps {
   navigationItems: NavigationItemProps[];
-  sidebarOnlyItems: NavigationItemProps[];
+  // sidebarOnlyItems: NavigationItemProps[];
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({
   navigationItems,
-  sidebarOnlyItems,
+  // sidebarOnlyItems,
 }) => {
   const location = useLocation();
 
@@ -32,7 +32,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
         ))}
       </div>
       <Popover>
-        <PopoverContent className="bg-card border-border w-48 rounded-lg border p-2 shadow-md">
+        {/* <PopoverContent className="bg-card border-border w-48 rounded-lg border p-2 shadow-md">
           {sidebarOnlyItems.map((item) => (
             <NavigationItem
               key={item.name}
@@ -41,7 +41,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
               showText={true}
             />
           ))}
-        </PopoverContent>
+        </PopoverContent> */}
       </Popover>
     </nav>
   );

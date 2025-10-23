@@ -23,9 +23,9 @@ export async function request<T>(
       data,
     });
 
-    console.log(`API request to ${url}:`, { method, data });
+    // console.log(`API request to ${url}:`, { method, data });
     const { success, data: responseData, message } = response.data;
-    console.log('API response:', response.data);
+    // console.log('API response:', response.data);
     if (!success) {
       throw new AppError(message || 'Unknown error occurred', response.status);
     }

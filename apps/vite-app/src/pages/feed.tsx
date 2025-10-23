@@ -31,7 +31,7 @@ export default function Feed() {
         <div className="flex w-full flex-col">
           {/* Notification for redirected users */}
           {redirectNotification && (
-            <div className="mb-6 p-4 rounded-lg bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 relative shadow-sm">
+            <div className="mb-6 p-4 rounded-lg bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 relative shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
               <div className="flex items-start">
                 <AlertCircle className="h-5 w-5 text-amber-500 mr-3 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
@@ -44,7 +44,7 @@ export default function Feed() {
                 </div>
                 <button
                   onClick={() => setRedirectNotification(null)}
-                  className="text-amber-500 hover:text-amber-700 dark:hover:text-amber-300 flex-shrink-0"
+                  className="text-amber-500 hover:text-amber-700 dark:hover:text-amber-300 flex-shrink-0 transition-colors duration-200"
                   aria-label="Close notification"
                 >
                   <X className="h-4 w-4" />
@@ -53,9 +53,10 @@ export default function Feed() {
             </div>
           )}
 
-          <div className="sticky top-0 bg-background z-10 pt-2 pb-4">
+          <div className="bg-background z-10 pt-6 pb-4">
             <AddContentButton />
           </div>
+
           <div className="mt-6">
             <PostList />
           </div>

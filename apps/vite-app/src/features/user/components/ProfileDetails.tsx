@@ -37,11 +37,11 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
           <p className="text-muted-foreground text-lg sm:text-xl">@{userProfile.friendlyId}</p>
 
           <div className="mt-4 space-y-2">
-            <p className="text-muted-foreground flex items-center justify-center sm:justify-start">
+            <div className="text-muted-foreground flex items-center justify-center sm:justify-start">
               <Briefcase className="mr-2 h-5 w-5" />
               {userProfile.profession || 'No profession listed'}
-            </p>
-            <p className="text-muted-foreground flex items-center justify-center sm:justify-start">
+            </div>
+            <div className="text-muted-foreground flex items-center justify-center sm:justify-start">
               <LucideHome className="mr-2 h-5 w-5" />
               {userProfile.countryOrigin ? (
                 <div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
               ) : (
                 <span>No country listed</span>
               )}
-            </p>
+            </div>
             <div className="text-muted-foreground flex items-center justify-center sm:justify-start">
               <CakeIcon className="mr-2 h-5 w-5" />
               {userProfile.age ? `${userProfile.age}` : 'Age not provided'}
@@ -72,6 +72,8 @@ const ProfileDetails = ({ userProfile }: ProfileDetailsProps) => {
       {/* Full Screen Profile Picture Dialog */}
       <FullScreenPictureDialog
         pictureUrl={userProfile.profilePicture ?? '/placeholder.jpg'}
+        username={userProfile.username || undefined}
+        friendlyId={userProfile.friendlyId}
         isOpen={isProfilePicOpen}
         setIsOpen={setIsProfilePicOpen}
       />

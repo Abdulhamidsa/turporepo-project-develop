@@ -18,15 +18,15 @@ function getFullUrl(url: string): string {
 async function handleApiRequest(url: string, options?: RequestInit) {
   try {
     const fullUrl = getFullUrl(url);
-    console.log('Fetching URL:', fullUrl);
-    console.log('BASE_URL at runtime:', BASE_URL);
+    // console.log('Fetching URL:', fullUrl);
+    // console.log('BASE_URL at runtime:', BASE_URL);
 
     const res = await fetch(fullUrl, {
       cache: 'no-store', // Changed from force-cache to prevent stale data and loops
       ...options,
     });
 
-    console.log('Response received with status:', res.status);
+    // console.log('Response received with status:', res.status);
 
     if (!res.ok) {
       const errorBody = await res.json().catch(() => null);
@@ -35,7 +35,7 @@ async function handleApiRequest(url: string, options?: RequestInit) {
     }
 
     const json = await res.json();
-    console.log('Response JSON:', json);
+    // console.log('Response JSON:', json);
     return json;
   } catch (error) {
     if (error instanceof AppError) {
@@ -57,7 +57,7 @@ export async function getProjects(page = 1, limit = 12, search = '') {
     let projects = response.data.projects || [];
     projects = projects.filter((project: any) => project.user?.completedProfile === true);
     const totalPages = Math.ceil(response.data.pagination.total / limit);
-    console.log('projects', projects);
+    // console.log('projects', projects);
     return { projects, totalPages };
   } catch (error) {
     console.error('Error fetching projects:', error);

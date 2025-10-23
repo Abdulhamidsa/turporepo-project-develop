@@ -23,8 +23,18 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId, viewOnly = false }) =
   const [selectedPost, setSelectedPost] = useState<UserPostType | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
   const { loggedUser } = useAuth();
   const { deletePost } = useDeletePost();
+
+  // Early return if friendlyId is empty or invalid
+  if (!friendlyId || friendlyId.trim() === '') {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">No user identifier provided.</p>
+      </div>
+    );
+  }
 
   const openPostModal = (post: UserPostType) => {
     setSelectedPost(post);
@@ -42,8 +52,6 @@ const UserPosts: React.FC<UserPostsProps> = ({ friendlyId, viewOnly = false }) =
     }
     setIsDeleting(false);
   };
-
-  const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
 
   return (
     <>
