@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@repo/ui/components/ui/dialog';
-import { ArrowRight, Globe, Menu, Rocket, User, X, Sparkles, Code2, Star } from 'lucide-react';
+import { ArrowRight, Code2, Globe, Menu, Rocket, Sparkles, Star, User, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import SignupForm from '../features/auth/components/SignUpForm';
@@ -128,24 +128,33 @@ export default function Auth() {
       <section className="relative bg-gradient-to-br from-background via-background to-muted/20 py-20 sm:py-32 overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        
+
         {/* Floating Icons */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-10 text-primary/15 animate-pulse">
             <Code2 className="w-6 h-6" />
           </div>
-          <div className="absolute bottom-32 right-20 text-primary/20 animate-pulse" style={{ animationDelay: '1s' }}>
-            <Star className="w-5 h-5" />
+          <div
+            className="absolute bottom-32 right-20 text-primary/20 animate-pulse"
+            style={{ animationDelay: '1s' }}
+          >
+            {/* <Star className="w-5 h-5" /> */}
           </div>
-          <div className="absolute top-1/2 right-8 text-primary/15 animate-pulse" style={{ animationDelay: '2s' }}>
+          <div
+            className="absolute top-1/2 right-8 text-primary/15 animate-pulse"
+            style={{ animationDelay: '2s' }}
+          >
             <Sparkles className="w-4 h-4" />
           </div>
         </div>
 
         {/* Gradient Orbs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        
+        <div
+          className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: '1s' }}
+        ></div>
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
             {/* Hero content */}
@@ -154,19 +163,26 @@ export default function Auth() {
                 <Sparkles className="w-4 h-4" />
                 Professional Portfolio Platform
               </div>
-              
+
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-foreground leading-tight animate-fade-in-up">
-                Share. <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Connect.</span> Grow.
+                Share.{' '}
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Connect.
+                </span>{' '}
+                Grow.
               </h1>
 
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <p
+                className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
+                style={{ animationDelay: '0.2s' }}
+              >
                 A platform for professionals to share their work, connect with peers, and grow their
                 network.
               </p>
             </div>
           </div>
         </div>
-        
+
         {/* Bottom Wave */}
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-muted/30 to-transparent"></div>
       </section>
@@ -176,7 +192,10 @@ export default function Auth() {
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-1/4 w-1 h-1 bg-primary rounded-full animate-pulse"></div>
-          <div className="absolute bottom-32 right-1/3 w-1 h-1 bg-secondary rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div
+            className="absolute bottom-32 right-1/3 w-1 h-1 bg-secondary rounded-full animate-pulse"
+            style={{ animationDelay: '2s' }}
+          ></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -197,16 +216,19 @@ export default function Auth() {
             <div className="group text-center space-y-4 p-8 rounded-2xl bg-background/80 backdrop-blur-sm border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-500 relative overflow-hidden">
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               <div className="relative">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
                   <Rocket className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">Quick Start</h3>
+                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">
+                  Quick Start
+                </h3>
                 <p className="text-muted-foreground leading-relaxed mt-3">
-                  Set up your professional portfolio in minutes with our intuitive interface and smart templates
+                  Set up your professional portfolio in minutes with our intuitive interface and
+                  smart templates
                 </p>
-                
+
                 {/* Floating Accent */}
                 <div className="absolute -top-2 -right-2 w-3 h-3 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
@@ -215,16 +237,19 @@ export default function Auth() {
             <div className="group text-center space-y-4 p-8 rounded-2xl bg-background/80 backdrop-blur-sm border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-500 relative overflow-hidden">
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               <div className="relative">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
                   <User className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">Share Your Work</h3>
+                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">
+                  Share Your Work
+                </h3>
                 <p className="text-muted-foreground leading-relaxed mt-3">
-                  Showcase your projects, skills, and expertise to stand out from the crowd and attract opportunities
+                  Showcase your projects, skills, and expertise to stand out from the crowd and
+                  attract opportunities
                 </p>
-                
+
                 {/* Floating Accent */}
                 <div className="absolute -top-2 -right-2 w-3 h-3 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
@@ -233,16 +258,19 @@ export default function Auth() {
             <div className="group text-center space-y-4 p-8 rounded-2xl bg-background/80 backdrop-blur-sm border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-500 relative overflow-hidden">
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               <div className="relative">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
                   <Globe className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">Global Network</h3>
+                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">
+                  Global Network
+                </h3>
                 <p className="text-muted-foreground leading-relaxed mt-3">
-                  Connect with like-minded professionals and expand your network across 100+ countries
+                  Connect with like-minded professionals and expand your network across 100+
+                  countries
                 </p>
-                
+
                 {/* Floating Accent */}
                 <div className="absolute -top-2 -right-2 w-3 h-3 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
