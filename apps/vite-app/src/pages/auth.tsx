@@ -65,38 +65,42 @@ function PublicNavbar({
         </div>
 
         {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {/* <Link
+        <div
+          className={`md:hidden border-t border-border bg-background transition-all duration-300 ease-in-out overflow-hidden ${
+            mobileMenuOpen
+              ? 'max-h-96 opacity-100 transform translate-y-0'
+              : 'max-h-0 opacity-0 transform -translate-y-2'
+          }`}
+        >
+          <div className="px-2 pt-2 pb-3 space-y-1 ">
+            {/* <Link
                 to="/discover/professionals"
                 className="block px-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Discover Professionals
               </Link> */}
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  openSignIn();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full justify-start text-muted-foreground hover:text-foreground"
-              >
-                Sign In
-              </Button>
-              <Button
-                onClick={() => {
-                  openSignUp();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full bg-primary hover:bg-primary/90 mt-2"
-              >
-                Get Started
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                openSignIn();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full justify-start text-muted-foreground hover:text-foreground"
+            >
+              Sign In
+            </Button>
+            <Button
+              onClick={() => {
+                openSignUp();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full bg-primary hover:bg-primary/90 mt-2"
+            >
+              Get Started
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );
@@ -138,7 +142,7 @@ export default function Auth() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
               <Button
                 onClick={openSignUp}
                 size="lg"
@@ -156,7 +160,7 @@ export default function Auth() {
               >
                 Sign In
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
