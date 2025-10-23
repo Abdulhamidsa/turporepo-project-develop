@@ -6,7 +6,7 @@ import { ExternalLink, MoreHorizontal } from 'lucide-react';
 
 export default function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
-    <Card className="bg-card border border-border hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20 transition-all duration-300 cursor-pointer group overflow-hidden">
+    <Card className="bg-card border border-border hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20 transition-all duration-300 group overflow-hidden">
       <div className="relative">
         {/* Project Image */}
         <div className="aspect-[4/3] overflow-hidden">
@@ -35,12 +35,15 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
         )}
 
         {/* Three Dots Menu */}
-        <button className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm shadow-sm">
+        <button
+          onClick={onClick}
+          className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white rounded-lg group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm shadow-sm"
+        >
           <MoreHorizontal className="h-4 w-4 text-gray-700" />
         </button>
       </div>
 
-      <CardContent className="p-5 space-y-4" onClick={onClick}>
+      <CardContent className="p-5 space-y-4">
         {/* Project Title */}
         <div className="space-y-2">
           <h3 className="font-semibold text-xl text-foreground line-clamp-2 group-hover:text-primary transition-colors duration-300">
