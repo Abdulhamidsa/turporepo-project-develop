@@ -50,8 +50,10 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
     // Close modal immediately for better UX
     onClose();
 
-    // Show upload started notification
-    showToast('🚀 Uploading project... Continue browsing!', 'success');
+    // Small delay to make the transition feel natural
+    setTimeout(() => {
+      showToast(`Uploading "${project.title}"... We'll let you know when it's ready!`, 'success');
+    }, 300);
 
     // Reset form
     const projectData = { ...project };
@@ -75,16 +77,19 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
       const success = await createProject(projectData, thumbnailData, mediaData);
 
       if (success) {
-        // The useCreateProject hook will show its own success toast
-        // and handle data refresh, so we don't need duplicate notifications
+        // Show a more personalized success message
+        showToast(
+          `🎉 "${projectData.title}" is now live on your portfolio! Keep building amazing things!`,
+          'success',
+        );
         return true;
       } else {
-        showToast('❌ Project upload failed. Please try again.', 'error');
+        showToast(`Oops! "${projectData.title}" couldn't be uploaded. Please try again.`, 'error');
         return false;
       }
     } catch (error) {
       console.error('Upload error:', error);
-      showToast('❌ Project upload failed. Please try again.', 'error');
+      showToast(`Something went wrong with "${projectData.title}". Please try again.`, 'error');
       return false;
     }
   };

@@ -107,7 +107,8 @@ export const useCreateProject = () => {
         addProjectSchema,
       );
 
-      showToast('Project uploaded successfully!', 'success');
+      // Don't show toast here - let the calling component handle notifications
+      // for better UX control
       await refetchAllProjects();
       mutateProjects();
 
