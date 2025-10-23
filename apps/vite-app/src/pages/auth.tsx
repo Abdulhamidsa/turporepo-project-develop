@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@repo/ui/components/ui/dialog';
-import { ArrowRight, Globe, Menu, Rocket, User, X } from 'lucide-react';
+import { ArrowRight, Globe, Menu, Rocket, User, X, Sparkles, Code2, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import SignupForm from '../features/auth/components/SignUpForm';
@@ -125,52 +125,68 @@ export default function Auth() {
       {/* Public Navigation */}
       <PublicNavbar openSignIn={openSignIn} openSignUp={openSignUp} />
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-background via-background to-muted/20 py-20 sm:py-32">
+      <section className="relative bg-gradient-to-br from-background via-background to-muted/20 py-20 sm:py-32 overflow-hidden">
+        {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        
+        {/* Floating Icons */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 text-primary/15 animate-pulse">
+            <Code2 className="w-6 h-6" />
+          </div>
+          <div className="absolute bottom-32 right-20 text-primary/20 animate-pulse" style={{ animationDelay: '1s' }}>
+            <Star className="w-5 h-5" />
+          </div>
+          <div className="absolute top-1/2 right-8 text-primary/15 animate-pulse" style={{ animationDelay: '2s' }}>
+            <Sparkles className="w-4 h-4" />
+          </div>
+        </div>
+
+        {/* Gradient Orbs */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
             {/* Hero content */}
             <div className="space-y-6">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-foreground leading-tight">
-                Share. <span className="text-primary">Connect.</span> Grow.
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary font-medium text-sm mb-4 animate-fade-in">
+                <Sparkles className="w-4 h-4" />
+                Professional Portfolio Platform
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-foreground leading-tight animate-fade-in-up">
+                Share. <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Connect.</span> Grow.
               </h1>
 
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                 A platform for professionals to share their work, connect with peers, and grow their
                 network.
               </p>
             </div>
-
-            {/* CTA Buttons */}
-            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-              <Button
-                onClick={openSignUp}
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto"
-              >
-                Create Account
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-
-              <Button
-                onClick={openSignIn}
-                variant="outline"
-                size="lg"
-                className="border-2 border-border text-foreground hover:bg-muted px-8 py-4 text-lg font-semibold transition-all duration-300 w-full sm:w-auto"
-              >
-                Sign In
-              </Button>
-            </div> */}
           </div>
         </div>
+        
+        {/* Bottom Wave */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-muted/30 to-transparent"></div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-muted/30 relative">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-1/4 w-1 h-1 bg-primary rounded-full animate-pulse"></div>
+          <div className="absolute bottom-32 right-1/3 w-1 h-1 bg-secondary rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary font-medium text-sm mb-4">
+              <Star className="w-4 h-4" />
+              Why ProFolio?
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Why Choose ProFolio?
+              Everything You Need to <span className="text-primary">Succeed</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Join thousands of professionals sharing their expertise and growing their network
@@ -178,34 +194,58 @@ export default function Auth() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center space-y-4 p-6 rounded-lg bg-background border border-border hover:shadow-lg transition-all duration-300">
-              <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mx-auto">
-                <Rocket className="w-8 h-8 text-primary" />
+            <div className="group text-center space-y-4 p-8 rounded-2xl bg-background/80 backdrop-blur-sm border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-500 relative overflow-hidden">
+              {/* Hover Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                  <Rocket className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform duration-300" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">Quick Start</h3>
+                <p className="text-muted-foreground leading-relaxed mt-3">
+                  Set up your professional portfolio in minutes with our intuitive interface and smart templates
+                </p>
+                
+                {/* Floating Accent */}
+                <div className="absolute -top-2 -right-2 w-3 h-3 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <h3 className="text-xl font-semibold text-foreground">Quick Start</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Set up your professional portfolio in minutes with our intuitive interface
-              </p>
             </div>
 
-            <div className="text-center space-y-4 p-6 rounded-lg bg-background border border-border hover:shadow-lg transition-all duration-300">
-              <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mx-auto">
-                <User className="w-8 h-8 text-primary" />
+            <div className="group text-center space-y-4 p-8 rounded-2xl bg-background/80 backdrop-blur-sm border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-500 relative overflow-hidden">
+              {/* Hover Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                  <User className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform duration-300" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">Share Your Work</h3>
+                <p className="text-muted-foreground leading-relaxed mt-3">
+                  Showcase your projects, skills, and expertise to stand out from the crowd and attract opportunities
+                </p>
+                
+                {/* Floating Accent */}
+                <div className="absolute -top-2 -right-2 w-3 h-3 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <h3 className="text-xl font-semibold text-foreground">Share Your Work</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Showcase your projects, skills, and expertise to stand out from the crowd
-              </p>
             </div>
 
-            <div className="text-center space-y-4 p-6 rounded-lg bg-background border border-border hover:shadow-lg transition-all duration-300">
-              <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mx-auto">
-                <Globe className="w-8 h-8 text-primary" />
+            <div className="group text-center space-y-4 p-8 rounded-2xl bg-background/80 backdrop-blur-sm border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-500 relative overflow-hidden">
+              {/* Hover Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                  <Globe className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform duration-300" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mt-6 group-hover:text-primary transition-colors duration-300">Global Network</h3>
+                <p className="text-muted-foreground leading-relaxed mt-3">
+                  Connect with like-minded professionals and expand your network across 100+ countries
+                </p>
+                
+                {/* Floating Accent */}
+                <div className="absolute -top-2 -right-2 w-3 h-3 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <h3 className="text-xl font-semibold text-foreground">Professional Network</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Connect with like-minded professionals and expand your network globally
-              </p>
             </div>
           </div>
         </div>
