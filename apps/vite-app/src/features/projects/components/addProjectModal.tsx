@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { AddProjectModalProps } from '@repo/data/types/types';
 import CustomModal from '@repo/ui/components/CustomModal';
+import { showToast } from '@repo/ui/components/ui/toaster';
 import { AddProjectInput } from '@repo/zod/validation';
 
 import { useCreateProject } from '../../../hooks/useCreateProject';
@@ -25,24 +26,65 @@ export default function AddProjectModal({ isOpen, onClose }: AddProjectModalProp
   const { createProject, loading, errors, setErrors } = useCreateProject();
 
   const saveProject = async (): Promise<boolean> => {
-    const success = await createProject(project, pendingThumbnail, pendingMedia);
+    // Validate basic fields before closing modal
+    if (!project.title.trim()) {
+      showToast('Project title is required', 'error');
+      return false;
+    }
 
-    if (success) {
-      setProject(initialProject);
-      setPendingThumbnail(null);
-      setPendingMedia([]);
-      setErrors({
-        title: '',
-        description: '',
-        url: '',
-        thumbnail: '',
-        tags: '',
-        media: '',
-      });
+    if (!project.description.trim()) {
+      showToast('Project description is required', 'error');
+      return false;
+    }
 
-      onClose();
-      return true;
-    } else {
+    if (!pendingThumbnail && !project.thumbnail) {
+      showToast('Project thumbnail is required', 'error');
+      return false;
+    }
+
+    if (pendingMedia.length === 0 && (!project.media || project.media.length === 0)) {
+      showToast('At least one project image is required', 'error');
+      return false;
+    }
+
+    // Close modal immediately for better UX
+    onClose();
+
+    // Show upload started notification
+    showToast('🚀 Uploading project... Continue browsing!', 'success');
+
+    // Reset form
+    const projectData = { ...project };
+    const thumbnailData = pendingThumbnail;
+    const mediaData = [...pendingMedia];
+
+    setProject(initialProject);
+    setPendingThumbnail(null);
+    setPendingMedia([]);
+    setErrors({
+      title: '',
+      description: '',
+      url: '',
+      thumbnail: '',
+      tags: '',
+      media: '',
+    });
+
+    // Process upload in background
+    try {
+      const success = await createProject(projectData, thumbnailData, mediaData);
+
+      if (success) {
+        // The useCreateProject hook will show its own success toast
+        // and handle data refresh, so we don't need duplicate notifications
+        return true;
+      } else {
+        showToast('❌ Project upload failed. Please try again.', 'error');
+        return false;
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      showToast('❌ Project upload failed. Please try again.', 'error');
       return false;
     }
   };

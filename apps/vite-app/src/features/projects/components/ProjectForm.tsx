@@ -39,36 +39,22 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
   const handleSaveProject = async () => {
     try {
-      setProgress(5);
       setIsUploading(true);
-
-      for (let i = 10; i <= 60; i += 10) {
-        await new Promise((resolve) => setTimeout(resolve, 150));
-        setProgress(i);
-      }
-
-      if (pendingThumbnail) {
-        setProgress(70);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-
-      if (pendingMedia.length > 0) {
-        for (let i = 70; i <= 90; i += 5) {
-          await new Promise((resolve) => setTimeout(resolve, 150));
-          setProgress(i);
-        }
-      }
+      setProgress(10);
 
       const success: boolean = await saveProject();
 
       if (success) {
         setProgress(100);
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // Reset progress after a brief moment
+        setTimeout(() => {
+          setProgress(0);
+          setIsUploading(false);
+        }, 300);
       } else {
         setProgress(0);
+        setIsUploading(false);
       }
-
-      setIsUploading(false);
     } catch (error) {
       console.error('Failed to save project:', error);
       setProgress(0);

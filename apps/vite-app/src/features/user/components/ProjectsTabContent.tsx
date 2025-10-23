@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { Tooltip, TooltipProvider, TooltipTrigger } from '@repo/ui/components/ui/tooltip';
 import { FetchedProjectType } from '@repo/zod/validation';
 import { UserProfile } from '@repo/zod/validation/user';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -88,36 +87,34 @@ const ProjectsTabContent = ({
 
       {/* AI Chat Button (for own profile only) */}
       {!viewOnly && (
-        <TooltipProvider>
-          <Tooltip
-            content={
-              projects.length === 0 ? 'Add projects to use AI Assistant' : 'AI Project Assistant'
-            }
+        <div className="group">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className={`fixed bottom-12 right-4 sm:bottom-16 sm:right-6 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200 ${
+              projects.length === 0
+                ? 'bg-muted border-2 border-dashed border-muted-foreground/30 cursor-not-allowed'
+                : 'bg-gradient-to-r from-primary to-primary/80 shadow-primary/25 cursor-pointer'
+            }`}
+            onClick={() => {
+              if (projects.length > 0) {
+                setChatOpen(true);
+              }
+            }}
           >
-            <TooltipTrigger asChild>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className={`fixed bottom-12 right-4 sm:bottom-16 sm:right-6 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200 ${
-                  projects.length === 0
-                    ? 'bg-muted border-2 border-dashed border-muted-foreground/30 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-primary to-primary/80 shadow-primary/25 cursor-pointer'
-                }`}
-                onClick={() => {
-                  if (projects.length > 0) {
-                    setChatOpen(true);
-                  }
-                }}
-              >
-                <Bot
-                  className={`h-5 w-5 sm:h-6 sm:w-6 ${
-                    projects.length === 0 ? 'text-muted-foreground/50' : 'text-primary-foreground'
-                  }`}
-                />
-              </motion.button>
-            </TooltipTrigger>
-          </Tooltip>
-        </TooltipProvider>
+            <Bot
+              className={`h-5 w-5 sm:h-6 sm:w-6 ${
+                projects.length === 0 ? 'text-muted-foreground/50' : 'text-primary-foreground'
+              }`}
+            />
+          </motion.button>
+
+          {/* Desktop-only tooltip - hidden on mobile to prevent click interference */}
+          <div className="hidden md:block fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+            {projects.length === 0 ? 'Add projects to use AI Assistant' : 'AI Project Assistant'}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+          </div>
+        </div>
       )}
 
       {/* AI Chat Modal */}
