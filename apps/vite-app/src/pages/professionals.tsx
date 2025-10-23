@@ -17,6 +17,7 @@ export default function ProfessionalsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProfession, setSelectedProfession] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('name');
+  const [resultsCount, setResultsCount] = useState<number>(0);
 
   const clearFilters = () => {
     setSearchQuery('');
@@ -102,15 +103,24 @@ export default function ProfessionalsPage() {
             {/* Results Count */}
             <div className="ml-auto text-sm text-muted-foreground">
               <Users className="inline h-4 w-4 mr-1" />
-              {searchQuery && `Results for "${searchQuery}"`}
+              {searchQuery
+                ? `${resultsCount} results for "${searchQuery}"`
+                : `${resultsCount} professionals`}
             </div>
           </div>
         </div>
 
         {/* Main Content */}
         <div className="w-full">
-          {/* Use SuggestedUsers component with grid layout */}
-          <SuggestedUsers layout="grid" />
+          {/* Use SuggestedUsers component with grid layout and filters */}
+          <SuggestedUsers
+            layout="grid"
+            searchQuery={searchQuery}
+            selectedProfession={selectedProfession}
+            sortBy={sortBy}
+            showAllUsers={true}
+            onResultsCount={setResultsCount}
+          />
         </div>
       </div>
     </div>

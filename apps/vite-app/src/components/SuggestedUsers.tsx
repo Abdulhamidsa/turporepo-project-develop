@@ -1,5 +1,8 @@
+import React from 'react';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avatar';
 import { cn } from '@repo/ui/lib/utils';
+import { Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { routesConfig } from '../../routes/routesConfig';
@@ -8,12 +11,65 @@ import { useUserALL } from '../features/user/hooks/useUserAll';
 
 interface SuggestedUsersProps {
   layout?: 'vertical' | 'horizontal' | 'grid';
+  searchQuery?: string;
+  selectedProfession?: string;
+  sortBy?: string;
+  showAllUsers?: boolean;
+  onResultsCount?: (count: number) => void;
 }
 
-export default function SuggestedUsers({ layout = 'vertical' }: SuggestedUsersProps) {
-  const { users, isLoading, error } = useUserALL(1, 10);
+export default function SuggestedUsers({
+  layout = 'vertical',
+  searchQuery = '',
+  selectedProfession = 'all',
+  sortBy = 'name',
+  showAllUsers = false,
+  onResultsCount,
+}: SuggestedUsersProps) {
+  const { users, isLoading, error } = useUserALL(
+    1,
+    showAllUsers ? 50 : 10,
+    showAllUsers ? undefined : 5,
+  );
   const { loggedUser } = useAuth();
   const navigate = useNavigate();
+
+  // Filter and sort users based on props
+  const filteredAndSortedUsers = users
+    .filter((user) => {
+      // Search filter
+      if (searchQuery) {
+        const searchLower = searchQuery.toLowerCase();
+        const matchesName = user.username?.toLowerCase().includes(searchLower);
+        const matchesProfession = user.profession?.toLowerCase().includes(searchLower);
+        if (!matchesName && !matchesProfession) return false;
+      }
+
+      // Profession filter
+      if (selectedProfession && selectedProfession !== 'all') {
+        if (user.profession?.toLowerCase() !== selectedProfession.toLowerCase()) return false;
+      }
+
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'profession':
+          return (a.profession || '').localeCompare(b.profession || '');
+        case 'recent':
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case 'name':
+        default:
+          return (a.username || '').localeCompare(b.username || '');
+      }
+    });
+
+  // Notify parent component of results count
+  React.useEffect(() => {
+    if (onResultsCount && !isLoading) {
+      onResultsCount(filteredAndSortedUsers.length);
+    }
+  }, [filteredAndSortedUsers.length, isLoading, onResultsCount]);
 
   const handleUserClick = (userFriendlyId: string) => {
     if (!loggedUser) {
@@ -43,8 +99,22 @@ export default function SuggestedUsers({ layout = 'vertical' }: SuggestedUsersPr
           </div>
         )}
 
+        {!isLoading && !error && filteredAndSortedUsers.length === 0 && (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="h-8 w-8 text-muted-foreground/50" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">No professionals found</h3>
+            <p className="text-muted-foreground text-sm">
+              {searchQuery
+                ? `No results match "${searchQuery}". Try adjusting your search or filters.`
+                : 'No professionals match your current filters. Try changing your selection.'}
+            </p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {users.map((user) => (
+          {filteredAndSortedUsers.map((user) => (
             <div
               key={user.friendlyId}
               onClick={() => handleUserClick(user.friendlyId)}
@@ -97,7 +167,7 @@ export default function SuggestedUsers({ layout = 'vertical' }: SuggestedUsersPr
       {error && <p className="text-sm text-red-500">Failed to load users</p>}
 
       <div className={cn(layout === 'horizontal' ? 'flex space-x-4' : 'space-y-4')}>
-        {users.map((user) => (
+        {filteredAndSortedUsers.map((user) => (
           <div
             key={user.friendlyId}
             onClick={() => handleUserClick(user.friendlyId)}

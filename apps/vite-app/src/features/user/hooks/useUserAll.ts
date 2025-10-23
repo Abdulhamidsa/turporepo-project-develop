@@ -38,9 +38,9 @@ export type User = z.infer<typeof userSchema>;
 export type UserApiResponse = z.infer<typeof userApiResponseSchema>;
 
 /**
- * Hook for fetching all users with pagination and randomly picking 5 users.
+ * Hook for fetching all users with pagination and optional random selection.
  */
-export const useUserALL = (page: number, limit: number) => {
+export const useUserALL = (page: number, limit: number, maxResults?: number) => {
   const { loggedUser } = useAuth();
   const urlFetch = `${ENDPOINTS.users.fetchAll}?limit=${limit}&page=${page}`;
 
@@ -59,11 +59,14 @@ export const useUserALL = (page: number, limit: number) => {
   };
 
   const filteredUsers = data?.users.filter((user) => user.username !== loggedUser?.username) || [];
-  const shuffledUsers = shuffleArray(filteredUsers);
-  const selectedUsers = shuffledUsers.slice(0, 5);
+
+  // If maxResults is specified, shuffle and limit. Otherwise return all filtered users.
+  const finalUsers = maxResults
+    ? shuffleArray([...filteredUsers]).slice(0, maxResults)
+    : filteredUsers;
 
   return {
-    users: selectedUsers || [],
+    users: finalUsers || [],
     pagination: data?.pagination || null,
     mutate,
     error,
