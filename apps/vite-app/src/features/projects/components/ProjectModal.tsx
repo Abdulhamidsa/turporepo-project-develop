@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/ui/avat
 import { Badge } from '@repo/ui/components/ui/badge';
 import { Button } from '@repo/ui/components/ui/button';
 import { showToast } from '@repo/ui/components/ui/toaster';
+import { getProjectMediaUrl } from '@repo/utils/imageOptimization';
 import { FetchedProjectType } from '@repo/zod/validation';
 import { ChevronLeft, ChevronRight, ExternalLink, Loader, Trash2 } from 'lucide-react';
 
@@ -25,11 +26,16 @@ interface ProjectModalProps {
 
 export default function ProjectModal({ project, user, isOpen, onClose }: ProjectModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const { loggedUser } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteProject } = useDeleteProject();
   const { mutate } = useUserProjects();
+
+  const handleImageClick = () => {
+    setIsImageModalOpen(true);
+  };
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -71,11 +77,14 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
       <div className="flex flex-col md:flex-row gap-4 md:gap-6">
         {/* Image Section */}
         <div className="w-full md:w-1/2">
-          <div className="relative aspect-video md:aspect-square overflow-hidden rounded-lg bg-muted">
+          <div
+            className="relative aspect-video md:aspect-square overflow-hidden rounded-lg bg-muted cursor-pointer"
+            onClick={handleImageClick}
+          >
             <img
               src={project.media[currentImageIndex].url}
               alt={`Project image ${currentImageIndex + 1}`}
-              className="h-full w-full object-contain"
+              className="h-full w-full object-contain transition-opacity duration-300"
             />
             {project.media.length > 1 && (
               <>
@@ -83,7 +92,10 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
                   variant="ghost"
                   size="icon"
                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground border border-border shadow-md"
-                  onClick={prevImage}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevImage();
+                  }}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -91,7 +103,10 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
                   variant="ghost"
                   size="icon"
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground border border-border shadow-md"
-                  onClick={nextImage}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextImage();
+                  }}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -100,7 +115,10 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
                   {project.media.map((_, index) => (
                     <button
                       key={index}
-                      onClick={() => setCurrentImageIndex(index)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentImageIndex(index);
+                      }}
                       className={`w-2 h-2 rounded-full transition-colors ${
                         index === currentImageIndex ? 'bg-primary' : 'bg-muted-foreground/50'
                       }`}
@@ -212,6 +230,50 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
               {isDeleting ? 'Deleting...' : 'Delete'}
             </Button>
           </div>
+        </div>
+      </CustomModal>
+
+      {/* Full-Screen Image Modal */}
+      <CustomModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} size="full">
+        <div className="relative w-full h-full flex items-center justify-center bg-black/90 p-8">
+          <img
+            src={getProjectMediaUrl(project.media[currentImageIndex].url, 1920)}
+            alt={`Project image ${currentImageIndex + 1} - Full resolution`}
+            className="max-w-[60%] max-h-[60%] object-contain"
+          />
+
+          {/* Image navigation for multiple images */}
+          {project.media.length > 1 && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-8 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white border-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-8 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white border-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextImage();
+                }}
+              >
+                <ChevronRight className="h-6 w-6" />
+              </Button>
+
+              {/* Image counter */}
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                {currentImageIndex + 1} / {project.media.length}
+              </div>
+            </>
+          )}
         </div>
       </CustomModal>
     </CustomModal>

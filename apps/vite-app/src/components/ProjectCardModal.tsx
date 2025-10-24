@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@repo/ui/components/ui/dialog';
+import { getProjectMediaUrl } from '@repo/utils/imageOptimization';
 import {
   Calendar,
   ExternalLink,
@@ -56,9 +57,17 @@ interface ProjectCardModalProps {
 
 export default function ProjectCardModal({ project, isOpen, onOpenChange }: ProjectCardModalProps) {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const { isAuthenticated } = useAuth();
 
   if (!project) return null;
+
+  const handleImageClick = () => {
+    const imageUrl = project.thumbnail || project.media?.[0]?.url || project.coverImage;
+    if (imageUrl) {
+      setIsImageModalOpen(true);
+    }
+  };
 
   const handleViewFullProject = () => {
     if (!isAuthenticated) {
@@ -83,12 +92,12 @@ export default function ProjectCardModal({ project, isOpen, onOpenChange }: Proj
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-md p-0 overflow-hidden">
           {/* Project Cover Image */}
-          <div className="relative h-40 w-full bg-muted">
+          <div className="relative h-40 w-full bg-muted cursor-pointer" onClick={handleImageClick}>
             {project.thumbnail || project.media?.[0]?.url || project.coverImage ? (
               <img
                 src={project.thumbnail || project.media?.[0]?.url || project.coverImage}
                 alt={project.title}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover transition-opacity duration-300"
                 onError={(e) => {
                   // Hide broken images and show placeholder
                   (e.target as HTMLImageElement).style.display = 'none';
@@ -260,6 +269,22 @@ export default function ProjectCardModal({ project, isOpen, onOpenChange }: Proj
               </Button>
             </Link>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Full-Screen Image Modal */}
+      <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+        <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 border-0 bg-transparent">
+          <div className="relative w-full h-full flex items-center justify-center bg-black/90 p-8 rounded-lg">
+            <img
+              src={getProjectMediaUrl(
+                project?.thumbnail || project?.media?.[0]?.url || project?.coverImage || '',
+                1920
+              )}
+              alt={`${project?.title} - Full resolution`}
+              className="max-w-[60%] max-h-[60%] object-contain"
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </>
