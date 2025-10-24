@@ -234,7 +234,7 @@ export default function ProjectModal({ project, user, isOpen, onClose }: Project
       </CustomModal>
 
       {/* Full-Screen Image Modal */}
-      <CustomModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} size="full">
+      <CustomModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} size="lg">
         <div className="relative w-full h-full flex items-center justify-center bg-black/90 p-8">
           <img
             src={getProjectMediaUrl(project.media[currentImageIndex].url, 1920)}
