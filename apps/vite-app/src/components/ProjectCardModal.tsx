@@ -279,7 +279,7 @@ export default function ProjectCardModal({ project, isOpen, onOpenChange }: Proj
             <img
               src={getProjectMediaUrl(
                 project?.thumbnail || project?.media?.[0]?.url || project?.coverImage || '',
-                1920
+                1920,
               )}
               alt={`${project?.title} - Full resolution`}
               className="max-w-[60%] max-h-[60%] object-contain"
