@@ -253,7 +253,7 @@ export default function DirectProfessionalProfile() {
                     <Lock className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
                     <p className="text-muted-foreground mb-4">Sign in to view projects</p>
                     <button
-                      onClick={() => (window.location.href = '/auth')}
+                      onClick={() => (window.location.href = '/')}
                       className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg transition-colors"
                     >
                       Sign In
@@ -267,13 +267,13 @@ export default function DirectProfessionalProfile() {
           <div className="border-t border-border bg-muted/30 p-6">
             <div className="flex flex-col sm:flex-row justify-center gap-3">
               <button
-                onClick={() => (window.location.href = '/auth')}
+                onClick={() => (window.location.href = '/')}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg transition-colors font-medium"
               >
                 Sign In
               </button>
               <button
-                onClick={() => (window.location.href = '/auth')}
+                onClick={() => (window.location.href = '/')}
                 className="border border-border hover:bg-muted text-card-foreground px-8 py-3 rounded-lg transition-colors font-medium"
               >
                 Create Account

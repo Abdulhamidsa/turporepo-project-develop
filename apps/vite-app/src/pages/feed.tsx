@@ -4,8 +4,10 @@ import { AlertCircle, X } from 'lucide-react';
 
 import PostList from '../features/post/components/PostList';
 import { AddContentButton } from '../features/user/components/AddContentButton';
+import { useAuth } from '../features/user/hooks/use.auth';
 
 export default function Feed() {
+  const { isAuthenticated } = useAuth();
   const [redirectNotification, setRedirectNotification] = useState<string | null>(null);
 
   useEffect(() => {
@@ -54,7 +56,22 @@ export default function Feed() {
           )}
 
           <div className="bg-background z-10 pt-6 pb-4">
-            <AddContentButton />
+            {isAuthenticated ? (
+              <AddContentButton />
+            ) : (
+              <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-lg p-6 text-center border border-border">
+                <p className="text-foreground font-medium mb-2">
+                  Welcome! Browse the feed or{' '}
+                  <a
+                    href="/"
+                    className="text-primary hover:text-primary/80 underline font-semibold"
+                  >
+                    create an account
+                  </a>{' '}
+                  to share your own content.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="mt-6">

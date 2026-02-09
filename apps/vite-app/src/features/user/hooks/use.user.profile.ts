@@ -3,12 +3,17 @@ import { defaultUserProfile, userProfileSchema } from '@repo/zod/validation/user
 import useSWR from 'swr';
 
 import { swrFetcher } from '../../../../api/swrFetcher';
+import { useAuth } from './use.auth';
 
 const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
-export const useUserProfile = () => {
+export const useUserProfile = (friendlyId?: string) => {
+  const { loggedUser } = useAuth();
+  const resolvedFriendlyId = friendlyId ?? loggedUser?.friendlyId;
+  const endpoint = resolvedFriendlyId ? ENDPOINTS.profile.fetch(resolvedFriendlyId) : null;
+
   const { data, error, isLoading, mutate } = useSWR(
-    ENDPOINTS.users.fetchProfile,
-    (endpoint) => swrFetcher(endpoint, userProfileSchema, defaultUserProfile),
+    endpoint,
+    (url) => swrFetcher(url, userProfileSchema, defaultUserProfile),
     {
       dedupingInterval: Infinity,
     },

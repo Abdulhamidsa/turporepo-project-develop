@@ -84,7 +84,8 @@ export default function UserProfileModal({ user, isOpen, onOpenChange }: UserPro
   const handleVisitProfile = () => {
     // Navigate to the user's public profile page using their friendlyId
     const friendlyId = user.friendlyId || user.id;
-    window.location.href = `/explore/professionals/${friendlyId}`;
+    // window.location.href = `/explore/professionals/${friendlyId}`;
+    window.location.href = `/user/${friendlyId}`;
   };
 
   const handleContactClick = () => {

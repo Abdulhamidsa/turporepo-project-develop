@@ -277,13 +277,13 @@ export default function CreativeProfessionalsPage() {
           <div className="flex space-x-3">
             <Button
               variant="ghost"
-              onClick={() => (window.location.href = '/auth')}
+              onClick={() => (window.location.href = '/')}
               className="hover:text-primary"
             >
               Sign In
             </Button>
             <Button
-              onClick={() => (window.location.href = '/auth')}
+              onClick={() => (window.location.href = '/')}
               className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               Create Account

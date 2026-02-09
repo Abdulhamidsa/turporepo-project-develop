@@ -46,48 +46,72 @@ export const appRoutes: RouteObject[] = [
     ),
   },
 
+  // Root route - Auth page for public, redirects to feed for authenticated
   {
-    path: routesConfig.auth,
+    path: '/',
     element: <AuthOrRedirect />,
   },
+  // Public and Protected Routes with DashboardLayout
   {
-    element: (
-      <ProtectedRoute>
-        <DashboardLayout />
-      </ProtectedRoute>
-    ),
+    element: <DashboardLayout />,
     children: [
+      // Public routes - accessible to everyone
       {
-        path: routesConfig.home,
+        path: '/feed',
         element: <Feed />,
-      },
-      {
-        path: routesConfig.posts,
-        element: <Posts />,
-      },
-      {
-        path: routesConfig.projects,
-        element: <Projects />,
-      },
-      {
-        path: routesConfig.professionals,
-        element: <ProfessionalsPage />,
-      },
-      {
-        path: routesConfig.userPortfolio(':friendlyId'),
-        element: <ProfilePage />,
       },
       {
         path: routesConfig.userPortfolioView(':friendlyId'),
         element: <ProfileView />,
       },
+      // Protected routes - require authentication
+      {
+        path: routesConfig.posts,
+        element: (
+          <ProtectedRoute>
+            <Posts />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: routesConfig.projects,
+        element: (
+          <ProtectedRoute>
+            <Projects />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: routesConfig.professionals,
+        element: (
+          <ProtectedRoute>
+            <ProfessionalsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: routesConfig.userPortfolio(':friendlyId'),
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: routesConfig.profile,
-        element: <ProfileInfo />,
+        element: (
+          <ProtectedRoute>
+            <ProfileInfo />
+          </ProtectedRoute>
+        ),
       },
       {
         path: routesConfig.settings,
-        element: <Settings />,
+        element: (
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

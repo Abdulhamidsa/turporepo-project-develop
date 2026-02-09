@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { Badge } from '@repo/ui/components/ui/badge';
 import { Button } from '@repo/ui/components/ui/button';
 import {
@@ -18,7 +16,6 @@ import {
 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
-import axiosClient from '../../../api/axiosClient';
 import { Skeleton } from '../../components/ui/skeleton';
 import { useGetRequest } from '../../hooks/useRequest';
 
@@ -63,63 +60,19 @@ export default function PublicProfilePage() {
     error: userError,
   } = useGetRequest<UserProfile>(`/user/${id}`, { shouldFetch: !!id });
 
-  // First try with the standard format
-  const {
-    data: projectsData,
-    loading: projectsLoading,
-    error: projectsError,
-  } = useGetRequest<{ projects: ProjectType[] } | ProjectType[]>(`/projects/user/${id}`, {
+  const { data: projectsData, loading: projectsLoading } = useGetRequest<
+    { projects: ProjectType[] } | ProjectType[]
+  >(`/projects/user/${id}`, {
     shouldFetch: !!id,
   });
 
-  // Fallback to alternate endpoint format
-  const { data: projectsDataAlt, loading: projectsLoadingAlt } = useGetRequest<
-    { projects: ProjectType[] } | ProjectType[]
-  >(`/user/${id}/projects`, {
-    shouldFetch: !!id && !!projectsError,
-  });
-
-  // Direct API fetch when mounted to check all possible endpoints
-  useEffect(() => {
-    if (id) {
-      // const apiBaseUrl = import.meta.env.VITE_BASE_URL;
-      // console.log('API Base URL:', apiBaseUrl);
-
-      // Try several endpoint formats to see which one works
-      const endpoints = [
-        `/projects/user/${id}`,
-        `/user/${id}/projects`,
-        `/projects/by-user/${id}`,
-        `/projects?userId=${id}`,
-      ];
-
-      endpoints.forEach((endpoint) => {
-        // console.log(`Trying direct API fetch for ${endpoint}`);
-        axiosClient
-          .get(endpoint)
-          // .then((data) => console.log(`Direct fetch result for ${endpoint}:`, data))
-          .catch((err) => console.error(`Direct fetch error for ${endpoint}:`, err));
-      });
-    }
-  }, [id]);
-
-  // Use either the primary or alternate data
-  const projectsResponse = projectsData || projectsDataAlt;
-  const isProjectsLoading = projectsLoading || projectsLoadingAlt;
+  const projectsResponse = projectsData;
+  const isProjectsLoading = projectsLoading;
 
   // Handle different response structures
   const projectsList = Array.isArray(projectsResponse)
     ? projectsResponse
     : projectsResponse?.projects || [];
-
-  // Debug information
-  // console.log('User Profile:', userProfile);
-  // console.log('Projects Data (primary):', projectsData);
-  // console.log('Projects Data (alternate):', projectsDataAlt);
-  // console.log('Projects Error:', projectsError);
-  // console.log('Final Projects List:', projectsList);
-  // console.log('Array.isArray(projectsData)', Array.isArray(projectsData));
-  // console.log('Array.isArray(projectsDataAlt)', Array.isArray(projectsDataAlt));
 
   if (userLoading) {
     return <ProfileSkeleton />;
@@ -223,7 +176,7 @@ export default function PublicProfilePage() {
               {/* Action Button */}
               <Button
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={() => (window.location.href = '/auth')}
+                onClick={() => (window.location.href = '/')}
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Sign In to Contact
@@ -335,7 +288,7 @@ export default function PublicProfilePage() {
                         <Button
                           size="sm"
                           className="bg-primary/80 text-white hover:bg-primary"
-                          onClick={() => (window.location.href = '/auth')}
+                          onClick={() => (window.location.href = '/')}
                         >
                           Sign in to view
                         </Button>
@@ -379,15 +332,12 @@ export default function PublicProfilePage() {
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <Button
-                  onClick={() => (window.location.href = '/auth')}
+                  onClick={() => (window.location.href = '/')}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   Sign In
                 </Button>
-                <Button
-                  onClick={() => (window.location.href = '/auth?signup=true')}
-                  variant="outline"
-                >
+                <Button onClick={() => (window.location.href = '/')} variant="outline">
                   Create Account
                 </Button>
               </div>

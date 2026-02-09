@@ -7,8 +7,8 @@ export function AuthOrRedirect() {
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    console.log('User is authenticated, redirecting to / from AuthOrRedirect');
-    return <Navigate to="/" replace />;
+    console.log('User is authenticated, redirecting to /feed from AuthOrRedirect');
+    return <Navigate to="/feed" replace />;
   }
   return <Auth />;
 }

@@ -36,7 +36,7 @@ type PostProps = {
 };
 
 export function PostFeed({ post, user, index = 0 }: PostProps & { index?: number }) {
-  const { loggedUser } = useAuth();
+  const { loggedUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [likedByUser, setLikedByUser] = useState(post.likedByUser);
   const [likesCount, setLikesCount] = useState(post.likesCount);
@@ -76,6 +76,11 @@ export function PostFeed({ post, user, index = 0 }: PostProps & { index?: number
   };
 
   const handleLikeClick = async () => {
+    if (!isAuthenticated) {
+      showToast('Please login to like posts', 'error');
+      navigate('/');
+      return;
+    }
     if (isToggling) return;
     setIsToggling(true);
     try {
@@ -106,7 +111,8 @@ export function PostFeed({ post, user, index = 0 }: PostProps & { index?: number
   const handleAvatarClick = () => {
     if (!loggedUser) {
       // Non-logged-in users go to public route with blurred content
-      navigate(`/explore/professionals/${user.friendlyId}`);
+      // navigate(`/explore/professionals/${user.friendlyId}`);
+      navigate(routesConfig.userPortfolioView(user.friendlyId));
     } else if (loggedUser.friendlyId === user.friendlyId) {
       // Navigate to manage mode for own profile
       navigate(routesConfig.userPortfolio(user.friendlyId));
@@ -271,10 +277,24 @@ export function PostFeed({ post, user, index = 0 }: PostProps & { index?: number
             : 'max-h-0 opacity-0 -translate-y-2'
         }`}
       >
-        {/* Add Comment Input */}
-        <div className="px-6 pt-4">
-          <CommentBox postId={post._id} onCommentAdded={handleCommentAdded} />
-        </div>
+        {/* Add Comment Input - Only for authenticated users */}
+        {isAuthenticated ? (
+          <div className="px-6 pt-4">
+            <CommentBox postId={post._id} onCommentAdded={handleCommentAdded} />
+          </div>
+        ) : (
+          <div className="px-6 pt-4">
+            <div className="bg-muted/30 rounded-lg p-4 text-center">
+              <p className="text-muted-foreground text-sm mb-2">Want to join the conversation?</p>
+              <button
+                onClick={() => navigate('/')}
+                className="text-primary hover:text-primary/80 font-medium text-sm underline"
+              >
+                Login to comment
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Comments Container */}
         <div className="px-6 pb-4 mt-4">

@@ -10,12 +10,12 @@ export const getEndpoints = (baseUrl: string) => ({
   },
   users: {
     updateProfile: `/user/update`,
-    fetchProfile: `/profile/:friendlyId`,
+    fetchProfile: `/profile`,
     fetchUserPublicProfile: (friendlyId: string) => `/user/${friendlyId}`,
     fetchAll: `/users`,
   },
   profile: {
-    fetch: `/profile`,
+    fetch: (friendlyId: string) => `/profile/${friendlyId}`,
     update: `/profile`,
   },
   projects: {

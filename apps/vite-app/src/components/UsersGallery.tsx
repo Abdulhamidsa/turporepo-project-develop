@@ -210,7 +210,8 @@ export default function UsersGallery({ initialPage = 1, pageSize = 18 }: UsersGa
   };
 
   const handleUserClick = (user: User) => {
-    window.location.href = `/explore/professionals/${user.friendlyId}`;
+    // window.location.href = `/explore/professionals/${user.friendlyId}`;
+    window.location.href = `/user/${user.friendlyId}`;
   };
 
   const goToPreviousPage = () => {

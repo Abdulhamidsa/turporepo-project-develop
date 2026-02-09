@@ -31,12 +31,12 @@ export default function IncompleteProfileDialog({
               Your profile is currently private. To make it visible on the public domain, please
               complete the required details. Once added, your public profile will be available on
               <Link
-                to="https://profoliohub.vercel.app"
+                to="https://profolio-hub.abdulhamidma.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary ml-1 underline"
               >
-                profoliohub.vercel.app
+                profolio-hub.abdulhamidma.com
               </Link>
               .
             </p>

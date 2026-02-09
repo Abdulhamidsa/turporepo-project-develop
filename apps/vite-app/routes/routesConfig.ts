@@ -1,8 +1,8 @@
 export const routesConfig = {
-  auth: '/auth',
-  login: '/auth/login',
-  register: '/auth/register',
-  home: '/',
+  auth: '/', // Auth is now at root
+  login: '/', // Login redirects to root
+  register: '/', // Register redirects to root
+  home: '/feed', // Home feed for authenticated users
   posts: '/posts',
   projects: '/projects',
   projectDetails: (projectId: string) => `/projects/${projectId}`,

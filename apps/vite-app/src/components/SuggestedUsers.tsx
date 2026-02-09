@@ -74,7 +74,8 @@ export default function SuggestedUsers({
   const handleUserClick = (userFriendlyId: string) => {
     if (!loggedUser) {
       // Non-logged-in users go to public route with blurred content
-      navigate(`/explore/professionals/${userFriendlyId}`);
+      // navigate(`/explore/professionals/${userFriendlyId}`);
+      navigate(routesConfig.userPortfolioView(userFriendlyId));
     } else if (loggedUser.friendlyId === userFriendlyId) {
       // Navigate to manage mode for own profile
       navigate(routesConfig.userPortfolio(userFriendlyId));
