@@ -13,14 +13,14 @@ const ENDPOINTS = getEndpoints(import.meta.env.VITE_BASE_URL);
 // Custom hook for professional profile page
 const useProfessionalProfile = () => {
   const { friendlyId } = useParams<{ friendlyId: string }>();
-  console.log('Professional profile params:', { friendlyId });
+  // console.log('Professional profile params:', { friendlyId });
 
   const { data, error, isLoading } = useSWR(
     friendlyId ? ENDPOINTS.users.fetchUserPublicProfile(friendlyId) : null,
     async (endpoint) => {
       try {
         const result = await swrFetcher(endpoint, userProfileSchema, defaultUserProfile);
-        console.log('Fetched profile data:', result);
+        // console.log('Fetched profile data:', result);
         if (!result?.username) {
           console.warn(`Profile not found for ID: ${friendlyId}`);
           localStorage.setItem('lastAttemptedProfile', friendlyId || 'unknown');
@@ -45,7 +45,7 @@ const useProfessionalProfile = () => {
 export default function DirectProfessionalProfile() {
   // Log when this component is mounted to confirm it's being used
   React.useEffect(() => {
-    console.log('DirectProfessionalProfile component mounted - PUBLIC VERSION');
+    // console.log('DirectProfessionalProfile component mounted - PUBLIC VERSION');
   }, []);
 
   const { userProfile, isLoading, error, friendlyId } = useProfessionalProfile();
@@ -53,17 +53,17 @@ export default function DirectProfessionalProfile() {
 
   // Handle user not found - redirect to main page
   React.useEffect(() => {
-    console.log('DirectProfessionalProfile rendered at path:', window.location.pathname);
-    console.log('Profile check:', {
-      isLoading,
-      error,
-      hasUsername: !!userProfile?.username,
-      friendlyId,
-    });
+    // console.log('DirectProfessionalProfile rendered at path:', window.location.pathname);
+    // console.log('Profile check:', {
+    //   isLoading,
+    //   error,
+    //   hasUsername: !!userProfile?.username,
+    //   friendlyId,
+    // });
 
     // Only redirect if we've finished loading and there's no username in the profile
     if (!isLoading && !error && !userProfile?.username) {
-      console.log('Setting redirect for missing profile');
+      // console.log('Setting redirect for missing profile');
       setRedirecting(true);
     }
   }, [isLoading, userProfile, error, friendlyId]);

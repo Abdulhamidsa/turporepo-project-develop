@@ -415,19 +415,19 @@ export default function AdminUserProfile() {
         throw new Error(errorData.message || `Failed to delete user: ${response.status}`);
       }
 
-      const result = await response.json();
+      // const result = await response.json();
       // console.log('User deleted successfully:', result);
 
       // Log admin action for audit trail
-      console.log('Admin Action Success:', {
-        action: 'delete_user',
-        targetUser: user.friendlyId,
-        targetUsername: user.username,
-        reason,
-        timestamp: new Date().toISOString(),
-        adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
-        backendResponse: result.data,
-      });
+      // console.log('Admin Action Success:', {
+      //   action: 'delete_user',
+      //   targetUser: user.friendlyId,
+      //   targetUsername: user.username,
+      //   reason,
+      //   timestamp: new Date().toISOString(),
+      //   adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
+      //   backendResponse: result.data,
+      // });
 
       setDeleteDialog({ isOpen: false, type: 'user', reason: '' });
       showToast(`User ${user.username} has been deleted successfully`, 'success');
@@ -446,14 +446,14 @@ export default function AdminUserProfile() {
     try {
       // The post might have _id instead of id from MongoDB
       const postId = post.id || (post as { _id?: string })._id;
-      console.log('Admin Action: Deleting post:', postId, 'Reason:', reason);
+      // console.log('Admin Action: Deleting post:', postId, 'Reason:', reason);
 
       if (!postId) {
         throw new Error('Post ID is missing');
       }
 
       // Actually delete the post using the backend API
-      console.log('Making delete request with credentials:', document.cookie);
+      // console.log('Making delete request with credentials:', document.cookie);
       const response = await fetch(`http://localhost:4000/api/admin/post/${postId}`, {
         method: 'DELETE',
         credentials: 'include', // Important for cookies
@@ -468,19 +468,19 @@ export default function AdminUserProfile() {
         throw new Error(errorData.message || `Failed to delete post: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('Post deleted successfully:', result);
+      // const result = await response.json();
+      // console.log('Post deleted successfully:', result);
 
       // Log admin action for audit trail
-      console.log('Admin Action Success:', {
-        action: 'delete_post',
-        targetPost: post.id,
-        targetUser: user?.friendlyId,
-        reason,
-        timestamp: new Date().toISOString(),
-        adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
-        backendResponse: result.data,
-      });
+      // console.log('Admin Action Success:', {
+      //   action: 'delete_post',
+      //   targetPost: post.id,
+      //   targetUser: user?.friendlyId,
+      //   reason,
+      //   timestamp: new Date().toISOString(),
+      //   adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
+      //   backendResponse: result.data,
+      // });
 
       setDeleteDialog({ isOpen: false, type: 'post', reason: '' });
       showToast('Post has been deleted successfully', 'success');
@@ -490,7 +490,7 @@ export default function AdminUserProfile() {
       setPosts(updatedPosts);
 
       // Log the updated state for debugging
-      console.log(`Post deleted. Remaining posts: ${updatedPosts.length}`);
+      // console.log(`Post deleted. Remaining posts: ${updatedPosts.length}`);
     } catch (error) {
       console.error('Delete post error:', error);
       showToast(error instanceof Error ? error.message : 'Failed to delete post', 'error');
@@ -501,7 +501,7 @@ export default function AdminUserProfile() {
     try {
       // The project might have _id instead of id from MongoDB
       const projectId = project.id || (project as { _id?: string })._id;
-      console.log('Admin Action: Deleting project:', projectId, 'Reason:', reason);
+      // console.log('Admin Action: Deleting project:', projectId, 'Reason:', reason);
 
       if (!projectId) {
         throw new Error('Project ID is missing');
@@ -522,19 +522,19 @@ export default function AdminUserProfile() {
         throw new Error(errorData.message || `Failed to delete project: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('Project deleted successfully:', result);
+      // const result = await response.json();
+      // console.log('Project deleted successfully:', result);
 
       // Log admin action for audit trail
-      console.log('Admin Action Success:', {
-        action: 'delete_project',
-        targetProject: project.id,
-        targetUser: user?.friendlyId,
-        reason,
-        timestamp: new Date().toISOString(),
-        adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
-        backendResponse: result.data,
-      });
+      // console.log('Admin Action Success:', {
+      //   action: 'delete_project',
+      //   targetProject: project.id,
+      //   targetUser: user?.friendlyId,
+      //   reason,
+      //   timestamp: new Date().toISOString(),
+      //   adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
+      //   backendResponse: result.data,
+      // });
 
       setDeleteDialog({ isOpen: false, type: 'project', reason: '' });
       showToast('Project has been deleted successfully', 'success');
@@ -552,14 +552,14 @@ export default function AdminUserProfile() {
       // The comment might have _id instead of id from MongoDB
       const commentId = comment.id || (comment as { _id?: string })._id;
       const postId = comment.postId || (comment as { post?: string }).post;
-      console.log(
-        'Admin Action: Deleting comment:',
-        commentId,
-        'from post:',
-        postId,
-        'Reason:',
-        reason,
-      );
+      // console.log(
+      //   'Admin Action: Deleting comment:',
+      //   commentId,
+      //   'from post:',
+      //   postId,
+      //   'Reason:',
+      //   reason,
+      // );
 
       if (!commentId || !postId) {
         throw new Error('Comment ID or Post ID is missing');
@@ -583,20 +583,20 @@ export default function AdminUserProfile() {
         throw new Error(errorData.message || `Failed to delete comment: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('Comment deleted successfully:', result);
+      // const result = await response.json();
+      // console.log('Comment deleted successfully:', result);
 
       // Log admin action for audit trail
-      console.log('Admin Action Success:', {
-        action: 'delete_comment',
-        targetComment: comment.id,
-        targetPost: comment.postId,
-        targetUser: user?.friendlyId,
-        reason,
-        timestamp: new Date().toISOString(),
-        adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
-        backendResponse: result.data,
-      });
+      // console.log('Admin Action Success:', {
+      //   action: 'delete_comment',
+      //   targetComment: comment.id,
+      //   targetPost: comment.postId,
+      //   targetUser: user?.friendlyId,
+      //   reason,
+      //   timestamp: new Date().toISOString(),
+      //   adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
+      //   backendResponse: result.data,
+      // });
 
       setDeleteDialog({ isOpen: false, type: 'comment', reason: '' });
       showToast('Comment has been deleted successfully', 'success');

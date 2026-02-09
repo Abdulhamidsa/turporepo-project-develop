@@ -36,7 +36,7 @@ export default function AdminSignin() {
       }
 
       // Use real backend authentication API
-      console.log('Attempting admin signin with:', { email: formData.email });
+      // console.log('Attempting admin signin with:', { email: formData.email });
       const response = await fetch(`http://localhost:4000/api/auth/signin`, {
         method: 'POST',
         credentials: 'include', // Important for cookies
@@ -50,11 +50,11 @@ export default function AdminSignin() {
       });
 
       const result = await response.json();
-      console.log('Signin response:', {
-        status: response.status,
-        result,
-        cookies: document.cookie,
-      });
+      // console.log('Signin response:', {
+      //   status: response.status,
+      //   result,
+      //   cookies: document.cookie,
+      // });
 
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'Invalid credentials');

@@ -129,12 +129,12 @@ const mockProfessionals: CreativeProfessional[] = [
 ];
 
 // Simple component to add/remove from favorites
-const AddToFavourite: React.FC<AddToFavouriteProps> = ({ professionalId }) => {
+const AddToFavourite: React.FC<AddToFavouriteProps> = () => {
   const [isFavourite, setIsFavourite] = React.useState<boolean>(false);
 
   const handleFavouriteToggle = () => {
     setIsFavourite(!isFavourite);
-    console.log(`${isFavourite ? 'Removed from' : 'Added to'} favorites: ${professionalId}`);
+    // console.log(`${isFavourite ? 'Removed from' : 'Added to'} favorites: ${professionalId}`);
   };
 
   return (
@@ -236,8 +236,8 @@ export default function CreativeProfessionalsPage() {
     document.title = 'Creative Professionals | ProFolio';
 
     // Log for debugging
-    console.log('CreativeProfessionalsPage mounted');
-    console.log('Current pathname:', window.location.pathname);
+    // console.log('CreativeProfessionalsPage mounted');
+    // console.log('Current pathname:', window.location.pathname);
   }, []);
 
   return (

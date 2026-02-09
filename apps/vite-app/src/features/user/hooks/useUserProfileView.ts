@@ -13,7 +13,7 @@ export const useUserProfileView = () => {
   const friendlyId = params.friendlyId;
 
   // Debug the parameters we're getting
-  console.log('useUserProfileView params:', params, 'friendlyId:', friendlyId);
+  // console.log('useUserProfileView params:', params, 'friendlyId:', friendlyId);
 
   // Fetch only if `friendlyId` exists
   const { data, error, isLoading, mutate } = useSWR(
@@ -24,9 +24,9 @@ export const useUserProfileView = () => {
 
         // If the response doesn't have essential fields, consider it a "not found"
         if (!result?.username) {
-          console.log(`User profile not found for friendlyId: ${friendlyId}`);
+          // console.log(`User profile not found for friendlyId: ${friendlyId}`);
           // Log the attempt for analytics and save to localStorage
-          console.info(`Attempted to access non-existent profile: ${friendlyId}`);
+          // console.info(`Attempted to access non-existent profile: ${friendlyId}`);
           localStorage.setItem('lastAttemptedProfile', friendlyId || 'unknown');
         }
 

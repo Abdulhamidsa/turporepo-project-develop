@@ -12,7 +12,7 @@ export function CreatePostButton() {
 
   const handleSubmit = (content: string, image: File | null) => {
     // TODO: Implement post creation logic
-    console.log('Creating new post:', { content, image });
+    // console.log('Creating new post:', { content, image });
   };
 
   return (

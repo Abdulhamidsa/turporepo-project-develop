@@ -182,7 +182,7 @@ export default function AdminDashboard() {
 
   const handleDeleteUser = async (user: AdminDashboardUser, reason: string) => {
     try {
-      console.log('Admin Action: Deleting user:', user.mongoRef, 'Reason:', reason);
+      // console.log('Admin Action: Deleting user:', user.mongoRef, 'Reason:', reason);
 
       // Make the actual DELETE request to the backend
       const response = await fetch(`http://localhost:4000/api/admin/user/${user.mongoRef}`, {
@@ -199,23 +199,22 @@ export default function AdminDashboard() {
         throw new Error(errorData.message || `Failed to delete user: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('User deleted successfully:', result);
+      // console.log('User deleted successfully:', result);
 
       setDeleteDialog({ isOpen: false, reason: '' });
       showToast(`User ${user.username} has been deleted successfully`, 'success');
 
       // Log admin action for audit trail
-      console.log('Admin Action Log:', {
-        action: 'delete_user',
-        targetUser: user.mongoRef,
-        targetUsername: user.username,
-        targetEmail: user.email,
-        reason,
-        timestamp: new Date().toISOString(),
-        adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
-        result,
-      });
+      // console.log('Admin Action Log:', {
+      //   action: 'delete_user',
+      //   targetUser: user.mongoRef,
+      //   targetUsername: user.username,
+      //   targetEmail: user.email,
+      //   reason,
+      //   timestamp: new Date().toISOString(),
+      //   adminUser: JSON.parse(localStorage.getItem('admin_user') || '{}').email,
+      //   result,
+      // });
 
       // Refresh the user list after deletion - trigger SWR revalidation
     } catch (error) {

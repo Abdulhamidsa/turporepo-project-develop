@@ -38,7 +38,7 @@ export default function SigninForm({
       showToast('You have successfully signed in.', 'success');
 
       // Add debug message to show where we're redirecting
-      console.log('Authentication successful, redirecting from SigninForm');
+      // console.log('Authentication successful, redirecting from SigninForm');
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       showToast(errorMessage, 'error');
