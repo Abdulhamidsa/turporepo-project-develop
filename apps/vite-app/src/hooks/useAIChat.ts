@@ -60,6 +60,10 @@ export const useAIChat = () => {
   const [loading, setLoading] = useState(false);
   const [refreshLoading, setRefreshLoading] = useState(false);
   const [lastAction] = useState<ActionOption | null>(null);
+  const [lastRequestTime, setLastRequestTime] = useState<number>(0);
+
+  // Debounce delay in milliseconds to prevent rapid successive requests
+  const DEBOUNCE_DELAY = 500;
 
   const startChat = () => {
     setChatOpen(true);
@@ -90,6 +94,13 @@ export const useAIChat = () => {
 
   const sendMessage = async (message: string) => {
     if (loading || refreshLoading) return;
+
+    // Prevent rapid successive requests (debounce)
+    const now = Date.now();
+    if (now - lastRequestTime < DEBOUNCE_DELAY) {
+      return;
+    }
+    setLastRequestTime(now);
 
     const isRefresh = message.trim().toLowerCase() === 'refresh';
 
@@ -137,7 +148,13 @@ export const useAIChat = () => {
       if (error instanceof z.ZodError) {
         showToast('Invalid message format.', 'error');
       } else {
-        showToast(getErrorMessage(error), 'error');
+        const errorMessage = getErrorMessage(error);
+        // Provide specific guidance for rate limit errors
+        if (errorMessage.includes('Too Many Requests') || errorMessage.includes('429')) {
+          showToast('API rate limit exceeded. Please wait a moment and try again.', 'error');
+        } else {
+          showToast(errorMessage, 'error');
+        }
       }
     } finally {
       setLoading(false);
