@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider } from 'next-themes';
 import { Inter } from 'next/font/google';
 
-import BackToPortfolioButton from '../components/BackToPortfolioButton';
+// import BackToPortfolioButton from '../components/BackToPortfolioButton';
 import { Footer } from '../components/Footer';
 import { Nav } from '../components/Nav';
 
@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </main>
             <Footer />
           </div>
-          <BackToPortfolioButton />
+          {/* <BackToPortfolioButton />  */}
         </ThemeProvider>
       </body>
     </html>
