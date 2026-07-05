@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@repo/ui/components/ui/badge';
-import { Briefcase, Calendar, GitHub, Globe, Linkedin, Twitter } from 'lucide-react';
+import { Briefcase, Calendar, Github, Globe, Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -149,7 +149,7 @@ export default function ProfileHeader({ userProfile }: ProfileHeaderProps) {
                         rel="noopener noreferrer"
                         className="bg-accent hover:bg-accent/80 p-2.5 rounded-lg transition-colors"
                       >
-                        <GitHub className="w-5 h-5" />
+                        <Github className="w-5 h-5" />
                       </Link>
                     )}
 
